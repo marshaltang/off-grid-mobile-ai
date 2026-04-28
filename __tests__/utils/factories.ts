@@ -184,7 +184,7 @@ export const createModelFile = (options: ModelFileFactoryOptions = {}): ModelFil
   name: options.name ?? 'model-q4_k_m.gguf',
   size: options.size ?? 4 * 1024 * 1024 * 1024,
   quantization: options.quantization ?? 'Q4_K_M',
-  downloadUrl: options.downloadUrl ?? 'https://huggingface.co/test/model/resolve/main/model-q4_k_m.gguf',
+  downloadUrl: options.downloadUrl ?? 'https://hf-mirror.com/test/model/resolve/main/model-q4_k_m.gguf',
 });
 
 export interface ModelInfoFactoryOptions {
@@ -429,7 +429,7 @@ export const createModelFileWithMmProj = (options: ModelFileFactoryOptions & {
   mmProjFile: {
     name: options.mmProjName ?? 'mmproj-model-f16.gguf',
     size: options.mmProjSize ?? 500 * 1024 * 1024,
-    downloadUrl: options.mmProjDownloadUrl ?? 'https://huggingface.co/test/model/resolve/main/mmproj-model-f16.gguf',
+    downloadUrl: options.mmProjDownloadUrl ?? 'https://hf-mirror.com/test/model/resolve/main/mmproj-model-f16.gguf',
   },
 });
 

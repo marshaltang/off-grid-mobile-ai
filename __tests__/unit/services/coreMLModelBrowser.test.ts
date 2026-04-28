@@ -195,7 +195,7 @@ describe('CoreMLModelBrowser', () => {
 
       if (models.length > 0) {
         models[0]!.files!.forEach(file => {
-          expect(file.downloadUrl).toContain('https://huggingface.co/');
+          expect(file.downloadUrl).toContain('https://hf-mirror.com/');
           expect(file.downloadUrl).toContain('resolve/main/');
         });
       }

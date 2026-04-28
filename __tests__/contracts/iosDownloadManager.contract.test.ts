@@ -112,7 +112,7 @@ describe('iOS DownloadManagerModule Contract (parity with Android)', () => {
       });
 
       const result = await mockDownloadModule.startDownload({
-        url: 'https://huggingface.co/apple/coreml-stable-diffusion-2-1-base/resolve/main/model.zip',
+        url: 'https://hf-mirror.com/apple/coreml-stable-diffusion-2-1-base/resolve/main/model.zip',
         fileName: 'sd21-coreml.zip',
         modelId: 'coreml_sd21',
         title: 'Downloading SD 2.1 (Core ML)',

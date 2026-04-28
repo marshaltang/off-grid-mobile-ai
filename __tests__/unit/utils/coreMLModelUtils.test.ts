@@ -275,11 +275,11 @@ describe('downloadCoreMLTokenizerFiles', () => {
     // Should download both files
     expect(mockDownloadFile).toHaveBeenCalledTimes(2);
     expect(mockDownloadFile).toHaveBeenCalledWith({
-      fromUrl: `https://huggingface.co/${repo}/resolve/main/merges.txt`,
+      fromUrl: `https://hf-mirror.com/${repo}/resolve/main/merges.txt`,
       toFile: `${modelDir}/merges.txt`,
     });
     expect(mockDownloadFile).toHaveBeenCalledWith({
-      fromUrl: `https://huggingface.co/${repo}/resolve/main/vocab.json`,
+      fromUrl: `https://hf-mirror.com/${repo}/resolve/main/vocab.json`,
       toFile: `${modelDir}/vocab.json`,
     });
   });
@@ -315,7 +315,7 @@ describe('downloadCoreMLTokenizerFiles', () => {
 
     expect(mockDownloadFile).toHaveBeenCalledTimes(1);
     expect(mockDownloadFile).toHaveBeenCalledWith({
-      fromUrl: `https://huggingface.co/${repo}/resolve/main/vocab.json`,
+      fromUrl: `https://hf-mirror.com/${repo}/resolve/main/vocab.json`,
       toFile: `${modelDir}/vocab.json`,
     });
   });
@@ -335,12 +335,12 @@ describe('downloadCoreMLTokenizerFiles', () => {
 
     expect(mockDownloadFile).toHaveBeenCalledWith(
       expect.objectContaining({
-        fromUrl: `https://huggingface.co/apple/coreml-stable-diffusion-xl-base-ios/resolve/main/merges.txt`,
+        fromUrl: `https://hf-mirror.com/apple/coreml-stable-diffusion-xl-base-ios/resolve/main/merges.txt`,
       }),
     );
     expect(mockDownloadFile).toHaveBeenCalledWith(
       expect.objectContaining({
-        fromUrl: `https://huggingface.co/apple/coreml-stable-diffusion-xl-base-ios/resolve/main/vocab.json`,
+        fromUrl: `https://hf-mirror.com/apple/coreml-stable-diffusion-xl-base-ios/resolve/main/vocab.json`,
       }),
     );
   });

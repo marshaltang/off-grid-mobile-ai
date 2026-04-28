@@ -26,7 +26,7 @@ const mockedAsyncStorage = AsyncStorage as jest.Mocked<typeof AsyncStorage>;
 jest.mock('../../../src/services/huggingface', () => ({
   huggingFaceService: {
     getDownloadUrl: jest.fn((modelId: string, fileName: string) =>
-      `https://huggingface.co/${modelId}/resolve/main/${fileName}`
+      `https://hf-mirror.com/${modelId}/resolve/main/${fileName}`
     ),
   },
 }));
@@ -61,7 +61,7 @@ function visionFile(mainSize = 4_000_000_000, mmProjSize = 500_000_000) {
     quantization: 'Q4_K_M',
     mmProjName: 'mmproj.gguf',
     mmProjSize,
-    mmProjDownloadUrl: 'https://huggingface.co/test/model/resolve/main/mmproj.gguf',
+    mmProjDownloadUrl: 'https://hf-mirror.com/test/model/resolve/main/mmproj.gguf',
   });
 }
 

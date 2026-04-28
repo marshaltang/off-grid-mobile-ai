@@ -73,7 +73,7 @@ describe('huggingFaceModelBrowser', () => {
         size: 2000,
         repo: 'xororz/sd-mnn',
         downloadUrl:
-          'https://huggingface.co/xororz/sd-mnn/resolve/main/AnythingV5.zip',
+          'https://hf-mirror.com/xororz/sd-mnn/resolve/main/AnythingV5.zip',
       });
       expect(models[0].variant).toBeUndefined();
     });

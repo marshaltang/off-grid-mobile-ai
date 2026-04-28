@@ -19,7 +19,7 @@ const mockedAsyncStorage = AsyncStorage as jest.Mocked<typeof AsyncStorage>;
 jest.mock('../../../src/services/huggingface', () => ({
   huggingFaceService: {
     getDownloadUrl: jest.fn((modelId: string, fileName: string) =>
-      `https://huggingface.co/${modelId}/resolve/main/${fileName}`
+      `https://hf-mirror.com/${modelId}/resolve/main/${fileName}`
     ),
   },
 }));
@@ -59,7 +59,7 @@ describe('ModelManager', () => {
     // Re-establish huggingFaceService mock (resetAllMocks clears jest.mock implementations)
     (huggingFaceService.getDownloadUrl as jest.Mock).mockImplementation(
       (modelId: string, fileName: string) =>
-        `https://huggingface.co/${modelId}/resolve/main/${fileName}`
+        `https://hf-mirror.com/${modelId}/resolve/main/${fileName}`
     );
 
     // Default RNFS behaviors
