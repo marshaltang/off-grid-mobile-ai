@@ -70,7 +70,7 @@ function parseFileName(fileName: string, backend: 'mnn' | 'qnn'): Omit<HFImageMo
 }
 
 async function fetchRepoFiles(repo: string): Promise<HFTreeEntry[]> {
-  const response = await fetch(`https://huggingface.co/api/models/${repo}/tree/main`);
+  const response = await fetch(`https://hf-mirror.com/api/models/${repo}/tree/main`);
   if (!response.ok) {
     throw new Error(`Failed to fetch ${repo}: HTTP ${response.status}`);
   }
@@ -96,7 +96,7 @@ export async function fetchAvailableModels(forceRefresh = false, opts?: { skipQn
     if (!parsed) continue;
     models.push({
       ...parsed,
-      downloadUrl: `https://huggingface.co/${REPOS.mnn}/resolve/main/${entry.path}`,
+      downloadUrl: `https://hf-mirror.com/${REPOS.mnn}/resolve/main/${entry.path}`,
       size: entry.lfs?.size ?? entry.size,
       repo: REPOS.mnn,
     });
@@ -108,7 +108,7 @@ export async function fetchAvailableModels(forceRefresh = false, opts?: { skipQn
     if (!parsed) continue;
     models.push({
       ...parsed,
-      downloadUrl: `https://huggingface.co/${REPOS.qnn}/resolve/main/${entry.path}`,
+      downloadUrl: `https://hf-mirror.com/${REPOS.qnn}/resolve/main/${entry.path}`,
       size: entry.lfs?.size ?? entry.size,
       repo: REPOS.qnn,
     });

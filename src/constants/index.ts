@@ -2,8 +2,8 @@ export { MODEL_RECOMMENDATIONS, RECOMMENDED_MODELS, TRENDING_FAMILIES, TRENDING_
 
 // Hugging Face API configuration
 export const HF_API = {
-  baseUrl: 'https://huggingface.co',
-  apiUrl: 'https://huggingface.co/api',
+  baseUrl: 'https://hf-mirror.com',
+  apiUrl: 'https://hf-mirror.com/api',
   modelsEndpoint: '/models',
   searchParams: {
     filter: 'gguf',

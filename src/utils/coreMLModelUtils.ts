@@ -35,7 +35,7 @@ export async function downloadCoreMLTokenizerFiles(modelDir: string, repo: strin
   await Promise.all(files.map(async (file) => {
     const destPath = `${modelDir}/${file}`;
     if (await RNFS.exists(destPath)) return;
-    const url = `https://huggingface.co/${repo}/resolve/main/${file}`;
+    const url = `https://hf-mirror.com/${repo}/resolve/main/${file}`;
     logger.log(`[CoreML] Downloading tokenizer file: ${file}`);
     try {
       const result = await RNFS.downloadFile({ fromUrl: url, toFile: destPath }).promise;

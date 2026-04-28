@@ -122,7 +122,7 @@ export async function downloadHuggingFaceModel(
     const totalSize = files.reduce((sum, f) => sum + f.size, 0);
     let downloadedSize = 0;
     for (const file of files) {
-      const fileUrl = `https://huggingface.co/${modelInfo.huggingFaceRepo}/resolve/main/${file.path}`;
+      const fileUrl = `https://hf-mirror.com/${modelInfo.huggingFaceRepo}/resolve/main/${file.path}`;
       const filePath = `${modelDir}/${file.path}`;
       const fileDir = filePath.substring(0, filePath.lastIndexOf('/'));
       if (!(await RNFS.exists(fileDir))) await RNFS.mkdir(fileDir);

@@ -86,8 +86,8 @@ const CACHE_TTL = 5 * 60 * 1000; // 5 minutes
 
 async function fetchRepoTree(repo: string, path = ''): Promise<HFTreeEntry[]> {
   const url = path
-    ? `https://huggingface.co/api/models/${repo}/tree/main/${path}`
-    : `https://huggingface.co/api/models/${repo}/tree/main`;
+    ? `https://hf-mirror.com/api/models/${repo}/tree/main/${path}`
+    : `https://hf-mirror.com/api/models/${repo}/tree/main`;
   const response = await fetch(url);
   if (!response.ok) {
     throw new Error(`Failed to fetch ${repo}: HTTP ${response.status}`);
@@ -129,7 +129,7 @@ async function fetchModelFromRepo(
       name,
       displayName: `${name} (Core ML)`,
       backend: 'coreml',
-      downloadUrl: `https://huggingface.co/${repo}/resolve/main/${zipEntry.path}`,
+      downloadUrl: `https://hf-mirror.com/${repo}/resolve/main/${zipEntry.path}`,
       fileName: zipEntry.path,
       size,
       repo,
@@ -167,7 +167,7 @@ async function fetchModelFromRepo(
           path: entry.path,
           relativePath,
           size: entry.lfs?.size ?? entry.size ?? 0,
-          downloadUrl: `https://huggingface.co/${repo}/resolve/main/${entry.path}`,
+          downloadUrl: `https://hf-mirror.com/${repo}/resolve/main/${entry.path}`,
         });
       } else if (entry.type === 'directory') {
         if (entry.path.endsWith('/analytics')) continue;
@@ -190,7 +190,7 @@ async function fetchModelFromRepo(
     name,
     displayName: `${name} (Core ML)`,
     backend: 'coreml',
-    downloadUrl: `https://huggingface.co/${repo}/tree/main/${compiledDir.path}`,
+    downloadUrl: `https://hf-mirror.com/${repo}/tree/main/${compiledDir.path}`,
     fileName: compiledDir.path,
     size: totalSize,
     repo,
