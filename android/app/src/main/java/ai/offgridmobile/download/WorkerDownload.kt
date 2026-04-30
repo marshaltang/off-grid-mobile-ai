@@ -383,6 +383,7 @@ class WorkerDownload(
 
         private val allowedDownloadHosts = setOf(
             "hf-mirror.com",
+            "huggingface.co",
             "cdn-lfs.huggingface.co",
             "cas-bridge.xethub.hf.co",
         )
