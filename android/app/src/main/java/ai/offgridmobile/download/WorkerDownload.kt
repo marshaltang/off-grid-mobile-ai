@@ -383,8 +383,8 @@ class WorkerDownload(
 
         private val allowedDownloadHosts = setOf(
             "hf-mirror.com",
-            "cdn-lfs.huggingface.co",
-            "cas-bridge.xethub.hf.co",
+ //           "cdn-lfs.huggingface.co",
+ //           "cas-bridge.xethub.hf.co",
         )
 
         fun isHostAllowed(url: String): Boolean {
