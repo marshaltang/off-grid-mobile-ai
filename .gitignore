@@ -34,6 +34,11 @@ local.properties
 *.keystore
 !debug.keystore
 .kotlin/
+android/app/src/main/assets/ggml-hexagon/libggml-htp-v69.so
+android/app/src/main/assets/ggml-hexagon/libggml-htp-v73.so
+android/app/src/main/assets/ggml-hexagon/libggml-htp-v75.so
+android/app/src/main/assets/ggml-hexagon/libggml-htp-v79.so
+android/app/src/main/assets/ggml-hexagon/libggml-htp-v81.so
 
 # Environment variables
 .env
@@ -42,8 +47,10 @@ local.properties
 # node.js
 #
 node_modules/
+node_modules_old/
 npm-debug.log
 yarn-error.log
+bun.lock
 
 # fastlane
 #
