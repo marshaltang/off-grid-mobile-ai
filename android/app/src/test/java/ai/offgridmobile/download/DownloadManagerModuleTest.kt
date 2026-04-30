@@ -25,7 +25,7 @@ class DownloadManagerModuleTest {
 
     @Test
     fun isHostAllowedAcceptsHuggingfaceCo() {
-        assertTrue(WorkerDownload.isHostAllowed("https://huggingface.co/model.gguf"))
+        assertTrue(WorkerDownload.isHostAllowed("https://hf-mirror.com/model.gguf"))
     }
 
     @Test
@@ -77,7 +77,7 @@ class DownloadManagerModuleTest {
     fun isHostAllowedAllowsHttpSchemeOnAllowedHost() {
         // The allowlist checks the host, not the scheme — http is still allowed by this
         // function; network security config handles transport-level enforcement.
-        assertTrue(WorkerDownload.isHostAllowed("http://huggingface.co/model.gguf"))
+        assertTrue(WorkerDownload.isHostAllowed("http://hf-mirror.com/model.gguf"))
     }
 
     // ── WorkerDownload.workName ───────────────────────────────────────────────
