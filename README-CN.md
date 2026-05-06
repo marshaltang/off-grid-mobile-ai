@@ -93,7 +93,14 @@
 
 ### 从源码构建
 
+Download the HEXAGON SDK and set Environment Variables
+
 ```bash
+curl https://github.com/snapdragon-toolchain/hexagon-sdk/releases/download/v6.4.0.2/hexagon-sdk-v6.4.0.2-amd64-lnx.tar.xz 
+tar -xzvf exagon-sdk-v6.4.0.2-amd64-lnx.tar.xz  ~/.hexagon-sdk/
+export HEXAGON_SDK_ROOT=~/.hexagon-sdk/6.4.0.
+export HEXAGON_TOOLS_ROOT=~/.hexagon-sdk/6.4.0.2/tools/HEXAGON_Tools/19.0.4
+
 git clone https://github.com/alichherawalla/off-grid-mobile.git
 cd off-grid-mobile
 npm install
