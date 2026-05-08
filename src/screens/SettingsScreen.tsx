@@ -24,6 +24,8 @@ import { TYPOGRAPHY, SPACING } from '../constants';
 import DeviceInfo from 'react-native-device-info';
 import RNFS from 'react-native-fs';
 import { useAppStore, useRemoteServerStore } from '../stores';
+import { languageOptions } from '../i18n';
+import { useTranslation } from 'react-i18next';
 import { hardwareService } from '../services';
 import { RootStackParamList, MainTabParamList } from '../navigation/types';
 import { GITHUB_URL, SHARE_ON_X_URL } from '../utils/sharePrompt';
@@ -37,6 +39,7 @@ type NavigationProp = CompositeNavigationProp<
 >;
 
 export const SettingsScreen: React.FC = () => {
+  const { t } = useTranslation();
   const navigation = useNavigation<NavigationProp>();
   const focusTrigger = useFocusTrigger();
   const { colors } = useTheme();
@@ -44,6 +47,8 @@ export const SettingsScreen: React.FC = () => {
   const setOnboardingComplete = useAppStore((s) => s.setOnboardingComplete);
   const themeMode = useAppStore((s) => s.themeMode);
   const setThemeMode = useAppStore((s) => s.setThemeMode);
+  const language = useAppStore((s) => s.language);
+  const setLanguage = useAppStore((s) => s.setLanguage);
   const completeChecklistStep = useAppStore((s) => s.completeChecklistStep);
   const resetChecklist = useAppStore((s) => s.resetChecklist);
   const deviceInfo = useAppStore((s) => s.deviceInfo);
@@ -110,14 +115,40 @@ export const SettingsScreen: React.FC = () => {
   return (
     <SafeAreaView style={styles.container} edges={['top']}>
       <View style={styles.header}>
-        <Text style={styles.title}>Settings</Text>
+        <Text style={styles.title}>{t('settings.title')}</Text>
       </View>
       <ScrollView style={styles.scrollView} contentContainerStyle={styles.content}>
 
-        {/* Theme Selector */}
+        {/* Language Selector */}
         <AnimatedEntry index={0} staggerMs={40} trigger={focusTrigger}>
           <View style={styles.themeToggleRow}>
-            <Text style={styles.themeToggleLabel}>Appearance</Text>
+            <Text style={styles.themeToggleLabel}>{t('settings.language')}</Text>
+            <View style={styles.themeSelector}>
+              {languageOptions.map(({ code, name }) => (
+                <TouchableOpacity
+                  key={code}
+                  style={[
+                    styles.themeSelectorOption,
+                    language === code && styles.themeSelectorOptionActive,
+                  ]}
+                  onPress={() => setLanguage(code as Language)}
+                >
+                  <Text style={[
+                    styles.languageOptionText,
+                    language === code && styles.languageOptionTextActive,
+                  ]}>
+                    {code === 'en' ? 'EN' : code === 'zh-CN' ? '中' : name}
+                  </Text>
+                </TouchableOpacity>
+              ))}
+            </View>
+          </View>
+        </AnimatedEntry>
+
+        {/* Theme Selector */}
+        <AnimatedEntry index={1} staggerMs={40} trigger={focusTrigger}>
+          <View style={styles.themeToggleRow}>
+            <Text style={styles.themeToggleLabel}>{t('settings.theme')}</Text>
             <View style={styles.themeSelector}>
               {([
                 { mode: 'system' as const, icon: 'monitor' },
@@ -276,6 +307,14 @@ const createStyles = (colors: ThemeColors, shadows: ThemeShadows) => ({
   themeSelector: { flexDirection: 'row' as const, backgroundColor: colors.surfaceLight, borderRadius: 8, padding: 3, gap: 2 },
   themeSelectorOption: { width: 34, height: 30, borderRadius: 6, alignItems: 'center' as const, justifyContent: 'center' as const },
   themeSelectorOptionActive: { backgroundColor: colors.primary },
+  languageOptionText: {
+    ...TYPOGRAPHY.bodySmall,
+    color: colors.textMuted,
+    fontWeight: '500' as const,
+  },
+  languageOptionTextActive: {
+    color: colors.background,
+  },
   navSection: {
     backgroundColor: colors.surface,
     borderRadius: 8,
