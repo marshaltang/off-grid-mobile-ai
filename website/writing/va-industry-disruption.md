@@ -3,7 +3,7 @@ layout: default
 title: "Why the Virtual Assistant Industry Is About to Be Disrupted by On-Device AI"
 parent: Perspectives
 nav_order: 28
-description: The VA market is worth billions and growing. On-device AI doesn't compete with it on price. It competes on a dimension the human model can't match: full personal context, always available, private by architecture.
+description: "The VA market is worth billions and growing. On-device AI doesn't compete with it on price. It competes on a dimension the human model can't match: full personal context, always available, private by architecture."
 ---
 
 # Why the Virtual Assistant Industry Is About to Be Disrupted by On-Device AI
