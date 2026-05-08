@@ -194,7 +194,7 @@ export const useAppStore = create<AppState>()(
     (set, get) => ({
       themeMode: 'system' as ThemeMode,
       setThemeMode: (mode) => set({ themeMode: mode }),
-      language: 'en' as Language,
+      language: 'zh-CN' as Language,
       setLanguage: (lang) => set({ language: lang }),
       hasCompletedOnboarding: false,
       setOnboardingComplete: (complete) =>

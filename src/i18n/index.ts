@@ -15,7 +15,7 @@ export const languageOptions = [
 
 i18n.use(initReactI18next).init({
   resources,
-  lng: 'en',
+  lng: 'zh-CN',
   fallbackLng: 'en',
   interpolation: {
     escapeValue: false,
