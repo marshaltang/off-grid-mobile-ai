@@ -1,0 +1,135 @@
+{
+  "common": {
+    "loading": "加载中...",
+    "error": "错误",
+    "cancel": "取消",
+    "confirm": "确认",
+    "save": "保存",
+    "delete": "删除",
+    "edit": "编辑",
+    "back": "返回",
+    "done": "完成",
+    "search": "搜索",
+    "settings": "设置",
+    "close": "关闭"
+  },
+  "tabs": {
+    "home": "首页",
+    "chats": "对话",
+    "projects": "项目",
+    "knowledge": "知识库",
+    "settingsTab": "设置"
+  },
+  "home": {
+    "title": "Off Grid",
+    "subtitle": "本地 AI 助手",
+    "activeModels": "已加载模型",
+    "recentConversations": "最近对话",
+    "noActiveModel": "未选择模型",
+    "tapToSelectModel": "点击选择模型",
+    "noConversations": "暂无对话",
+    "startNewChat": "开始新对话"
+  },
+  "chats": {
+    "title": "对话",
+    "newChat": "新对话",
+    "searchChats": "搜索对话...",
+    "noChats": "暂无对话",
+    "deleteChat": "删除对话",
+    "deleteConfirm": "确定要删除这个对话吗？"
+  },
+  "projects": {
+    "title": "项目",
+    "newProject": "新建项目",
+    "projectName": "项目名称",
+    "projectDescription": "描述（可选）",
+    "noProjects": "暂无项目",
+    "deleteProject": "删除项目",
+    "deleteConfirm": "确定要删除这个项目吗？"
+  },
+  "knowledge": {
+    "title": "知识库",
+    "addDocuments": "添加文档",
+    "noDocuments": "暂无文档",
+    "indexing": "索引中...",
+    "ready": "就绪",
+    "search": "搜索知识库..."
+  },
+  "settings": {
+    "title": "设置",
+    "language": "语言",
+    "theme": "主题",
+    "themeSystem": "跟随系统",
+    "themeLight": "浅色",
+    "themeDark": "深色",
+    "modelSettings": "模型设置",
+    "voiceSettings": "语音设置",
+    "storageSettings": "存储设置",
+    "securitySettings": "安全设置",
+    "about": "关于",
+    "version": "版本",
+    "deviceInfo": "设备信息"
+  },
+  "modelSettings": {
+    "title": "模型设置",
+    "textGeneration": "文本生成",
+    "imageGeneration": "图像生成",
+    "systemPrompt": "系统提示词",
+    "temperature": "温度",
+    "maxTokens": "最大令牌数",
+    "contextLength": "上下文长度",
+    "advanced": "高级",
+    "resetToDefaults": "恢复默认设置",
+    "resetConfirm": "这将恢复所有模型设置到默认值。"
+  },
+  "voiceSettings": {
+    "title": "语音设置",
+    "enableVoice": "启用语音输入",
+    "speechRecognition": "语音识别",
+    "transcription": "转录"
+  },
+  "storageSettings": {
+    "title": "存储设置",
+    "downloadedModels": "已下载模型",
+    "imageModels": "图像模型",
+    "orphanedFiles": "孤立文件",
+    "clearCache": "清除缓存",
+    "storageUsed": "存储空间使用"
+  },
+  "securitySettings": {
+    "title": "安全设置",
+    "passphrase": "密码锁定",
+    "enablePassphrase": "启用密码锁定",
+    "setPassphrase": "设置密码",
+    "changePassphrase": "更改密码"
+  },
+  "security": {
+    "enterPassphrase": "输入密码",
+    "confirmPassphrase": "确认密码",
+    "passphraseHint": "密码至少需要6个字符",
+    "passphraseMismatch": "两次密码不一致",
+    "unlock": "解锁"
+  },
+  "download": {
+    "download": "下载",
+    "downloading": "下载中...",
+    "downloaded": "已下载",
+    "delete": "删除",
+    "size": "大小",
+    "progress": "进度"
+  },
+  "generation": {
+    "generating": "生成中...",
+    "thinking": "思考中",
+    "stop": "停止",
+    "regenerate": "重新生成",
+    "copy": "复制",
+    "share": "分享"
+  },
+  "errors": {
+    "modelLoadFailed": "加载模型失败",
+    "downloadFailed": "下载失败",
+    "networkError": "网络错误",
+    "unknownError": "发生未知错误"
+  }
+}

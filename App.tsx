@@ -16,6 +16,8 @@ import logger from './src/utils/logger';
 import { useAppStore, useAuthStore, useRemoteServerStore } from './src/stores';
 import { LockScreen } from './src/screens';
 import { useAppState } from './src/hooks/useAppState';
+import './src/i18n';
+import i18n from './src/i18n';
 
 LogBox.ignoreAllLogs(); // Suppress all logs
 
@@ -36,6 +38,14 @@ function App() {
   const clearImageModelDownloading = useAppStore((s) => s.clearImageModelDownloading);
 
   const { colors, isDark } = useTheme();
+
+  const language = useAppStore((s) => s.language);
+
+  useEffect(() => {
+    if (language && language !== i18n.language) {
+      i18n.changeLanguage(language);
+    }
+  }, [language]);
 
   const {
     isEnabled: authEnabled,

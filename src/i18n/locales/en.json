@@ -1,0 +1,135 @@
+{
+  "common": {
+    "loading": "Loading...",
+    "error": "Error",
+    "cancel": "Cancel",
+    "confirm": "Confirm",
+    "save": "Save",
+    "delete": "Delete",
+    "edit": "Edit",
+    "back": "Back",
+    "done": "Done",
+    "search": "Search",
+    "settings": "Settings",
+    "close": "Close"
+  },
+  "tabs": {
+    "home": "Home",
+    "chats": "Chats",
+    "projects": "Projects",
+    "knowledge": "Knowledge",
+    "settingsTab": "Settings"
+  },
+  "home": {
+    "title": "Off Grid",
+    "subtitle": "On-Device AI",
+    "activeModels": "Active Models",
+    "recentConversations": "Recent Conversations",
+    "noActiveModel": "No model selected",
+    "tapToSelectModel": "Tap to select a model",
+    "noConversations": "No conversations yet",
+    "startNewChat": "Start a new chat"
+  },
+  "chats": {
+    "title": "Chats",
+    "newChat": "New Chat",
+    "searchChats": "Search chats...",
+    "noChats": "No chats yet",
+    "deleteChat": "Delete chat",
+    "deleteConfirm": "Are you sure you want to delete this chat?"
+  },
+  "projects": {
+    "title": "Projects",
+    "newProject": "New Project",
+    "projectName": "Project name",
+    "projectDescription": "Description (optional)",
+    "noProjects": "No projects yet",
+    "deleteProject": "Delete project",
+    "deleteConfirm": "Are you sure you want to delete this project?"
+  },
+  "knowledge": {
+    "title": "Knowledge Base",
+    "addDocuments": "Add Documents",
+    "noDocuments": "No documents added",
+    "indexing": "Indexing...",
+    "ready": "Ready",
+    "search": "Search knowledge..."
+  },
+  "settings": {
+    "title": "Settings",
+    "language": "Language",
+    "theme": "Theme",
+    "themeSystem": "System",
+    "themeLight": "Light",
+    "themeDark": "Dark",
+    "modelSettings": "Model Settings",
+    "voiceSettings": "Voice Settings",
+    "storageSettings": "Storage Settings",
+    "securitySettings": "Security Settings",
+    "about": "About",
+    "version": "Version",
+    "deviceInfo": "Device Info"
+  },
+  "modelSettings": {
+    "title": "Model Settings",
+    "textGeneration": "Text Generation",
+    "imageGeneration": "Image Generation",
+    "systemPrompt": "System Prompt",
+    "temperature": "Temperature",
+    "maxTokens": "Max Tokens",
+    "contextLength": "Context Length",
+    "advanced": "Advanced",
+    "resetToDefaults": "Reset to Defaults",
+    "resetConfirm": "This will restore all model settings to defaults."
+  },
+  "voiceSettings": {
+    "title": "Voice Settings",
+    "enableVoice": "Enable Voice Input",
+    "speechRecognition": "Speech Recognition",
+    "transcription": "Transcription"
+  },
+  "storageSettings": {
+    "title": "Storage Settings",
+    "downloadedModels": "Downloaded Models",
+    "imageModels": "Image Models",
+    "orphanedFiles": "Orphaned Files",
+    "clearCache": "Clear Cache",
+    "storageUsed": "Storage Used"
+  },
+  "securitySettings": {
+    "title": "Security Settings",
+    "passphrase": "Passphrase Lock",
+    "enablePassphrase": "Enable Passphrase Lock",
+    "setPassphrase": "Set Passphrase",
+    "changePassphrase": "Change Passphrase"
+  },
+  "security": {
+    "enterPassphrase": "Enter Passphrase",
+    "confirmPassphrase": "Confirm Passphrase",
+    "passphraseHint": "Passphrase must be at least 6 characters",
+    "passphraseMismatch": "Passphrases do not match",
+    "unlock": "Unlock"
+  },
+  "download": {
+    "download": "Download",
+    "downloading": "Downloading...",
+    "downloaded": "Downloaded",
+    "delete": "Delete",
+    "size": "Size",
+    "progress": "Progress"
+  },
+  "generation": {
+    "generating": "Generating...",
+    "thinking": "Thinking",
+    "stop": "Stop",
+    "regenerate": "Regenerate",
+    "copy": "Copy",
+    "share": "Share"
+  },
+  "errors": {
+    "modelLoadFailed": "Failed to load model",
+    "downloadFailed": "Download failed",
+    "networkError": "Network error",
+    "unknownError": "An unknown error occurred"
+  }
+}

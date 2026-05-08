@@ -34,10 +34,13 @@ type AppSettings = {
 };
 
 type ThemeMode = 'system' | 'light' | 'dark';
+type Language = 'en' | 'zh-CN';
 
 interface AppState {
   themeMode: ThemeMode;
   setThemeMode: (mode: ThemeMode) => void;
+  language: Language;
+  setLanguage: (lang: Language) => void;
   hasCompletedOnboarding: boolean;
   setOnboardingComplete: (complete: boolean) => void;
   onboardingChecklist: OnboardingChecklist;
@@ -191,6 +194,8 @@ export const useAppStore = create<AppState>()(
     (set, get) => ({
       themeMode: 'system' as ThemeMode,
       setThemeMode: (mode) => set({ themeMode: mode }),
+      language: 'en' as Language,
+      setLanguage: (lang) => set({ language: lang }),
       hasCompletedOnboarding: false,
       setOnboardingComplete: (complete) =>
         set({ hasCompletedOnboarding: complete }),
@@ -352,6 +357,7 @@ export const useAppStore = create<AppState>()(
       merge: migratePersistedState,
       partialize: (state) => ({
         themeMode: state.themeMode,
+        language: state.language,
         hasCompletedOnboarding: state.hasCompletedOnboarding,
         onboardingChecklist: state.onboardingChecklist,
         checklistDismissed: state.checklistDismissed,

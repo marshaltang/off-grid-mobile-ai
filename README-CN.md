@@ -141,6 +141,10 @@ npm run test:e2e      # 运行 Maestro E2E 流程 (需要运行中的应用)
 
 ## 文档
 
+```bash
+cd website && bundle exec jekyll serve
+```
+
 | 文档 | 描述 |
 |----------|-------------|
 | [架构与技术参考](docs/ARCHITECTURE.md) | 系统架构、设计模式、原生模块、性能调优 |
