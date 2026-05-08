@@ -141,9 +141,12 @@ npm run test:e2e      # 运行 Maestro E2E 流程 (需要运行中的应用)
 
 ## 文档
 
+for website
+
 ```bash
 cd website && bundle exec jekyll serve
 ```
+for docs
 
 | 文档 | 描述 |
 |----------|-------------|
