@@ -220,7 +220,7 @@ export const SettingsScreen: React.FC = () => {
               <Text style={styles.aboutValue}>{packageJson.version}</Text>
             </View>
             <Text style={styles.aboutText}>
-              Off Grid brings AI to your device without compromising your privacy.
+              Off Grid brings AI to your device without compromising your privacy. This fork from the original 0.0.89 and add https://hf-mirror.com
             </Text>
           </Card>
         </AnimatedEntry>

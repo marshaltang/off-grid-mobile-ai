@@ -81,11 +81,11 @@ android {
 
     namespace "ai.offgridmobile"
     defaultConfig {
-        applicationId "ai.offgridmobile"
+        applicationId "ai.offgridmobile.cn"
         minSdkVersion rootProject.ext.minSdkVersion
         targetSdkVersion rootProject.ext.targetSdkVersion
-        versionCode 1776434971
-        versionName "0.0.89"
+        versionCode 2026050889
+        versionName "2026.0508.89"
     }
     signingConfigs {
         debug {
@@ -117,7 +117,7 @@ android {
             applicationIdSuffix ".dev"
         }
         release {
-            signingConfig signingConfigs.release.storeFile ? signingConfigs.release : signingConfigs.debug
+            signingConfig signingConfigs.release
             minifyEnabled enableProguardInReleaseBuilds
             proguardFiles getDefaultProguardFile("proguard-android.txt"), "proguard-rules.pro"
         }
