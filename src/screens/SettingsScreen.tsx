@@ -24,6 +24,7 @@ import { TYPOGRAPHY, SPACING } from '../constants';
 import DeviceInfo from 'react-native-device-info';
 import RNFS from 'react-native-fs';
 import { useAppStore, useRemoteServerStore } from '../stores';
+import type { Language } from '../stores/appStore';
 import { languageOptions } from '../i18n';
 import { useTranslation } from 'react-i18next';
 import { hardwareService } from '../services';
