@@ -1,20 +1,22 @@
 import React, { useCallback, useRef } from 'react';
-import { View, Text, TouchableOpacity, StyleSheet } from 'react-native';
-import { SafeAreaView } from 'react-native-safe-area-context';
-import { useFocusEffect, useRoute, RouteProp } from '@react-navigation/native';
-import { MainTabParamList } from '../../navigation/types';
-import Icon from 'react-native-vector-icons/Feather';
-import { AttachStep } from 'react-native-spotlight-tour';
-import { CustomAlert, hideAlert } from '../../components/CustomAlert';
-import { RECOMMENDED_MODELS } from '../../constants';
-import { useTheme, useThemedStyles } from '../../theme';
-import { useModelsScreen } from './useModelsScreen';
-import { createStyles } from './styles';
-import { initialFilterState } from './constants';
-import { TextModelsTab } from './TextModelsTab';
-import { ImageModelsTab } from './ImageModelsTab';
+  import { View, Text, TouchableOpacity, StyleSheet } from 'react-native';
+  import { SafeAreaView } from 'react-native-safe-area-context';
+  import { useFocusEffect, useRoute, RouteProp } from '@react-navigation/native';
+  import { MainTabParamList } from '../../navigation/types';
+  import Icon from 'react-native-vector-icons/Feather';
+  import { AttachStep } from 'react-native-spotlight-tour';
+  import { CustomAlert, hideAlert } from '../../components/CustomAlert';
+  import { RECOMMENDED_MODELS } from '../../constants';
+  import { useTheme, useThemedStyles } from '../../theme';
+  import { useModelsScreen } from './useModelsScreen';
+  import { createStyles } from './styles';
+  import { initialFilterState } from './constants';
+  import { TextModelsTab } from './TextModelsTab';
+  import { ImageModelsTab } from './ImageModelsTab';
+  import { useTranslation } from 'react-i18next';
 
 export const ModelsScreen: React.FC = () => {
+  const { t } = useTranslation();
   const { colors } = useTheme();
   const styles = useThemedStyles(createStyles);
   const vm = useModelsScreen();
@@ -50,25 +52,25 @@ export const ModelsScreen: React.FC = () => {
       {/* Collapse header/import/tabs when showing model detail — detail has its own header.
            Use height:0 + overflow:hidden instead of unmounting so AttachStep components
            stay registered with the SpotlightTourProvider (prevents broken spotlight overlays). */}
-      <View style={isShowingDetail ? collapsedStyle.hidden : undefined}>
-        {/* Header */}
-        <View style={styles.header}>
-          <Text style={styles.title}>Models</Text>
-          <AttachStep index={10}>
-            <TouchableOpacity
-              style={styles.downloadManagerButton}
-              onPress={() => vm.navigation.navigate('DownloadManager')}
-              testID="downloads-icon"
-            >
-              <Icon name="download" size={20} color={colors.text} />
-              {vm.totalModelCount > 0 && (
-                <View style={styles.downloadBadge}>
-                  <Text style={styles.downloadBadgeText}>{vm.totalModelCount}</Text>
-                </View>
-              )}
-            </TouchableOpacity>
-          </AttachStep>
-        </View>
+       <View style={isShowingDetail ? collapsedStyle.hidden : undefined}>
+         {/* Header */}
+         <View style={styles.header}>
+           <Text style={styles.title}>{t('models.title')}</Text>
+           <AttachStep index={10}>
+             <TouchableOpacity
+               style={styles.downloadManagerButton}
+               onPress={() => vm.navigation.navigate('DownloadManager')}
+               testID="downloads-icon"
+             >
+               <Icon name="download" size={20} color={colors.text} />
+               {vm.totalModelCount > 0 && (
+                 <View style={styles.downloadBadge}>
+                   <Text style={styles.downloadBadgeText}>{vm.totalModelCount}</Text>
+                 </View>
+               )}
+             </TouchableOpacity>
+           </AttachStep>
+         </View>
 
         {/* Import Local File */}
         <View>
@@ -87,43 +89,43 @@ export const ModelsScreen: React.FC = () => {
                 {Math.round(vm.importProgress.fraction * 100)}%
               </Text>
             </View>
-          ) : (
-            <TouchableOpacity style={styles.importButton} onPress={vm.handleImportLocalModel} testID="import-local-model" disabled={vm.isImporting}>
-              <Icon name="folder-plus" size={20} color={colors.primary} />
-              <Text style={styles.importButtonText}>Import Local File</Text>
-            </TouchableOpacity>
+           ) : (
+             <TouchableOpacity style={styles.importButton} onPress={vm.handleImportLocalModel} testID="import-local-model" disabled={vm.isImporting}>
+               <Icon name="folder-plus" size={20} color={colors.primary} />
+               <Text style={styles.importButtonText}>{t('models.importButtonText')}</Text>
+             </TouchableOpacity>
           )}
         </View>
 
-        {/* Tab Bar */}
-        <View style={styles.tabBar}>
-          <TouchableOpacity
-            style={styles.tabItem}
-            onPress={() => {
-              vm.setActiveTab('text');
-              vm.setFilterState(initialFilterState);
-              vm.setTextFiltersVisible(false);
-              vm.setImageFiltersVisible(false);
-            }}
-          >
-            <Text style={[styles.tabText, vm.activeTab === 'text' && styles.tabTextActive]}>Text Models</Text>
-            {vm.activeTab === 'text' && <View style={styles.tabIndicator} />}
-          </TouchableOpacity>
-          <AttachStep index={4}>
-            <TouchableOpacity
-              style={styles.tabItem}
-              onPress={() => {
-                vm.setActiveTab('image');
-                vm.setFilterState(initialFilterState);
-                vm.setTextFiltersVisible(false);
-                vm.setImageFiltersVisible(false);
-              }}
-            >
-              <Text style={[styles.tabText, vm.activeTab === 'image' && styles.tabTextActive]}>Image Models</Text>
-              {vm.activeTab === 'image' && <View style={styles.tabIndicator} />}
-            </TouchableOpacity>
-          </AttachStep>
-        </View>
+         {/* Tab Bar */}
+         <View style={styles.tabBar}>
+           <TouchableOpacity
+             style={styles.tabItem}
+             onPress={() => {
+               vm.setActiveTab('text');
+               vm.setFilterState(initialFilterState);
+               vm.setTextFiltersVisible(false);
+               vm.setImageFiltersVisible(false);
+             }}
+           >
+             <Text style={[styles.tabText, vm.activeTab === 'text' && styles.tabTextActive]}>{t('models.tabText.text')}</Text>
+             {vm.activeTab === 'text' && <View style={styles.tabIndicator} />}
+           </TouchableOpacity>
+           <AttachStep index={4}>
+             <TouchableOpacity
+               style={styles.tabItem}
+               onPress={() => {
+                 vm.setActiveTab('image');
+                 vm.setFilterState(initialFilterState);
+                 vm.setTextFiltersVisible(false);
+                 vm.setImageFiltersVisible(false);
+               }}
+             >
+               <Text style={[styles.tabText, vm.activeTab === 'image' && styles.tabTextActive]}>{t('models.tabText.image')}</Text>
+               {vm.activeTab === 'image' && <View style={styles.tabIndicator} />}
+             </TouchableOpacity>
+           </AttachStep>
+         </View>
       </View>
 
       {/* Text Models Tab */}

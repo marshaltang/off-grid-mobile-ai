@@ -13,12 +13,14 @@ import { CustomAlert, showAlert, hideAlert, AlertState, initialAlertState } from
 import { useTheme, useThemedStyles } from '../theme';
 import { SPACING } from '../constants';
 import { useAppStore, useChatStore } from '../stores';
-import { hardwareService, modelManager } from '../services';
-import { OrphanedFilesSection } from './OrphanedFilesSection';
-import { createStyles } from './StorageSettingsScreen.styles';
+  import { hardwareService, modelManager } from '../services';
+  import { OrphanedFilesSection } from './OrphanedFilesSection';
+  import { createStyles } from './StorageSettingsScreen.styles';
+  import { useTranslation } from 'react-i18next';
 
 export const StorageSettingsScreen: React.FC = () => {
   const navigation = useNavigation();
+  const { t } = useTranslation();
   const { colors } = useTheme();
   const styles = useThemedStyles(createStyles);
   const [storageUsed, setStorageUsed] = useState(0);
@@ -85,18 +87,18 @@ export const StorageSettingsScreen: React.FC = () => {
   return (
     <SafeAreaView style={styles.container} edges={['top']}>
       <View style={styles.header}>
-        <TouchableOpacity
-          style={styles.backButton}
-          onPress={() => navigation.goBack()}
-        >
-          <Icon name="arrow-left" size={20} color={colors.text} />
-        </TouchableOpacity>
-        <Text style={styles.title}>Storage</Text>
-      </View>
+         <TouchableOpacity
+           style={styles.backButton}
+           onPress={() => navigation.goBack()}
+         >
+           <Icon name="arrow-left" size={20} color={colors.text} />
+         </TouchableOpacity>
+         <Text style={styles.title}>{t('storageSettings.title')}</Text>
+       </View>
 
       <ScrollView style={styles.scrollView} contentContainerStyle={styles.content}>
-        <Card style={styles.section}>
-          <Text style={styles.sectionTitle}>Storage Usage</Text>
+         <Card style={styles.section}>
+           <Text style={styles.sectionTitle}>{t('storageSettings.storageUsage')}</Text>
           <View style={styles.storageBar}>
             <View style={[styles.storageUsed, { width: `${Math.min(usedPercentage, 100)}%` }]} />
           </View>
@@ -112,29 +114,29 @@ export const StorageSettingsScreen: React.FC = () => {
           </View>
         </Card>
 
-        <Card style={styles.section}>
-          <Text style={styles.sectionTitle}>Breakdown</Text>
+         <Card style={styles.section}>
+           <Text style={styles.sectionTitle}>{t('storageSettings.breakdown')}</Text>
           <View style={styles.infoRow}>
-            <View style={styles.infoRowLeft}>
-              <Icon name="cpu" size={18} color={colors.primary} />
-              <Text style={styles.infoLabel}>LLM Models</Text>
-            </View>
+           <View style={styles.infoRowLeft}>
+             <Icon name="cpu" size={18} color={colors.primary} />
+             <Text style={styles.infoLabel}>{t('storageSettings.infoLabels.llmModels')}</Text>
+           </View>
             <Text style={styles.infoValue}>{downloadedModels.length}</Text>
           </View>
-          <View style={styles.infoRow}>
-            <View style={styles.infoRowLeft}>
-              <Icon name="image" size={18} color={colors.primary} />
-              <Text style={styles.infoLabel}>Image Models</Text>
-            </View>
-            <Text style={styles.infoValue}>{downloadedImageModels.length}</Text>
-          </View>
-          <View style={styles.infoRow}>
-            <View style={styles.infoRowLeft}>
-              <Icon name="hard-drive" size={18} color={colors.primary} />
-              <Text style={styles.infoLabel}>Model Storage</Text>
-            </View>
-            <Text style={styles.infoValue}>{hardwareService.formatBytes(storageUsed)}</Text>
-          </View>
+           <View style={styles.infoRow}>
+             <View style={styles.infoRowLeft}>
+               <Icon name="image" size={18} color={colors.primary} />
+               <Text style={styles.infoLabel}>{t('storageSettings.infoLabels.imageModels')}</Text>
+             </View>
+             <Text style={styles.infoValue}>{downloadedImageModels.length}</Text>
+           </View>
+           <View style={styles.infoRow}>
+             <View style={styles.infoRowLeft}>
+               <Icon name="hard-drive" size={18} color={colors.primary} />
+               <Text style={styles.infoLabel}>{t('storageSettings.infoLabels.modelStorage')}</Text>
+             </View>
+             <Text style={styles.infoValue}>{hardwareService.formatBytes(storageUsed)}</Text>
+           </View>
           <View style={[styles.infoRow, styles.lastRow]}>
             <View style={styles.infoRowLeft}>
               <Icon name="message-circle" size={18} color={colors.primary} />

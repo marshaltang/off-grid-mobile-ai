@@ -8,7 +8,7 @@
 
 **聊天。生成图像。使用工具。看。听。全部在手机或 Mac 上完成。完全离线。零数据离开你的设备。**
 
-[![GitHub stars](https://img.shields.io/github/stars/alichherawalla/off-grid-mobile?style=social)](https://github.com/alichherawalla/off-grid-mobile)
+[![GitHub stars](https://img.shields.io/github/stars/alichherawalla/off-grid-mobile?style=social)](https://github.com/marshaltang/off-grid-mobile-ai)
 [![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE)
 [![Google Play](https://img.shields.io/badge/Google%20Play-下载-brightgreen?logo=google-play)](https://play.google.com/store/apps/details?id=ai.offgridmobile)
 [![App Store](https://img.shields.io/badge/App%20Store-下载-blue?logo=apple)](https://apps.apple.com/us/app/off-grid-local-ai/id6759299882)
@@ -87,7 +87,7 @@
 </tr></table>
 </div>
 
-或从 [**GitHub Releases**](https://github.com/alichherawalla/off-grid-mobile/releases/latest) 获取最新 APK。
+或从 [**GitHub Releases**](https://github.com/marshaltang/off-grid-mobile-ai/releases/latest) 获取最新 APK。
 
 > **macOS**：iOS App Store 版本通过 Mac Catalyst / iPad 兼容性在 Apple Silicon Mac 上原生运行。
 
@@ -101,7 +101,7 @@ tar -xzvf exagon-sdk-v6.4.0.2-amd64-lnx.tar.xz  ~/.hexagon-sdk/
 export HEXAGON_SDK_ROOT=~/.hexagon-sdk/6.4.0.
 export HEXAGON_TOOLS_ROOT=~/.hexagon-sdk/6.4.0.2/tools/HEXAGON_Tools/19.0.4
 
-git clone https://github.com/alichherawalla/off-grid-mobile.git
+git clone https://github.com/marshaltang/off-grid-mobile-ai.git
 cd off-grid-mobile
 npm install
 
@@ -120,7 +120,7 @@ npm run ios
 
 ## 测试
 
-[![CI](https://github.com/alichherawalla/off-grid-mobile/actions/workflows/ci.yml/badge.svg)](https://github.com/alichherawalla/off-grid-mobile/actions/workflows/ci.yml)
+[![CI](https://github.com/marshaltang/off-grid-mobile-ai/actions/workflows/ci.yml/badge.svg)](https://github.com/marshaltang/off-grid-mobile-ai/actions/workflows/ci.yml)
 [![codecov](https://codecov.io/gh/alichherawalla/off-grid-mobile/graph/badge.svg)](https://codecov.io/gh/alichherawalla/off-grid-mobile)
 
 每次 PR 都会在三个平台上运行测试：

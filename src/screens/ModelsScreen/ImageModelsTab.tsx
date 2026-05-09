@@ -7,12 +7,13 @@ import { ModelCard } from '../../components';
 import { consumePendingSpotlight } from '../../components/onboarding/spotlightState';
 import { useTheme, useThemedStyles } from '../../theme';
 import { HFImageModel, getVariantLabel } from '../../services/huggingFaceModelBrowser';
-import { ImageModelRecommendation } from '../../types';
-import { createStyles } from './styles';
-import { ModelsScreenViewModel } from './useModelsScreen';
-import { ImageFilterBar } from './ImageFilterBar';
-import { BackendFilter, ImageFilterDimension } from './types';
-import { formatBytes, getImageModelCompatibility, hfModelToDescriptor } from './utils';
+  import { ImageModelRecommendation } from '../../types';
+  import { createStyles } from './styles';
+  import { ModelsScreenViewModel } from './useModelsScreen';
+  import { ImageFilterBar } from './ImageFilterBar';
+  import { BackendFilter, ImageFilterDimension } from './types';
+  import { formatBytes, getImageModelCompatibility, hfModelToDescriptor } from './utils';
+  import { useTranslation } from 'react-i18next';
 
 type Props = Pick<ModelsScreenViewModel,
   | 'imageSearchQuery' | 'setImageSearchQuery'
@@ -155,14 +156,14 @@ const ImageModelsScrollContent: React.FC<ScrollContentProps> = ({
       }
     }
   }, [hfModelsLoading, filteredHFModels.length, goTo]);
-  let emptyMessage: string;
-  if (imageSearchQuery.trim()) {
-    emptyMessage = 'No models match your search';
-  } else if (hasActiveImageFilters) {
-    emptyMessage = 'No models match your filters';
-  } else {
-    emptyMessage = 'All available models are downloaded';
-  }
+   let emptyMessage: string;
+   if (imageSearchQuery.trim()) {
+     emptyMessage = t('models.imageModelsTab.emptyMessages.noSearchResults');
+   } else if (hasActiveImageFilters) {
+     emptyMessage = t('models.imageModelsTab.emptyMessages.noFilterResults');
+   } else {
+     emptyMessage = t('models.imageModelsTab.emptyMessages.allDownloaded');
+   }
 
   return (
     <ScrollView keyboardShouldPersistTaps="handled">
@@ -176,12 +177,12 @@ const ImageModelsScrollContent: React.FC<ScrollContentProps> = ({
           </TouchableOpacity>
         )}
 
-        <View style={styles.deviceBanner}>
-          <Text style={styles.deviceBannerText}>{Math.round(ramGB)}GB RAM — {imageRecommendation}</Text>
-          {imageRec?.warning && (
-            <Text style={[styles.deviceBannerText, styles.deviceBannerWarning]}>{imageRec.warning}</Text>
-          )}
-        </View>
+         <View style={styles.deviceBanner}>
+           <Text style={styles.deviceBannerText}>{t('models.imageModelsTab.deviceBanner', { ramGB: Math.round(ramGB), recommendation: imageRecommendation })}</Text>
+           {imageRec?.warning && (
+             <Text style={[styles.deviceBannerText, styles.deviceBannerWarning]}>{t('models.imageModelsTab.imageRec.warning', { warning: imageRec.warning })}</Text>
+           )}
+         </View>
 
         {imageFiltersVisible && (
           <ImageFilterBar
@@ -199,21 +200,21 @@ const ImageModelsScrollContent: React.FC<ScrollContentProps> = ({
           />
         )}
 
-        {hfModelsLoading && (
-          <View style={styles.hfLoadingContainer}>
-            <ActivityIndicator size="small" color={colors.primary} />
-            <Text style={styles.loadingText}>Loading models...</Text>
-          </View>
-        )}
+         {hfModelsLoading && (
+           <View style={styles.hfLoadingContainer}>
+             <ActivityIndicator size="small" color={colors.primary} />
+             <Text style={styles.loadingText}>{t('models.imageModelsTab.loadingText')}</Text>
+           </View>
+         )}
 
-        {hfModelsError && !hfModelsLoading && (
-          <View style={styles.hfErrorContainer}>
-            <Text style={styles.hfErrorText}>{hfModelsError}</Text>
-            <TouchableOpacity style={styles.retryButton} onPress={() => loadHFModels(true)}>
-              <Text style={styles.retryButtonText}>Retry</Text>
-            </TouchableOpacity>
-          </View>
-        )}
+         {hfModelsError && !hfModelsLoading && (
+           <View style={styles.hfErrorContainer}>
+             <Text style={styles.hfErrorText}>{t('models.imageModelsTab.hfErrorText')}</Text>
+             <TouchableOpacity style={styles.retryButton} onPress={() => loadHFModels(true)}>
+               <Text style={styles.retryButtonText}>{t('models.imageModelsTab.retryButtonText')}</Text>
+             </TouchableOpacity>
+           </View>
+         )}
 
         {!hfModelsLoading && !hfModelsError && filteredHFModels.map(
           (model, index) => {

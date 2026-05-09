@@ -38,15 +38,18 @@
     "deleteChat": "Delete chat",
     "deleteConfirm": "Are you sure you want to delete this chat?"
   },
-  "projects": {
-    "title": "Projects",
-    "newProject": "New Project",
-    "projectName": "Project name",
-    "projectDescription": "Description (optional)",
-    "noProjects": "No projects yet",
-    "deleteProject": "Delete project",
-    "deleteConfirm": "Are you sure you want to delete this project?"
-  },
+   "projects": {
+     "title": "Projects",
+     "newProject": "New Project",
+     "projectName": "Project name",
+     "projectDescription": "Description (optional)",
+     "noProjects": "No projects yet",
+     "deleteProject": "Delete project",
+     "deleteConfirm": "Are you sure you want to delete this project?",
+     "subtitle": "Projects group related chats with shared context and instructions.",
+     "createProject": "Create Project",
+     "createProjectDescription": "Create a project to organize your chats by topic, like \"Spanish Learning\" or \"Code Review\"."
+   },
   "knowledge": {
     "title": "Knowledge Base",
     "addDocuments": "Add Documents",
@@ -82,35 +85,107 @@
     "resetToDefaults": "Reset to Defaults",
     "resetConfirm": "This will restore all model settings to defaults."
   },
-  "voiceSettings": {
-    "title": "Voice Settings",
-    "enableVoice": "Enable Voice Input",
-    "speechRecognition": "Speech Recognition",
-    "transcription": "Transcription"
+   "voiceSettings": {
+     "title": "Voice Settings",
+     "enableVoice": "Enable Voice Input",
+     "speechRecognition": "Speech Recognition",
+     "transcription": "Transcription",
+     "voiceTranscription": "Voice Transcription",
+     "modelStatus": {
+       "downloaded": "Downloaded"
+     },
+     "selectLabel": "Select a model to download:",
+     "privacyTitle": "Privacy First"
+   },
+  "settings": {
+    "title": "Settings",
+    "language": "Language",
+    "theme": "Theme",
+    "github": {
+      "star": "Star on GitHub",
+      "support": "Support the open-source project"
+    },
+    "feedback": {
+      "title": "Send Feedback",
+      "description": "Report a bug or share a suggestion"
+    },
+    "share": {
+      "title": "Share on X",
+      "description": "Tell others about Off Grid"
+    },
+    "about": {
+      "version": "Version",
+      "description": "Off Grid brings AI to your device without compromising your privacy. This fork from the original 0.0.89 and add https://hf-mirror.com"
+    },
+    "privacy": {
+      "title": "Privacy First",
+      "description": "All your data stays on this device. No conversations, prompts, or personal information is ever sent to any server."
+    },
+    "onboarding": {
+      "reset": "Reset Onboarding",
+      "resetChecklist": "Reset Onboarding Checklist"
+    }
   },
-  "storageSettings": {
-    "title": "Storage Settings",
-    "downloadedModels": "Downloaded Models",
-    "imageModels": "Image Models",
-    "orphanedFiles": "Orphaned Files",
-    "clearCache": "Clear Cache",
-    "storageUsed": "Storage Used"
-  },
-  "securitySettings": {
-    "title": "Security Settings",
-    "passphrase": "Passphrase Lock",
-    "enablePassphrase": "Enable Passphrase Lock",
-    "setPassphrase": "Set Passphrase",
-    "changePassphrase": "Change Passphrase"
-  },
-  "security": {
-    "enterPassphrase": "Enter Passphrase",
-    "confirmPassphrase": "Confirm Passphrase",
-    "passphraseHint": "Passphrase must be at least 6 characters",
-    "passphraseMismatch": "Passphrases do not match",
-    "unlock": "Unlock"
-  },
-  "download": {
+   "storageSettings": {
+     "title": "Storage Settings",
+     "downloadedModels": "Downloaded Models",
+     "imageModels": "Image Models",
+     "orphanedFiles": "Orphaned Files",
+     "clearCache": "Clear Cache",
+     "storageUsed": "Storage Used",
+     "storageUsage": "Storage Usage",
+     "breakdown": "Breakdown",
+     "infoLabels": {
+       "llmModels": "LLM Models",
+       "imageModels": "Image Models",
+       "modelStorage": "Model Storage",
+       "conversations": "Conversations"
+     }
+   },
+   "orphanedFiles": {
+     "sectionTitle": "Orphaned Files",
+     "deleteAllText": "Delete All Orphaned Files"
+   },
+   "remoteServers": {
+     "title": "Remote Servers",
+     "emptyTitle": "No Remote Servers",
+     "emptyDescription": "Connect to Ollama, LM Studio, or other LLM servers on your network",
+     "addButtonText": "Add Server",
+     "addAnother": "Add Another Server",
+     "scanNetwork": "Scan Network",
+     "scanning": "Scanning...",
+     "test": "Test",
+     "edit": "Edit",
+     "delete": "Delete",
+     "infoTitle": "About Remote Servers",
+     "status": {
+       "unknown": "Unknown",
+       "testing": "Testing...",
+       "connected": "Connected",
+       "offline": "Offline"
+     }
+   },
+   "securitySettings": {
+     "title": "Security Settings",
+     "passphrase": "Passphrase Lock",
+     "enablePassphrase": "Enable Passphrase Lock",
+     "setPassphrase": "Set Passphrase",
+     "changePassphrase": "Change Passphrase"
+   },
+   "security": {
+     "title": "Security",
+     "sectionTitle": "App Lock",
+     "settingLabel": "Passphrase Lock",
+     "settingHint": "Require passphrase to open app",
+     "infoText": "When enabled, the app will lock automatically when you switch away or close it. Your passphrase is stored securely on device and never transmitted.",
+     "changePassphrase": "Change Passphrase",
+     "enterPassphrase": "Enter Passphrase",
+     "confirmPassphrase": "Confirm Passphrase",
+     "passphraseHint": "Passphrase must be at least 6 characters",
+     "passphraseMismatch": "Passphrases do not match",
+     "unlock": "Unlock"
+   },
+   "download": {
     "download": "Download",
     "downloading": "Downloading...",
     "downloaded": "Downloaded",
@@ -126,10 +201,42 @@
     "copy": "Copy",
     "share": "Share"
   },
-  "errors": {
-    "modelLoadFailed": "Failed to load model",
-    "downloadFailed": "Download failed",
-    "networkError": "Network error",
-    "unknownError": "An unknown error occurred"
-  }
-}
+   "models": {
+     "title": "Models",
+     "importButtonText": "Import Local File",
+     "tabText": {
+       "text": "Text Models",
+       "image": "Image Models"
+     },
+     "textModelsTab": {
+       "sectionTitle": {
+         "availableFiles": "Available Files"
+       },
+       "sectionSubtitle": {
+         "quantizationLevel": "Choose a quantization level. Q4_K_M is recommended for mobile.",
+         "visionFiles": " Vision files include mmproj."
+       },
+       "emptyText": "No compatible files found for this model."
+     },
+     "imageModelsTab": {
+       "deviceBanner": "{ramGB}GB RAM — {recommendation}",
+       "loadingText": "Loading models...",
+       "hfErrorText": "Failed to load models from Hugging Face",
+       "retryButtonText": "Retry",
+       "allDownloadedText": "{emptyMessage}",
+       "retry": "Retry",
+       "clearFilters": "Clear",
+       "emptyMessages": {
+         "noSearchResults": "No models match your search",
+         "noFilterResults": "No models match your filters",
+         "allDownloaded": "All available models are downloaded"
+       }
+     }
+   },
+   "errors": {
+     "modelLoadFailed": "Failed to load model",
+     "downloadFailed": "Download failed",
+     "networkError": "Network error",
+     "unknownError": "An unknown error occurred"
+   }
+ }

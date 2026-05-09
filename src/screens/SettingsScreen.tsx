@@ -214,30 +214,30 @@ export const SettingsScreen: React.FC = () => {
               <View style={styles.navItemIcon}>
                 <Icon name="star" size={16} color={colors.textSecondary} />
               </View>
-              <View style={styles.navItemContent}>
-                <Text style={styles.navItemTitle}>Star on GitHub</Text>
-                <Text style={styles.navItemDesc}>Support the open-source project</Text>
-              </View>
+               <View style={styles.navItemContent}>
+                 <Text style={styles.navItemTitle}>{t('settings.github.star')}</Text>
+                 <Text style={styles.navItemDesc}>{t('settings.github.support')}</Text>
+               </View>
               <Icon name="external-link" size={14} color={colors.textMuted} />
             </TouchableOpacity>
             <TouchableOpacity style={styles.navItem} onPress={handleSendFeedback}>
               <View style={styles.navItemIcon}>
                 <Icon name="mail" size={16} color={colors.textSecondary} />
               </View>
-              <View style={styles.navItemContent}>
-                <Text style={styles.navItemTitle}>Send Feedback</Text>
-                <Text style={styles.navItemDesc}>Report a bug or share a suggestion</Text>
-              </View>
+               <View style={styles.navItemContent}>
+                 <Text style={styles.navItemTitle}>{t('settings.feedback.title')}</Text>
+                 <Text style={styles.navItemDesc}>{t('settings.feedback.description')}</Text>
+               </View>
               <Icon name="external-link" size={14} color={colors.textMuted} />
             </TouchableOpacity>
             <TouchableOpacity style={[styles.navItem, styles.navItemLast]} onPress={() => Linking.openURL(SHARE_ON_X_URL)}>
               <View style={styles.navItemIcon}>
                 <Icon name="share-2" size={16} color={colors.textSecondary} />
               </View>
-              <View style={styles.navItemContent}>
-                <Text style={styles.navItemTitle}>Share on X</Text>
-                <Text style={styles.navItemDesc}>Tell others about Off Grid</Text>
-              </View>
+               <View style={styles.navItemContent}>
+                 <Text style={styles.navItemTitle}>{t('settings.share.title')}</Text>
+                 <Text style={styles.navItemDesc}>{t('settings.share.description')}</Text>
+               </View>
               <Icon name="external-link" size={14} color={colors.textMuted} />
             </TouchableOpacity>
           </View>
@@ -246,41 +246,40 @@ export const SettingsScreen: React.FC = () => {
         {/* About */}
         <AnimatedEntry index={7} staggerMs={40} trigger={focusTrigger}>
           <Card style={styles.section}>
-            <View style={styles.aboutRow}>
-              <Text style={styles.aboutLabel}>Version</Text>
-              <Text style={styles.aboutValue}>{packageJson.version}</Text>
-            </View>
-            <Text style={styles.aboutText}>
-              Off Grid brings AI to your device without compromising your privacy. This fork from the original 0.0.89 and add https://hf-mirror.com
-            </Text>
+             <View style={styles.aboutRow}>
+               <Text style={styles.aboutLabel}>{t('settings.about.version')}</Text>
+               <Text style={styles.aboutValue}>{packageJson.version}</Text>
+             </View>
+             <Text style={styles.aboutText}>
+               {t('settings.about.description')}
+             </Text>
           </Card>
         </AnimatedEntry>
 
         {/* Privacy */}
         <AnimatedEntry index={8} staggerMs={40} trigger={focusTrigger}>
-          <Card style={styles.privacyCard}>
-            <View style={styles.privacyIconContainer}>
-              <Icon name="shield" size={18} color={colors.textSecondary} />
-            </View>
-            <Text style={styles.privacyTitle}>Privacy First</Text>
-            <Text style={styles.privacyText}>
-              All your data stays on this device. No conversations, prompts, or
-              personal information is ever sent to any server.
-            </Text>
-          </Card>
+           <Card style={styles.privacyCard}>
+             <View style={styles.privacyIconContainer}>
+               <Icon name="shield" size={18} color={colors.textSecondary} />
+             </View>
+             <Text style={styles.privacyTitle}>{t('settings.privacy.title')}</Text>
+             <Text style={styles.privacyText}>
+               {t('settings.privacy.description')}
+             </Text>
+           </Card>
         </AnimatedEntry>
 
         {/* Reset Onboarding */}
         <AnimatedEntry index={9} staggerMs={40} trigger={focusTrigger}>
           <View style={styles.devButtonGroup}>
-            <TouchableOpacity style={styles.devButton} onPress={handleResetOnboarding}>
-              <Icon name="rotate-ccw" size={14} color={colors.textMuted} />
-              <Text style={styles.devButtonText}>Reset Onboarding</Text>
-            </TouchableOpacity>
-            <TouchableOpacity style={styles.devButton} onPress={resetChecklist}>
-              <Icon name="list" size={14} color={colors.textMuted} />
-              <Text style={styles.devButtonText}>Reset Onboarding Checklist</Text>
-            </TouchableOpacity>
+             <TouchableOpacity style={styles.devButton} onPress={handleResetOnboarding}>
+               <Icon name="rotate-ccw" size={14} color={colors.textMuted} />
+               <Text style={styles.devButtonText}>{t('settings.onboarding.reset')}</Text>
+             </TouchableOpacity>
+             <TouchableOpacity style={styles.devButton} onPress={resetChecklist}>
+               <Icon name="list" size={14} color={colors.textMuted} />
+               <Text style={styles.devButtonText}>{t('settings.onboarding.resetChecklist')}</Text>
+             </TouchableOpacity>
           </View>
         </AnimatedEntry>
         <MadeWithLove />

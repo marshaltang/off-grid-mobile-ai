@@ -11,12 +11,13 @@ import { useTheme, useThemedStyles } from '../../theme';
 import { needsVisionRepair as checkNeedsVisionRepair } from '../../utils/visionRepair';
 import { CREDIBILITY_LABELS } from '../../constants';
 import { ModelInfo, ModelFile } from '../../types';
-import { createStyles } from './styles';
-import { ModelsScreenViewModel } from './useModelsScreen';
-import { TextFiltersSection } from './TextFiltersSection';
-import { FilterState, SortOption } from './types';
-import { SORT_OPTIONS } from './constants';
-import { formatNumber, getTextModelCompatibility } from './utils';
+  import { createStyles } from './styles';
+  import { ModelsScreenViewModel } from './useModelsScreen';
+  import { TextFiltersSection } from './TextFiltersSection';
+  import { FilterState, SortOption } from './types';
+  import { SORT_OPTIONS } from './constants';
+  import { formatNumber, getTextModelCompatibility } from './utils';
+  import { useTranslation } from 'react-i18next';
 
 function hasNonSortFilters(fs: FilterState): boolean {
   return fs.orgs.length > 0 || fs.type !== 'all' || fs.source !== 'all' || fs.size !== 'all' || fs.quant !== 'all';
@@ -142,11 +143,11 @@ const ModelDetailView: React.FC<DetailProps> = ({
           <Text style={styles.statText}>{formatNumber(selectedModel.likes)} likes</Text>
         </View>
       </Card>
-      <Text style={styles.sectionTitle}>Available Files</Text>
-      <Text style={styles.sectionSubtitle}>
-        Choose a quantization level. Q4_K_M is recommended for mobile.
-        {modelFiles.some(f => f.mmProjFile) && ' Vision files include mmproj.'}
-      </Text>
+       <Text style={styles.sectionTitle}>{t('models.textModelsTab.sectionTitle.availableFiles')}</Text>
+       <Text style={styles.sectionSubtitle}>
+         {t('models.textModelsTab.sectionSubtitle.quantizationLevel')}
+         {modelFiles.some(f => f.mmProjFile) && t('models.textModelsTab.sectionSubtitle.visionFiles')}
+       </Text>
       {isLoadingFiles ? (
         <View style={styles.loadingContainer}><ActivityIndicator size="large" color={colors.primary} /></View>
       ) : (
@@ -162,7 +163,7 @@ const ModelDetailView: React.FC<DetailProps> = ({
           renderItem={renderFileItem}
           keyExtractor={item => item.name}
           contentContainerStyle={styles.listContent}
-          ListEmptyComponent={<Card style={styles.emptyCard}><Text style={styles.emptyText}>No compatible files found for this model.</Text></Card>}
+           ListEmptyComponent={<Card style={styles.emptyCard}><Text style={styles.emptyText}>{t('models.textModelsTab.emptyText')}</Text></Card>}
         />
       )}
       <CustomAlert {...alertState} onClose={() => setAlertState(hideAlert())} />

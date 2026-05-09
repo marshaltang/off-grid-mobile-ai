@@ -15,10 +15,12 @@ import { useTheme, useThemedStyles } from '../theme';
 import type { ThemeColors, ThemeShadows } from '../theme';
 import { TYPOGRAPHY, SPACING } from '../constants';
 import { useWhisperStore } from '../stores';
-import { WHISPER_MODELS } from '../services';
+  import { WHISPER_MODELS } from '../services';
+  import { useTranslation } from 'react-i18next';
 
 export const VoiceSettingsScreen: React.FC = () => {
   const navigation = useNavigation();
+  const { t } = useTranslation();
   const { colors } = useTheme();
   const styles = useThemedStyles(createStyles);
   const [alertState, setAlertState] = useState<AlertState>(initialAlertState);
@@ -35,13 +37,13 @@ export const VoiceSettingsScreen: React.FC = () => {
   return (
     <SafeAreaView style={styles.container} edges={['top']}>
       <View style={styles.header}>
-        <TouchableOpacity
-          style={styles.backButton}
-          onPress={() => navigation.goBack()}
-        >
-          <Icon name="arrow-left" size={20} color={colors.text} />
-        </TouchableOpacity>
-        <Text style={styles.title}>Voice Transcription</Text>
+         <TouchableOpacity
+           style={styles.backButton}
+           onPress={() => navigation.goBack()}
+         >
+           <Icon name="arrow-left" size={20} color={colors.text} />
+         </TouchableOpacity>
+         <Text style={styles.title}>{t('voiceSettings.voiceTranscription')}</Text>
       </View>
 
       <ScrollView style={styles.scrollView} contentContainerStyle={styles.content}>
@@ -58,7 +60,7 @@ export const VoiceSettingsScreen: React.FC = () => {
                     <Text style={styles.modelName}>
                       {WHISPER_MODELS.find(m => m.id === whisperModelId)?.name || whisperModelId}
                     </Text>
-                    <Text style={styles.modelStatus}>Downloaded</Text>
+                     <Text style={styles.modelStatus}>{t('voiceSettings.modelStatus.downloaded')}</Text>
                   </View>
                   <Button
                     title="Remove Model"
@@ -103,7 +105,7 @@ export const VoiceSettingsScreen: React.FC = () => {
             }
             return (
               <View style={styles.modelList}>
-                <Text style={styles.selectLabel}>Select a model to download:</Text>
+                 <Text style={styles.selectLabel}>{t('voiceSettings.selectLabel')}</Text>
                 {WHISPER_MODELS.slice(0, 3).map((model) => (
                   <TouchableOpacity
                     key={model.id}
@@ -132,10 +134,10 @@ export const VoiceSettingsScreen: React.FC = () => {
           <View style={styles.privacyIconContainer}>
             <Icon name="mic" size={18} color={colors.textSecondary} />
           </View>
-          <Text style={styles.privacyTitle}>Privacy First</Text>
-          <Text style={styles.privacyText}>
-            Voice transcription happens entirely on your device. Your audio is never sent to any server or stored anywhere.
-          </Text>
+           <Text style={styles.privacyTitle}>{t('voiceSettings.privacyTitle')}</Text>
+           <Text style={styles.privacyText}>
+             {t('voiceSettings.privacyText')}
+           </Text>
         </Card>
       </ScrollView>
       <CustomAlert

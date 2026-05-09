@@ -1,10 +1,11 @@
 import React from 'react';
-import { View, Text, TouchableOpacity, ScrollView, Platform } from 'react-native';
-import { useThemedStyles } from '../../theme';
-import { SPACING } from '../../constants';
-import { createStyles } from './styles';
-import { BackendFilter, ImageFilterDimension } from './types';
-import { BACKEND_OPTIONS, SD_VERSION_OPTIONS, STYLE_OPTIONS } from './constants';
+  import { View, Text, TouchableOpacity, ScrollView, Platform } from 'react-native';
+  import { useThemedStyles } from '../../theme';
+  import { SPACING } from '../../constants';
+  import { createStyles } from './styles';
+  import { BackendFilter, ImageFilterDimension } from './types';
+  import { BACKEND_OPTIONS, SD_VERSION_OPTIONS, STYLE_OPTIONS } from './constants';
+  import { useTranslation } from 'react-i18next';
 
 interface Props {
   backendFilter: BackendFilter;
@@ -112,13 +113,19 @@ const FilterExpandedSection: React.FC<ExpandedSectionProps> = ({
 };
 
 export const ImageFilterBar: React.FC<Props> = ({
-  backendFilter, setBackendFilter,
-  styleFilter, setStyleFilter,
-  sdVersionFilter, setSdVersionFilter,
-  imageFilterExpanded, setImageFilterExpanded,
-  hasActiveImageFilters, clearImageFilters,
-  setUserChangedBackendFilter,
+  backendFilter,
+  setBackendFilter,
+  styleFilter,
+  setStyleFilter,
+  sdVersionFilter,
+  setSdVersionFilter,
+  imageFilterExpanded,
+  setImageFilterExpanded,
+  hasActiveImageFilters,
+  clearImageFilters,
+  setUserChangedBackendFilter
 }) => {
+  const { t } = useTranslation();
   const styles = useThemedStyles(createStyles);
 
   const backendLabel = getBackendLabel(backendFilter);
@@ -160,7 +167,7 @@ export const ImageFilterBar: React.FC<Props> = ({
         )}
         {hasActiveImageFilters && (
           <TouchableOpacity style={styles.clearFiltersButton} onPress={clearImageFilters}>
-            <Text style={styles.clearFiltersText}>Clear</Text>
+             <Text style={styles.clearFiltersText}>{t('models.imageModelsTab.clearFilters')}</Text>
           </TouchableOpacity>
         )}
       </ScrollView>

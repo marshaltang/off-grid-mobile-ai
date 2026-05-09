@@ -22,6 +22,7 @@ import { useTheme, useThemedStyles } from '../theme';
 import type { ThemeColors, ThemeShadows } from '../theme';
 import { TYPOGRAPHY, SPACING } from '../constants';
 import { useProjectStore, useChatStore } from '../stores';
+import { useTranslation } from 'react-i18next';
 import { Project } from '../types';
 import { RootStackParamList, MainTabParamList } from '../navigation/types';
 
@@ -33,6 +34,7 @@ type NavigationProp = CompositeNavigationProp<
 export const ProjectsScreen: React.FC = () => {
   const navigation = useNavigation<NavigationProp>();
   const focusTrigger = useFocusTrigger();
+  const { t } = useTranslation();
   const { colors } = useTheme();
   const styles = useThemedStyles(createStyles);
   const { projects, deleteProject } = useProjectStore();
@@ -121,22 +123,22 @@ export const ProjectsScreen: React.FC = () => {
 
   return (
     <SafeAreaView style={styles.container} edges={['top']}>
-      <View style={styles.header}>
-        <Text style={styles.title}>Projects</Text>
-        <AttachStep index={7}>
-          <Button
-            title="New"
-            variant="primary"
-            size="small"
-            onPress={handleNewProject}
-            icon={<Icon name="plus" size={16} color={colors.primary} />}
-          />
-        </AttachStep>
-      </View>
+       <View style={styles.header}>
+         <Text style={styles.title}>{t('projects.title')}</Text>
+         <AttachStep index={7}>
+           <Button
+             title={t('projects.newProject')}
+             variant="primary"
+             size="small"
+             onPress={handleNewProject}
+             icon={<Icon name="plus" size={16} color={colors.primary} />}
+           />
+         </AttachStep>
+       </View>
 
-      <Text style={styles.subtitle}>
-        Projects group related chats with shared context and instructions.
-      </Text>
+       <Text style={styles.subtitle}>
+         {t('projects.subtitle')}
+       </Text>
 
       {projects.length === 0 ? (
         <View style={styles.emptyState}>
@@ -145,20 +147,20 @@ export const ProjectsScreen: React.FC = () => {
               <Icon name="folder" size={20} color={colors.textMuted} />
             </View>
           </AnimatedEntry>
-          <AnimatedEntry index={1} staggerMs={60} trigger={focusTrigger}>
-            <Text style={styles.emptyTitle}>No Projects Yet</Text>
-          </AnimatedEntry>
-          <AnimatedEntry index={2} staggerMs={60} trigger={focusTrigger}>
-            <Text style={styles.emptyText}>
-              Create a project to organize your chats by topic, like "Spanish Learning" or "Code Review".
-            </Text>
-          </AnimatedEntry>
-          <AnimatedEntry index={3} staggerMs={60} trigger={focusTrigger}>
-            <TouchableOpacity style={styles.emptyButton} onPress={handleNewProject}>
-              <Icon name="plus" size={14} color={colors.primary} />
-              <Text style={styles.emptyButtonText}>Create Project</Text>
-            </TouchableOpacity>
-          </AnimatedEntry>
+           <AnimatedEntry index={1} staggerMs={60} trigger={focusTrigger}>
+             <Text style={styles.emptyTitle}>{t('projects.noProjects')}</Text>
+           </AnimatedEntry>
+           <AnimatedEntry index={2} staggerMs={60} trigger={focusTrigger}>
+             <Text style={styles.emptyText}>
+               {t('projects.createProjectDescription')}
+             </Text>
+           </AnimatedEntry>
+           <AnimatedEntry index={3} staggerMs={60} trigger={focusTrigger}>
+             <TouchableOpacity style={styles.emptyButton} onPress={handleNewProject}>
+               <Icon name="plus" size={14} color={colors.primary} />
+               <Text style={styles.emptyButtonText}>{t('projects.createProject')}</Text>
+             </TouchableOpacity>
+           </AnimatedEntry>
         </View>
       ) : (
         <FlatList

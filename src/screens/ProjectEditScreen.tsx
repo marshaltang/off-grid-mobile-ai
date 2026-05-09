@@ -20,6 +20,7 @@ import type { ThemeColors, ThemeShadows } from '../theme';
 import { TYPOGRAPHY, SPACING } from '../constants';
 import { useProjectStore } from '../stores';
 import { RootStackParamList } from '../navigation/types';
+import { useTranslation } from 'react-i18next';
 
 type NavigationProp = NativeStackNavigationProp<RootStackParamList, 'ProjectEdit'>;
 type RouteProps = RouteProp<RootStackParamList, 'ProjectEdit'>;
@@ -32,6 +33,7 @@ export const ProjectEditScreen: React.FC = () => {
   const { colors } = useTheme();
   const styles = useThemedStyles(createStyles);
 
+  const { t } = useTranslation();
   const { goTo } = useSpotlightTour();
   const { getProject, createProject, updateProject } = useProjectStore();
   const existingProject = projectId ? getProject(projectId) : null;
@@ -97,13 +99,13 @@ export const ProjectEditScreen: React.FC = () => {
         {/* Header */}
         <View style={styles.header}>
           <TouchableOpacity onPress={() => navigation.goBack()} style={styles.headerButton}>
-            <Text style={styles.cancelText}>Cancel</Text>
+            <Text style={styles.cancelText}>{t('common.cancel')}</Text>
           </TouchableOpacity>
           <Text style={styles.headerTitle}>
-            {existingProject ? 'Edit Project' : 'New Project'}
+            {existingProject ? t('project.editTitle') : t('project.newTitle')}
           </Text>
           <TouchableOpacity onPress={handleSave} style={styles.headerButton}>
-            <Text style={styles.saveText}>Save</Text>
+            <Text style={styles.saveText}>{t('common.save')}</Text>
           </TouchableOpacity>
         </View>
 
@@ -113,44 +115,44 @@ export const ProjectEditScreen: React.FC = () => {
           keyboardShouldPersistTaps="handled"
         >
           {/* Name */}
-          <Text style={styles.label}>Name *</Text>
+          <Text style={styles.label}>{t('project.name')} *</Text>
           <AttachStep index={8} fill>
             <TextInput
               style={styles.input}
               value={formData.name}
               onChangeText={(text) => setFormData({ ...formData, name: text })}
-              placeholder="e.g., Spanish Learning, Code Review"
+              placeholder={t('project.namePlaceholder')}
               placeholderTextColor={colors.textMuted}
             />
           </AttachStep>
 
           {/* Description */}
-          <Text style={styles.label}>Description</Text>
+          <Text style={styles.label}>{t('project.description')}</Text>
           <TextInput
             style={styles.input}
             value={formData.description}
             onChangeText={(text) => setFormData({ ...formData, description: text })}
-            placeholder="Brief description of this project"
+            placeholder={t('project.descriptionPlaceholder')}
             placeholderTextColor={colors.textMuted}
           />
 
           {/* System Prompt */}
-          <Text style={styles.label}>System Prompt *</Text>
+          <Text style={styles.label}>{t('project.systemPrompt')} *</Text>
           <Text style={styles.hint}>
-            This context is sent to the AI at the start of every chat in this project.
+            {t('project.systemPromptHint')}
           </Text>
           <TextInput
             style={[styles.input, styles.textArea]}
             value={formData.systemPrompt}
             onChangeText={(text) => setFormData({ ...formData, systemPrompt: text })}
-            placeholder="Enter the instructions or context for the AI..."
+            placeholder={t('project.systemPromptPlaceholder')}
             placeholderTextColor={colors.textMuted}
             multiline
             textAlignVertical="top"
           />
 
           <Text style={styles.tip}>
-            Tip: Be specific about what you want the AI to do, how it should respond, and any context it needs.
+            {t('project.systemPromptTip')}
           </Text>
 
           <View style={styles.bottomPadding} />

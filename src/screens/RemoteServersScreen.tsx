@@ -18,17 +18,19 @@ import { useNavigation } from '@react-navigation/native';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { useTheme, useThemedStyles } from '../theme';
 import { useRemoteServerStore } from '../stores';
-import { RemoteServerModal } from '../components/RemoteServerModal';
-import { RootStackParamList } from '../navigation/types';
-import { remoteServerManager } from '../services/remoteServerManager';
-import { discoverLANServers } from '../services/networkDiscovery';
-import { CustomAlert, AlertState, initialAlertState, showAlert } from '../components/CustomAlert';
-import { createStyles } from './RemoteServersScreen.styles';
+  import { RemoteServerModal } from '../components/RemoteServerModal';
+  import { RootStackParamList } from '../navigation/types';
+  import { remoteServerManager } from '../services/remoteServerManager';
+  import { discoverLANServers } from '../services/networkDiscovery';
+  import { CustomAlert, AlertState, initialAlertState, showAlert } from '../components/CustomAlert';
+  import { createStyles } from './RemoteServersScreen.styles';
+  import { useTranslation } from 'react-i18next';
 
 type NavigationProp = NativeStackNavigationProp<RootStackParamList, 'RemoteServers'>;
 
 export const RemoteServersScreen: React.FC = () => {
   const navigation = useNavigation<NavigationProp>();
+  const { t } = useTranslation();
   const theme = useTheme();
   const styles = useThemedStyles(createStyles);
   const { servers, serverHealth, testConnection, activeServerId, setActiveServerId } = useRemoteServerStore();
@@ -115,37 +117,37 @@ export const RemoteServersScreen: React.FC = () => {
 
   return (
     <SafeAreaView style={styles.container} edges={['top']}>
-      <View style={styles.header}>
-        <TouchableOpacity style={styles.backButton} onPress={() => navigation.goBack()}>
-          <Icon name="chevron-left" size={24} color={theme.colors.text} />
-        </TouchableOpacity>
-        <Text style={styles.title}>Remote Servers</Text>
-      </View>
+       <View style={styles.header}>
+         <TouchableOpacity style={styles.backButton} onPress={() => navigation.goBack()}>
+           <Icon name="chevron-left" size={24} color={theme.colors.text} />
+         </TouchableOpacity>
+         <Text style={styles.title}>{t('remoteServers.title')}</Text>
+       </View>
 
       <ScrollView style={styles.scrollView} contentContainerStyle={styles.content}>
         {servers.length === 0 ? (
           <View style={styles.emptyState}>
-            <View style={styles.emptyIcon}>
-              <Icon name="wifi" size={32} color={theme.colors.textMuted} />
-            </View>
-            <Text style={styles.emptyTitle}>No Remote Servers</Text>
-            <Text style={styles.emptyText}>
-              Connect to Ollama, LM Studio, or other LLM servers on your network
-            </Text>
-            <TouchableOpacity style={styles.addButton} onPress={() => setShowAddModal(true)}>
-              <Icon name="plus" size={20} color={theme.colors.background} />
-              <Text style={styles.addButtonText}>Add Server</Text>
-            </TouchableOpacity>
-            <TouchableOpacity style={styles.scanButton} onPress={handleScanNetwork} disabled={isScanning}>
-              {isScanning ? (
-                <ActivityIndicator size="small" color={theme.colors.text} />
-              ) : (
-                <Icon name="wifi" size={20} color={theme.colors.text} />
-              )}
-              <Text style={styles.scanButtonText}>{isScanning ? 'Scanning...' : 'Scan Network'}</Text>
-            </TouchableOpacity>
-          </View>
-        ) : (
+             <View style={styles.emptyIcon}>
+               <Icon name="wifi" size={32} color={theme.colors.textMuted} />
+             </View>
+             <Text style={styles.emptyTitle}>{t('remoteServers.emptyTitle')}</Text>
+             <Text style={styles.emptyText}>
+               {t('remoteServers.emptyDescription')}
+             </Text>
+             <TouchableOpacity style={styles.addButton} onPress={() => setShowAddModal(true)}>
+               <Icon name="plus" size={20} color={theme.colors.background} />
+               <Text style={styles.addButtonText}>{t('remoteServers.addButtonText')}</Text>
+             </TouchableOpacity>
+             <TouchableOpacity style={styles.scanButton} onPress={handleScanNetwork} disabled={isScanning}>
+               {isScanning ? (
+                 <ActivityIndicator size="small" color={theme.colors.text} />
+               ) : (
+                 <Icon name="wifi" size={20} color={theme.colors.text} />
+               )}
+               <Text style={styles.scanButtonText}>{isScanning ? t('remoteServers.scanning') : t('remoteServers.scanNetwork')}</Text>
+             </TouchableOpacity>
+           </View>
+         ) : (
           <>
             {servers.map((server) => {
               const isTesting = testingId === server.id;
@@ -155,10 +157,10 @@ export const RemoteServersScreen: React.FC = () => {
               if (health?.isHealthy === true) statusColor = styles.statusDotActive;
               else if (health?.isHealthy === false) statusColor = styles.statusDotInactive;
 
-              let statusText = 'Unknown';
-              if (isTesting) statusText = 'Testing...';
-              else if (health?.isHealthy === true) statusText = 'Connected';
-              else if (health?.isHealthy === false) statusText = 'Offline';
+               let statusText = t('remoteServers.status.unknown');
+               if (isTesting) statusText = t('remoteServers.status.testing');
+               else if (health?.isHealthy === true) statusText = t('remoteServers.status.connected');
+               else if (health?.isHealthy === false) statusText = t('remoteServers.status.offline');
 
               return (
                 <View key={server.id} style={styles.serverItem}>
@@ -192,26 +194,26 @@ export const RemoteServersScreen: React.FC = () => {
                     <TouchableOpacity
                       style={styles.actionButton}
                       onPress={() => setEditingServer(server)}
-                    >
-                      <Icon name="edit-2" size={16} color={theme.colors.text} />
-                      <Text style={styles.actionButtonText}>Edit</Text>
+                     >
+                       <Icon name="edit-2" size={16} color={theme.colors.text} />
+                       <Text style={styles.actionButtonText}>{t('remoteServers.edit')}</Text>
                     </TouchableOpacity>
-                    <TouchableOpacity
-                      style={[styles.actionButton, styles.deleteButton]}
-                      onPress={() => handleDeleteServer(server)}
-                    >
-                      <Icon name="trash-2" size={16} color={theme.colors.error} />
-                      <Text style={[styles.actionButtonText, styles.deleteButtonText]}>Delete</Text>
-                    </TouchableOpacity>
+                     <TouchableOpacity
+                       style={[styles.actionButton, styles.deleteButton]}
+                       onPress={() => handleDeleteServer(server)}
+                     >
+                       <Icon name="trash-2" size={16} color={theme.colors.error} />
+                       <Text style={[styles.actionButtonText, styles.deleteButtonText]}>{t('remoteServers.delete')}</Text>
+                     </TouchableOpacity>
                   </View>
                 </View>
               );
             })}
 
-            <TouchableOpacity style={styles.addButton} onPress={() => setShowAddModal(true)}>
-              <Icon name="plus" size={20} color={theme.colors.background} />
-              <Text style={styles.addButtonText}>Add Another Server</Text>
-            </TouchableOpacity>
+             <TouchableOpacity style={styles.addButton} onPress={() => setShowAddModal(true)}>
+               <Icon name="plus" size={20} color={theme.colors.background} />
+               <Text style={styles.addButtonText}>{t('remoteServers.addAnother')}</Text>
+             </TouchableOpacity>
             <TouchableOpacity style={styles.scanButton} onPress={handleScanNetwork} disabled={isScanning}>
               {isScanning ? (
                 <ActivityIndicator size="small" color={theme.colors.text} />

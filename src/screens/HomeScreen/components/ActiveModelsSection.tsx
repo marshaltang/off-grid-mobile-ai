@@ -7,14 +7,16 @@ import { useTheme, useThemedStyles } from '../../../theme';
 import { createStyles } from '../styles';
 import { DownloadedModel, ONNXImageModel, RemoteModel } from '../../../types';
 import { LoadingState } from '../hooks/useHomeScreen';
+import { useTranslation } from 'react-i18next';
 
 function ModelLoadingState({ loadingState, styles }: { loadingState: LoadingState; styles: ReturnType<typeof createStyles> }) {
+  const { t } = useTranslation();
   return (
     <>
       <Text style={styles.modelCardName} numberOfLines={1}>
-        {loadingState.modelName || 'Unloading...'}
+        {loadingState.modelName || t('home.unloading')}
       </Text>
-      <Text style={styles.modelCardLoading}>Loading...</Text>
+      <Text style={styles.modelCardLoading}>{t('common.loading')}</Text>
     </>
   );
 }
@@ -51,6 +53,7 @@ const TextModelCard: React.FC<TextModelCardProps> = ({
   remoteModelsCount,
   onPress,
 }) => {
+  const { t } = useTranslation();
   const { colors } = useTheme();
   const styles = useThemedStyles(createStyles);
   const isLoading = loadingState.isLoading && loadingState.type === 'text';
@@ -60,7 +63,7 @@ const TextModelCard: React.FC<TextModelCardProps> = ({
     <AnimatedPressable style={styles.modelCard} onPress={onPress} hapticType="selection">
       <View style={styles.modelCardHeader}>
         <Icon name="message-square" size={16} color={colors.textMuted} />
-        <Text style={styles.modelCardLabel}>Text</Text>
+        <Text style={styles.modelCardLabel}>{t('home.text')}</Text>
         {isLoading
           ? <ActivityIndicator size="small" color={colors.primary} />
           : <Icon name="chevron-down" size={14} color={colors.textMuted} />}
@@ -120,6 +123,7 @@ const ImageModelCard: React.FC<ImageModelCardProps> = ({
   remoteModelsCount,
   onPress,
 }) => {
+  const { t } = useTranslation();
   const { colors } = useTheme();
   const styles = useThemedStyles(createStyles);
   const isLoading = loadingState.isLoading && loadingState.type === 'image';
@@ -134,7 +138,7 @@ const ImageModelCard: React.FC<ImageModelCardProps> = ({
     >
       <View style={styles.modelCardHeader}>
         <Icon name="image" size={16} color={colors.textMuted} />
-        <Text style={styles.modelCardLabel}>Image</Text>
+        <Text style={styles.modelCardLabel}>{t('home.image')}</Text>
         {isLoading
           ? <ActivityIndicator size="small" color={colors.primary} />
           : <Icon name="chevron-down" size={14} color={colors.textMuted} />}
@@ -159,11 +163,11 @@ const ImageModelCard: React.FC<ImageModelCardProps> = ({
               </View>
               {isOnnxImageModel(activeImageModel) ? (
                 <Text style={styles.modelCardMeta}>
-                  {activeImageModel.style || 'Ready'} · ~{((activeImageModel.size * 1.8) / (1024 * 1024 * 1024)).toFixed(1)} GB
+                  {activeImageModel.style || t('home.ready')} · ~{((activeImageModel.size * 1.8) / (1024 * 1024 * 1024)).toFixed(1)} GB
                 </Text>
               ) : (
                 <Text style={styles.modelCardMeta}>
-                  Remote · Vision
+                  {t('home.remoteVision')}
                 </Text>
               )}
             </>
@@ -214,6 +218,7 @@ export const ActiveModelsSection: React.FC<Props> = ({
   onPressImageModel,
   onEjectAll,
 }) => {
+  const { t } = useTranslation();
   const { colors } = useTheme();
   const styles = useThemedStyles(createStyles);
   const hasActiveModel = activeModelId || activeImageModelId || activeRemoteTextModelId || activeRemoteImageModelId;
@@ -251,7 +256,7 @@ export const ActiveModelsSection: React.FC<Props> = ({
           ) : (
             <>
               <Icon name="power" size={14} color={colors.error} />
-              <Text style={styles.ejectAllText}>Eject All Models</Text>
+              <Text style={styles.ejectAllText}>{t('home.ejectAll')}</Text>
             </>
           )}
         </TouchableOpacity>

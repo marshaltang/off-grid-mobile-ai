@@ -1,10 +1,11 @@
 import React from 'react';
-import { View, Text, TouchableOpacity, ScrollView } from 'react-native';
-import { useThemedStyles } from '../../theme';
-import { MODEL_ORGS } from '../../constants';
-import { createStyles } from './styles';
-import { FilterState, FilterDimension, ModelTypeFilter, CredibilityFilter, SizeFilter } from './types';
-import { CREDIBILITY_OPTIONS, MODEL_TYPE_OPTIONS, SIZE_OPTIONS, QUANT_OPTIONS } from './constants';
+  import { View, Text, TouchableOpacity, ScrollView } from 'react-native';
+  import { useThemedStyles } from '../../theme';
+  import { MODEL_ORGS } from '../../constants';
+  import { createStyles } from './styles';
+  import { FilterState, FilterDimension, ModelTypeFilter, CredibilityFilter, SizeFilter } from './types';
+  import { CREDIBILITY_OPTIONS, MODEL_TYPE_OPTIONS, SIZE_OPTIONS, QUANT_OPTIONS } from './constants';
+  import { useTranslation } from 'react-i18next';
 
 interface Props {
   filterState: FilterState;
@@ -22,6 +23,7 @@ export const TextFiltersSection: React.FC<Props> = ({
   filterState, hasActiveFilters, clearFilters,
   toggleFilterDimension, toggleOrg, setTypeFilter, setSourceFilter, setSizeFilter, setQuantFilter,
 }) => {
+  const { t } = useTranslation();
   const styles = useThemedStyles(createStyles);
 
   const renderPill = ({ label, isActive, dim, badge }: { label: string; isActive: boolean; dim: FilterDimension; badge?: number }) => (
@@ -55,7 +57,7 @@ export const TextFiltersSection: React.FC<Props> = ({
         {renderPill({ label: quantLabel, isActive: filterState.quant !== 'all', dim: 'quant' })}
         {hasActiveFilters && (
           <TouchableOpacity style={styles.clearFiltersButton} onPress={clearFilters}>
-            <Text style={styles.clearFiltersText}>Clear</Text>
+             <Text style={styles.clearFiltersText}>{t('models.textFilters.clearFilters')}</Text>
           </TouchableOpacity>
         )}
       </ScrollView>

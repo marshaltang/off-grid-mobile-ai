@@ -38,15 +38,18 @@
     "deleteChat": "删除对话",
     "deleteConfirm": "确定要删除这个对话吗？"
   },
-  "projects": {
-    "title": "项目",
-    "newProject": "新建项目",
-    "projectName": "项目名称",
-    "projectDescription": "描述（可选）",
-    "noProjects": "暂无项目",
-    "deleteProject": "删除项目",
-    "deleteConfirm": "确定要删除这个项目吗？"
-  },
+   "projects": {
+     "title": "项目",
+     "newProject": "新建项目",
+     "projectName": "项目名称",
+     "projectDescription": "描述（可选）",
+     "noProjects": "暂无项目",
+     "deleteProject": "删除项目",
+     "deleteConfirm": "确定要删除这个项目吗？",
+     "subtitle": "项目通过共享上下文和说明将相关对话分组。",
+     "createProject": "创建项目",
+     "createProjectDescription": "创建项目以按主题组织对话，例如“西班牙语学习”或“代码审查”。"
+   },
   "knowledge": {
     "title": "知识库",
     "addDocuments": "添加文档",
@@ -88,29 +91,95 @@
     "speechRecognition": "语音识别",
     "transcription": "转录"
   },
-  "storageSettings": {
-    "title": "存储设置",
-    "downloadedModels": "已下载模型",
-    "imageModels": "图像模型",
-    "orphanedFiles": "孤立文件",
-    "clearCache": "清除缓存",
-    "storageUsed": "存储空间使用"
+  "settings": {
+    "title": "设置",
+    "language": "语言",
+    "theme": "主题",
+    "github": {
+      "star": "在 GitHub 上点赞",
+      "support": "支持开源项目"
+    },
+    "feedback": {
+      "title": "发送反馈",
+      "description": "报告错误或分享建议"
+    },
+    "share": {
+      "title": "在 X 上分享",
+      "description": "告诉他人关于 Off Grid CN"
+    },
+    "about": {
+      "version": "版本",
+      "description": "Off Grid CN是从原始github Off Grid 0.0.89 版本分支并汉化界面、添加 https://hf-mirror.com"
+    },
+    "privacy": {
+      "title": "隐私优先",
+      "description": "所有数据都停留在您的设备上。永不会将任何对话、提示或个人信息发送到任何服务器。"
+    },
+    "onboarding": {
+      "reset": "重置引导",
+      "resetChecklist": "重置引导清单"
+    }
   },
-  "securitySettings": {
-    "title": "安全设置",
-    "passphrase": "密码锁定",
-    "enablePassphrase": "启用密码锁定",
-    "setPassphrase": "设置密码",
-    "changePassphrase": "更改密码"
-  },
-  "security": {
-    "enterPassphrase": "输入密码",
-    "confirmPassphrase": "确认密码",
-    "passphraseHint": "密码至少需要6个字符",
-    "passphraseMismatch": "两次密码不一致",
-    "unlock": "解锁"
-  },
-  "download": {
+   "storageSettings": {
+     "title": "存储设置",
+     "downloadedModels": "已下载模型",
+     "imageModels": "图像模型",
+     "orphanedFiles": "孤立文件",
+     "clearCache": "清除缓存",
+     "storageUsed": "存储空间使用",
+     "storageUsage": "存储使用情况",
+     "breakdown": "分解",
+     "infoLabels": {
+       "llmModels": "LLM 模型",
+       "imageModels": "图像模型",
+       "modelStorage": "模型存储",
+       "conversations": "对话"
+     }
+   },
+   "orphanedFiles": {
+     "sectionTitle": "孤立文件",
+     "deleteAllText": "删除所有孤立文件"
+   },
+   "remoteServers": {
+     "title": "远程服务器",
+     "emptyTitle": "没有远程服务器",
+     "emptyDescription": "连接到您网络上的 Ollama、LM Studio 或其他 LLM 服务器",
+     "addButtonText": "添加服务器",
+     "addAnother": "添加另一个服务器",
+     "scanNetwork": "扫描网络",
+     "scanning": "正在扫描...",
+     "test": "测试",
+     "edit": "编辑",
+     "delete": "删除",
+     "infoTitle": "关于远程服务器",
+     "status": {
+       "unknown": "未知",
+       "testing": "正在测试...",
+       "connected": "已连接",
+       "offline": "离线"
+     }
+   },
+   "securitySettings": {
+     "title": "安全设置",
+     "passphrase": "密码锁定",
+     "enablePassphrase": "启用密码锁定",
+     "setPassphrase": "设置密码",
+     "changePassphrase": "更改密码"
+   },
+   "security": {
+     "title": "安全",
+     "sectionTitle": "应用锁定",
+     "settingLabel": "密码锁定",
+     "settingHint": "打开应用时需要密码",
+     "infoText": "启用后，应用会在您切换 away 或关闭时自动锁定。您的密码会安全地存储在设备上，永不会被传输。",
+     "changePassphrase": "更改密码",
+     "enterPassphrase": "输入密码",
+     "confirmPassphrase": "确认密码",
+     "passphraseHint": "密码至少需要6个字符",
+     "passphraseMismatch": "两次密码不一致",
+     "unlock": "解锁"
+   },
+   "download": {
     "download": "下载",
     "downloading": "下载中...",
     "downloaded": "已下载",
@@ -126,10 +195,37 @@
     "copy": "复制",
     "share": "分享"
   },
-  "errors": {
-    "modelLoadFailed": "加载模型失败",
-    "downloadFailed": "下载失败",
-    "networkError": "网络错误",
-    "unknownError": "发生未知错误"
-  }
-}
+   "models": {
+     "title": "模型",
+     "importButtonText": "导入本地文件",
+     "tabText": {
+       "text": "语言模型",
+       "image": "图像模型"
+     },
+     "textModelsTab": {
+       "sectionTitle": {
+         "availableFiles": "可用文件"
+       },
+       "sectionSubtitle": {
+         "quantizationLevel": "选择量化级别。Q4_K_M 适用于移动设备。",
+         "visionFiles": "视觉文件包含 mmproj。"
+       },
+       "emptyText": "未找到兼容的文件为此模型。"
+     },
+     "imageModelsTab": {
+       "deviceBanner": "{ramGB}GB RAM — {recommendation}",
+       "loadingText": "正在加载模型...",
+       "hfErrorText": "从 Hugging Face 加载模型失败",
+       "retryButtonText": "重试",
+       "allDownloadedText": "{emptyMessage}",
+       "retry": "重试",
+       "clearFilters": "清除"
+     }
+   },
+   "errors": {
+     "modelLoadFailed": "加载模型失败",
+     "downloadFailed": "下载失败",
+     "networkError": "网络错误",
+     "unknownError": "发生未知错误"
+   }
+ }

@@ -17,14 +17,16 @@ import { useTheme, useThemedStyles } from '../theme';
 import type { ThemeColors, ThemeShadows } from '../theme';
 import { TYPOGRAPHY, SPACING } from '../constants';
 import { useAuthStore } from '../stores';
-import { authService } from '../services';
-import { PassphraseSetupScreen } from './PassphraseSetupScreen';
+  import { authService } from '../services';
+  import { PassphraseSetupScreen } from './PassphraseSetupScreen';
+  import { useTranslation } from 'react-i18next';
 
 export const SecuritySettingsScreen: React.FC = () => {
   const navigation = useNavigation();
   const [showPassphraseSetup, setShowPassphraseSetup] = useState(false);
   const [isChangingPassphrase, setIsChangingPassphrase] = useState(false);
   const [alertState, setAlertState] = useState<AlertState>(initialAlertState);
+  const { t } = useTranslation();
   const { colors } = useTheme();
   const styles = useThemedStyles(createStyles);
 
@@ -65,50 +67,50 @@ export const SecuritySettingsScreen: React.FC = () => {
 
   return (
     <SafeAreaView style={styles.container} edges={['top']}>
-      <View style={styles.header}>
-        <TouchableOpacity
-          style={styles.backButton}
-          onPress={() => navigation.goBack()}
-        >
-          <Icon name="arrow-left" size={20} color={colors.text} />
-        </TouchableOpacity>
-        <Text style={styles.title}>Security</Text>
-      </View>
+       <View style={styles.header}>
+         <TouchableOpacity
+           style={styles.backButton}
+           onPress={() => navigation.goBack()}
+         >
+           <Icon name="arrow-left" size={20} color={colors.text} />
+         </TouchableOpacity>
+         <Text style={styles.title}>{t('security.title')}</Text>
+       </View>
 
       <ScrollView style={styles.scrollView} contentContainerStyle={styles.content}>
-        <Card style={styles.section}>
-          <Text style={styles.sectionTitle}>App Lock</Text>
-          <View style={styles.settingRow}>
-            <View style={styles.settingInfo}>
-              <Text style={styles.settingLabel}>Passphrase Lock</Text>
-              <Text style={styles.settingHint}>Require passphrase to open app</Text>
-            </View>
-            <Switch
-              value={authEnabled}
-              onValueChange={handleTogglePassphrase}
-              trackColor={{ false: colors.surfaceLight, true: `${colors.primary  }80` }}
-              thumbColor={authEnabled ? colors.primary : colors.textMuted}
-            />
-          </View>
+         <Card style={styles.section}>
+           <Text style={styles.sectionTitle}>{t('security.sectionTitle')}</Text>
+           <View style={styles.settingRow}>
+             <View style={styles.settingInfo}>
+               <Text style={styles.settingLabel}>{t('security.settingLabel')}</Text>
+               <Text style={styles.settingHint}>{t('security.settingHint')}</Text>
+             </View>
+             <Switch
+               value={authEnabled}
+               onValueChange={handleTogglePassphrase}
+               trackColor={{ false: colors.surfaceLight, true: `${colors.primary  }80` }}
+               thumbColor={authEnabled ? colors.primary : colors.textMuted}
+             />
+           </View>
 
-          {authEnabled && (
-            <Button
-              title="Change Passphrase"
-              variant="primary"
-              size="medium"
-              onPress={handleChangePassphrase}
-              icon={<Icon name="edit-2" size={16} color={colors.primary} />}
-              style={{ alignSelf: 'flex-start' as const, marginTop: SPACING.lg }}
-            />
-          )}
+           {authEnabled && (
+             <Button
+               title={t('security.changePassphrase')}
+               variant="primary"
+               size="medium"
+               onPress={handleChangePassphrase}
+               icon={<Icon name="edit-2" size={16} color={colors.primary} />}
+               style={{ alignSelf: 'flex-start' as const, marginTop: SPACING.lg }}
+             />
+           )}
         </Card>
 
-        <Card style={styles.infoCard}>
-          <Icon name="info" size={18} color={colors.textMuted} />
-          <Text style={styles.infoText}>
-            When enabled, the app will lock automatically when you switch away or close it. Your passphrase is stored securely on device and never transmitted.
-          </Text>
-        </Card>
+         <Card style={styles.infoCard}>
+           <Icon name="info" size={18} color={colors.textMuted} />
+           <Text style={styles.infoText}>
+             {t('security.infoText')}
+           </Text>
+         </Card>
       </ScrollView>
 
       <Modal

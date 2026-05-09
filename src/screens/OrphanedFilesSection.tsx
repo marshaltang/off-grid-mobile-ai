@@ -10,9 +10,10 @@ import {
   initialAlertState,
 } from '../components/CustomAlert';
 import { useTheme, useThemedStyles } from '../theme';
-import type { ThemeColors, ThemeShadows } from '../theme';
-import { TYPOGRAPHY, SPACING } from '../constants';
-import { hardwareService, modelManager } from '../services';
+  import type { ThemeColors, ThemeShadows } from '../theme';
+  import { TYPOGRAPHY, SPACING } from '../constants';
+  import { hardwareService, modelManager } from '../services';
+  import { useTranslation } from 'react-i18next';
 
 interface OrphanedFile {
   name: string;
@@ -25,6 +26,7 @@ interface Props {
 }
 
 export const OrphanedFilesSection: React.FC<Props> = ({ onStorageChange }) => {
+  const { t } = useTranslation();
   const { colors } = useTheme();
   const styles = useThemedStyles(createStyles);
   const [orphanedFiles, setOrphanedFiles] = useState<OrphanedFile[]>([]);
@@ -120,10 +122,10 @@ export const OrphanedFilesSection: React.FC<Props> = ({ onStorageChange }) => {
   }, [orphanedFiles, onStorageChange]);
 
   return (
-    <>
-      <Card style={styles.section}>
-        <View style={styles.sectionHeader}>
-          <Text style={styles.sectionTitle}>Orphaned Files</Text>
+     <>
+       <Card style={styles.section}>
+         <View style={styles.sectionHeader}>
+           <Text style={styles.sectionTitle}>{t('orphanedFiles.sectionTitle')}</Text>
           <TouchableOpacity
             style={styles.scanButton}
             onPress={scanForOrphanedFiles}
@@ -170,13 +172,13 @@ export const OrphanedFilesSection: React.FC<Props> = ({ onStorageChange }) => {
                 </TouchableOpacity>
               </View>
             ))}
-            <TouchableOpacity
-              style={styles.deleteAllButton}
-              onPress={handleDeleteAll}
-            >
-              <Icon name="trash-2" size={16} color={colors.error} />
-              <Text style={styles.deleteAllText}>Delete All Orphaned Files</Text>
-            </TouchableOpacity>
+             <TouchableOpacity
+               style={styles.deleteAllButton}
+               onPress={handleDeleteAll}
+             >
+               <Icon name="trash-2" size={16} color={colors.error} />
+               <Text style={styles.deleteAllText}>{t('orphanedFiles.deleteAllText')}</Text>
+             </TouchableOpacity>
           </>
         )}
       </Card>
