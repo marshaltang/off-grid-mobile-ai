@@ -8,6 +8,11 @@
  * - Privacy section
  */
 
+jest.mock('react-i18next', () => ({
+  useTranslation: () => ({ t: (key: string) => require('../../helpers/mockI18n').mockT(key), i18n: { language: 'en', changeLanguage: jest.fn() } }),
+  initReactI18next: { type: '3rdParty', init: jest.fn() },
+}));
+
 import React from 'react';
 import { render, fireEvent } from '@testing-library/react-native';
 
@@ -135,7 +140,7 @@ describe('SettingsScreen', () => {
 
   it('renders theme selector with system/light/dark options', () => {
     const { getByText } = render(<SettingsScreen />);
-    expect(getByText('Appearance')).toBeTruthy();
+    expect(getByText('Theme')).toBeTruthy();
   });
 
   it('calls setThemeMode when theme option is pressed', () => {

@@ -22,6 +22,7 @@ import { useActiveTextModel } from '../hooks/useActiveTextModel';
 import { onnxImageGeneratorService } from '../services';
 import { Conversation } from '../types';
 import { RootStackParamList, MainTabParamList } from '../navigation/types';
+import { useTranslation } from 'react-i18next';
 type NavigationProp = CompositeNavigationProp<
   BottomTabNavigationProp<MainTabParamList, 'ChatsTab'>,
   NativeStackNavigationProp<RootStackParamList>
@@ -29,6 +30,7 @@ type NavigationProp = CompositeNavigationProp<
 
 export const ChatsListScreen: React.FC = () => {
   const navigation = useNavigation<NavigationProp>();
+  const { t } = useTranslation();
   const focusTrigger = useFocusTrigger();
   const { colors } = useTheme();
   const styles = useThemedStyles(createStyles);
@@ -62,7 +64,7 @@ export const ChatsListScreen: React.FC = () => {
 
   const handleNewChat = () => {
     if (!hasModels) {
-      setAlertState(showAlert('No Model', 'Please download a text or image model first.'));
+      setAlertState(showAlert(t('chats.noModel'), t('chats.noModelMessage')));
       return;
     }
     navigation.navigate('Chat', {});
@@ -70,12 +72,12 @@ export const ChatsListScreen: React.FC = () => {
 
   const handleDeleteChat = (conversation: Conversation) => {
     setAlertState(showAlert(
-      'Delete Chat',
-      `Delete "${conversation.title}"? This will also delete all images generated in this chat.`,
+      t('chats.deleteChat'),
+      t('chats.deleteConfirmWithImages', { title: conversation.title }),
       [
-        { text: 'Cancel', style: 'cancel' },
+        { text: t('common.cancel'), style: 'cancel' },
         {
-          text: 'Delete',
+          text: t('common.delete'),
           style: 'destructive',
           onPress: () => {
             setAlertState(hideAlert());
@@ -98,7 +100,7 @@ export const ChatsListScreen: React.FC = () => {
     if (diffDays === 0) {
       return date.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
     } else if (diffDays === 1) {
-      return 'Yesterday';
+      return t('chats.yesterday');
     } else if (diffDays < 7) {
       return date.toLocaleDateString([], { weekday: 'short' });
     } 
@@ -141,7 +143,7 @@ export const ChatsListScreen: React.FC = () => {
             </View>
             {lastMessage && (
               <Text style={styles.chatPreview} numberOfLines={1}>
-                {lastMessage.role === 'user' ? 'You: ' : ''}{lastMessage.content}
+                {lastMessage.role === 'user' ? t('chats.youPrefix') : ''}{lastMessage.content}
               </Text>
             )}
             {project && (
@@ -164,10 +166,10 @@ export const ChatsListScreen: React.FC = () => {
   return (
     <SafeAreaView style={styles.container} edges={['top']}>
       <View style={styles.header}>
-        <Text style={styles.title}>Chats</Text>
+        <Text style={styles.title}>{t('chats.title')}</Text>
         <AttachStep index={[2, 14]}>
           <Button
-            title="New"
+            title={t('chats.new')}
             variant="primary"
             size="small"
             onPress={handleNewChat}
@@ -185,19 +187,19 @@ export const ChatsListScreen: React.FC = () => {
             </View>
           </AnimatedEntry>
           <AnimatedEntry index={1} staggerMs={60} trigger={focusTrigger}>
-            <Text style={styles.emptyTitle}>No Chats Yet</Text>
+            <Text style={styles.emptyTitle}>{t('chats.emptyTitle')}</Text>
           </AnimatedEntry>
           <AnimatedEntry index={2} staggerMs={60} trigger={focusTrigger}>
             <Text style={styles.emptyText}>
               {hasModels
-                ? 'Start a new conversation to begin chatting with your local AI.'
-                : 'Download a model from the Models tab to start chatting.'}
+                ? t('chats.startConversation')
+                : t('chats.downloadModelPrompt')}
             </Text>
           </AnimatedEntry>
           {hasModels && (
             <AnimatedListItem index={3} staggerMs={60} trigger={focusTrigger} hapticType="impactLight" style={styles.emptyButton} onPress={handleNewChat}>
               <Icon name="plus" size={18} color={colors.primary} />
-              <Text style={styles.emptyButtonText}>New Chat</Text>
+              <Text style={styles.emptyButtonText}>{t('chats.newChat')}</Text>
             </AnimatedListItem>
           )}
         </View>

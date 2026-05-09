@@ -15,6 +15,22 @@
 import React from 'react';
 import { render, fireEvent, act, waitFor } from '@testing-library/react-native';
 
+jest.mock('react-i18next', () => {
+  const en = require('../../../src/i18n/locales/en.json');
+  const t = (key: string, params?: Record<string, string>) => {
+    const parts = key.split('.');
+    let value: any = en;
+    for (const part of parts) {
+      value = value?.[part];
+    }
+    if (typeof value === 'string' && params) {
+      return value.replace(/\{(\w+)\}/g, (_, k) => params[k] ?? `{${k}}`);
+    }
+    return value ?? key;
+  };
+  return { useTranslation: () => ({ t, i18n: { language: 'en', changeLanguage: jest.fn() } }) };
+});
+
 const mockGoBack = jest.fn();
 const mockNavigate = jest.fn();
 

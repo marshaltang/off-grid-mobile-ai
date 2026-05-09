@@ -21,6 +21,7 @@ import { TYPOGRAPHY, SPACING } from '../constants';
 import { authService } from '../services/authService';
 import { useAuthStore } from '../stores/authStore';
 import logger from '../utils/logger';
+import { useTranslation } from 'react-i18next';
 
 interface LockScreenProps {
   onUnlock: () => void;
@@ -33,6 +34,7 @@ export const LockScreen: React.FC<LockScreenProps> = ({ onUnlock }) => {
   const [alertState, setAlertState] = useState<AlertState>(initialAlertState);
   const { colors } = useTheme();
   const styles = useThemedStyles(createStyles);
+  const { t } = useTranslation();
 
   const {
     failedAttempts,
@@ -59,7 +61,7 @@ export const LockScreen: React.FC<LockScreenProps> = ({ onUnlock }) => {
 
   const handleUnlock = useCallback(async () => {
     if (!passphrase.trim()) {
-      setAlertState(showAlert('Error', 'Please enter your passphrase'));
+      setAlertState(showAlert(t('common.error'), t('security.pleaseEnterPassphrase')));
       return;
     }
 
@@ -83,25 +85,25 @@ export const LockScreen: React.FC<LockScreenProps> = ({ onUnlock }) => {
         if (isLockedOut) {
           setAlertState(
             showAlert(
-              'Too Many Attempts',
-              'You have been locked out for 5 minutes due to too many failed attempts.'
+              t('security.tooManyAttemptsTitle'),
+              t('security.lockedOut5min')
             )
           );
         } else {
           const remaining = 5 - (failedAttempts + 1);
           const alertMessage = remaining > 0
-            ? `${remaining} attempt${remaining === 1 ? '' : 's'} remaining before lockout.`
-            : 'Incorrect passphrase.';
-          setAlertState(showAlert('Incorrect Passphrase', alertMessage));
+            ? t('security.attemptsRemainingBeforeLockout', { count: remaining })
+            : t('security.incorrectPassphrase');
+          setAlertState(showAlert(t('security.incorrectPassphraseTitle'), alertMessage));
         }
       }
     } catch (error) {
       logger.warn('[LockScreen] Passphrase verification failed:', error);
-      setAlertState(showAlert('Error', 'Failed to verify passphrase'));
+      setAlertState(showAlert(t('common.error'), t('security.failedToVerify')));
     } finally {
       setIsVerifying(false);
     }
-  }, [passphrase, checkLockout, failedAttempts, recordFailedAttempt, resetFailedAttempts, onUnlock]);
+  }, [passphrase, checkLockout, failedAttempts, recordFailedAttempt, resetFailedAttempts, onUnlock, t]);
 
   const formatTime = (seconds: number): string => {
     const mins = Math.floor(seconds / 60);
@@ -121,17 +123,17 @@ export const LockScreen: React.FC<LockScreenProps> = ({ onUnlock }) => {
           <View style={styles.lockIconContainer}>
             <Icon name="lock" size={48} color={colors.primary} />
           </View>
-          <Text style={styles.title}>App Locked</Text>
+          <Text style={styles.title}>{t('security.appLocked')}</Text>
           <Text style={styles.subtitle}>
-            Enter your passphrase to unlock
+            {t('security.enterToUnlock')}
           </Text>
         </View>
 
         {isLockedOut ? (
           <View style={styles.lockoutContainer}>
-            <Text style={styles.lockoutText}>Too many failed attempts</Text>
+            <Text style={styles.lockoutText}>{t('security.tooManyFailedAttempts')}</Text>
             <Text style={styles.lockoutTimer}>{formatTime(lockoutSeconds)}</Text>
-            <Text style={styles.lockoutHint}>Please wait before trying again</Text>
+            <Text style={styles.lockoutHint}>{t('security.pleaseWaitBeforeRetry')}</Text>
           </View>
         ) : (
           <View style={styles.inputContainer}>
@@ -139,7 +141,7 @@ export const LockScreen: React.FC<LockScreenProps> = ({ onUnlock }) => {
               style={styles.input}
               value={passphrase}
               onChangeText={setPassphrase}
-              placeholder="Enter passphrase"
+              placeholder={t('security.enterPassphrasePlaceholder')}
               placeholderTextColor={colors.textMuted}
               secureTextEntry
               autoCapitalize="none"
@@ -149,7 +151,7 @@ export const LockScreen: React.FC<LockScreenProps> = ({ onUnlock }) => {
             />
 
             <Button
-              title={isVerifying ? 'Verifying...' : 'Unlock'}
+              title={isVerifying ? t('security.verifying') : t('security.unlock')}
               onPress={handleUnlock}
               disabled={isVerifying || !passphrase.trim()}
               style={styles.unlockButton}
@@ -157,7 +159,7 @@ export const LockScreen: React.FC<LockScreenProps> = ({ onUnlock }) => {
 
             {failedAttempts > 0 && (
               <Text style={styles.attemptsText}>
-                {5 - failedAttempts} attempt{5 - failedAttempts === 1 ? '' : 's'} remaining
+                {t('security.attemptsRemainingLabel', { count: 5 - failedAttempts })}
               </Text>
             )}
           </View>
@@ -166,7 +168,7 @@ export const LockScreen: React.FC<LockScreenProps> = ({ onUnlock }) => {
         <View style={styles.footer}>
           <Icon name="shield" size={20} color={colors.textMuted} />
           <Text style={styles.footerText}>
-            Your data is protected and stored locally
+            {t('security.dataProtectedLocally')}
           </Text>
         </View>
       </KeyboardAvoidingView>

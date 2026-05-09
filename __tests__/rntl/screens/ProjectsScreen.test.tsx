@@ -9,6 +9,11 @@
  * - Navigation
  */
 
+jest.mock('react-i18next', () => ({
+  useTranslation: () => ({ t: (key: string, options?: any) => require('../../helpers/mockI18n').mockT(key, options), i18n: { language: 'en', changeLanguage: jest.fn() } }),
+  initReactI18next: { type: '3rdParty', init: jest.fn() },
+}));
+
 import React from 'react';
 import { render, fireEvent } from '@testing-library/react-native';
 import { useChatStore } from '../../../src/stores/chatStore';
@@ -106,7 +111,7 @@ describe('ProjectsScreen', () => {
 
     it('renders the New button', () => {
       const { getByText } = render(<ProjectsScreen />);
-      expect(getByText('New')).toBeTruthy();
+      expect(getByText('New Project')).toBeTruthy();
     });
   });
 
@@ -116,7 +121,7 @@ describe('ProjectsScreen', () => {
   describe('empty state', () => {
     it('shows "No Projects Yet" when there are no projects', () => {
       const { getByText } = render(<ProjectsScreen />);
-      expect(getByText('No Projects Yet')).toBeTruthy();
+      expect(getByText('No projects yet')).toBeTruthy();
     });
 
     it('shows empty state description text', () => {
@@ -217,7 +222,7 @@ describe('ProjectsScreen', () => {
   describe('navigation', () => {
     it('navigates to ProjectEdit when New button is pressed', () => {
       const { getByText } = render(<ProjectsScreen />);
-      fireEvent.press(getByText('New'));
+      fireEvent.press(getByText('New Project'));
 
       expect(mockNavigate).toHaveBeenCalledWith('ProjectEdit', {});
     });

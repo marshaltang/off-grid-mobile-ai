@@ -8,6 +8,7 @@ import {
   ScrollView,
 } from 'react-native';
 import Icon from 'react-native-vector-icons/Feather';
+import { useTranslation } from 'react-i18next';
 import { useTheme, useThemedStyles } from '../../theme';
 import { GeneratedImage } from '../../types';
 import { createStyles } from './styles';
@@ -32,6 +33,7 @@ export const FullscreenViewer: React.FC<FullscreenViewerProps> = ({
 }) => {
   const { colors } = useTheme();
   const styles = useThemedStyles(createStyles);
+  const { t } = useTranslation();
 
   return (
     <Modal
@@ -58,9 +60,9 @@ export const FullscreenViewer: React.FC<FullscreenViewerProps> = ({
             {showDetails && (
               <View style={styles.detailsSheet}>
                 <View style={styles.detailsSheetHeader}>
-                  <Text style={styles.detailsSheetTitle}>Image Details</Text>
+                  <Text style={styles.detailsSheetTitle}>{t('gallery.imageDetails')}</Text>
                   <TouchableOpacity onPress={onToggleDetails}>
-                    <Text style={styles.detailsSheetClose}>Done</Text>
+                    <Text style={styles.detailsSheetClose}>{t('common.done')}</Text>
                   </TouchableOpacity>
                 </View>
                 <Image
@@ -70,24 +72,24 @@ export const FullscreenViewer: React.FC<FullscreenViewerProps> = ({
                 />
                 <ScrollView style={styles.detailsContent}>
                   <View style={styles.detailRow}>
-                    <Text style={styles.detailLabel}>PROMPT</Text>
+                    <Text style={styles.detailLabel}>{t('gallery.promptLabel')}</Text>
                     <Text style={styles.detailValue}>{image.prompt}</Text>
                   </View>
                   {image.negativePrompt ? (
                     <View style={styles.detailRow}>
-                      <Text style={styles.detailLabel}>NEGATIVE</Text>
+                      <Text style={styles.detailLabel}>{t('gallery.negativeLabel')}</Text>
                       <Text style={styles.detailValue}>{image.negativePrompt}</Text>
                     </View>
                   ) : null}
                   <View style={styles.detailsMetaRow}>
                     <View style={styles.detailChip}>
-                      <Text style={styles.detailChipText}>{image.steps} steps</Text>
+                      <Text style={styles.detailChipText}>{t('gallery.steps', { count: image.steps })}</Text>
                     </View>
                     <View style={styles.detailChip}>
                       <Text style={styles.detailChipText}>{image.width}x{image.height}</Text>
                     </View>
                     <View style={styles.detailChip}>
-                      <Text style={styles.detailChipText}>Seed: {image.seed}</Text>
+                      <Text style={styles.detailChipText}>{t('gallery.seed', { seed: image.seed })}</Text>
                     </View>
                   </View>
                   <Text style={styles.detailDate}>{formatDate(image.createdAt)}</Text>
@@ -101,20 +103,20 @@ export const FullscreenViewer: React.FC<FullscreenViewerProps> = ({
               >
                 <Icon name="info" size={22} color={showDetails ? colors.primary : colors.text} />
                 <Text style={showDetails ? styles.viewerButtonTextPrimary : styles.viewerButtonText}>
-                  Info
+                  {t('gallery.info')}
                 </Text>
               </TouchableOpacity>
               <TouchableOpacity style={styles.viewerButton} onPress={() => onSave(image)}>
                 <Icon name="download" size={22} color={colors.text} />
-                <Text style={styles.viewerButtonText}>Save</Text>
+                <Text style={styles.viewerButtonText}>{t('common.save')}</Text>
               </TouchableOpacity>
               <TouchableOpacity style={styles.viewerButton} onPress={() => onDelete(image)}>
                 <Icon name="trash-2" size={22} color={colors.error} />
-                <Text style={styles.viewerButtonTextError}>Delete</Text>
+                <Text style={styles.viewerButtonTextError}>{t('common.delete')}</Text>
               </TouchableOpacity>
               <TouchableOpacity style={styles.viewerButton} onPress={onClose}>
                 <Icon name="x" size={22} color={colors.text} />
-                <Text style={styles.viewerButtonText}>Close</Text>
+                <Text style={styles.viewerButtonText}>{t('common.close')}</Text>
               </TouchableOpacity>
             </View>
           </View>

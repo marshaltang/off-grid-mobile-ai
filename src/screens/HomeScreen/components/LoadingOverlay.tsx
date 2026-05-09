@@ -1,5 +1,7 @@
 import React from 'react';
 import { View, Text, Modal, ActivityIndicator } from 'react-native';
+import { useTranslation } from 'react-i18next';
+import i18n from '../../../i18n';
 import { useTheme, useThemedStyles } from '../../../theme';
 import type { ThemeColors, ThemeShadows } from '../../../theme';
 import { TYPOGRAPHY, SPACING } from '../../../constants';
@@ -42,9 +44,9 @@ const createStyles = (colors: ThemeColors, shadows: ThemeShadows) => ({
 });
 
 function getLoadingTitle(state: LoadingState): string {
-  if (!state.modelName) return 'Unloading Model';
-  if (state.modelName === 'Ejecting models...') return 'Ejecting Models';
-  return state.type === 'text' ? 'Loading Text Model' : 'Loading Image Model';
+  if (!state.modelName) return i18n.t('home.unloadingModel');
+  if (state.modelName === 'Ejecting models...') return i18n.t('home.ejectingModels');
+  return state.type === 'text' ? i18n.t('home.loadingTextModel') : i18n.t('home.loadingImageModel');
 }
 
 type Props = {
@@ -52,6 +54,7 @@ type Props = {
 };
 
 export const LoadingOverlay: React.FC<Props> = ({ loadingState }) => {
+  const { t } = useTranslation();
   const { colors } = useTheme();
   const styles = useThemedStyles(createStyles);
 
@@ -69,11 +72,10 @@ export const LoadingOverlay: React.FC<Props> = ({ loadingState }) => {
             {getLoadingTitle(loadingState)}
           </Text>
           <Text style={styles.loadingModelName} numberOfLines={2}>
-            {loadingState.modelName || 'Please wait...'}
+            {loadingState.modelName || t('home.pleaseWait')}
           </Text>
           <Text style={styles.loadingHint}>
-            This may take a moment.{'\n'}
-            Please wait...
+            {t('home.loadingHint')}
           </Text>
         </View>
       </View>

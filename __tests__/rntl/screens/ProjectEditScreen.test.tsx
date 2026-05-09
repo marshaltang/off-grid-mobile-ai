@@ -8,15 +8,12 @@
  * - System prompt input field
  * - Form editing (changeText)
  * - Save handler (update existing project)
- * - Save handler (create new project)
- * - Validation: empty name shows alert
- * - Validation: empty system prompt shows alert
- * - Cancel button calls goBack
- * - Hint and tip text display
- * - Label display
- *
- * Priority: P1 (High)
  */
+
+jest.mock('react-i18next', () => ({
+  useTranslation: () => ({ t: (key: string, options?: any) => require('../../helpers/mockI18n').mockT(key, options), i18n: { language: 'en', changeLanguage: jest.fn() } }),
+  initReactI18next: { type: '3rdParty', init: jest.fn() },
+}));
 
 import React from 'react';
 import { render, fireEvent } from '@testing-library/react-native';
@@ -174,14 +171,14 @@ describe('ProjectEditScreen', () => {
     it('shows hint text for system prompt', () => {
       const { getByText } = render(<ProjectEditScreen />);
       expect(
-        getByText(/This context is sent to the AI at the start of every chat/),
+        getByText('This prompt sets the behavior and context for all chats in this project.'),
       ).toBeTruthy();
     });
 
     it('shows tip text', () => {
       const { getByText } = render(<ProjectEditScreen />);
       expect(
-        getByText(/Tip: Be specific about what you want the AI to do/),
+        getByText('Tip: A well-written system prompt helps the AI understand the context and purpose of your project.'),
       ).toBeTruthy();
     });
 

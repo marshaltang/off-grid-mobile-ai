@@ -46,7 +46,7 @@ export const RemoteServersScreen: React.FC = () => {
       testConnection(server.id).catch(() => { });
     });
 
-  }, []);
+  }, [servers, testConnection]);
 
   const handleTestServer = useCallback(async (serverId: string) => {
     setTestingId(serverId);

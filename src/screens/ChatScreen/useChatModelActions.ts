@@ -263,7 +263,7 @@ export function useChatImageModelEffects(deps: ImageModelEffectsDeps): void {
     }, 0);
     return () => { cancelled = true; clearTimeout(timer); };
 
-  }, []);
+  }, [setDownloadedImageModels]);
   useEffect(() => {
     let cancelled = false;
     const preload = async () => {
@@ -283,7 +283,7 @@ export function useChatImageModelEffects(deps: ImageModelEffectsDeps): void {
     preload();
     return () => { cancelled = true; };
 
-  }, [settings.imageGenerationMode, settings.autoDetectMethod, settings.classifierModelId, activeImageModelId, settings.modelLoadingStrategy]);
+  }, [settings.imageGenerationMode, settings.autoDetectMethod, settings.classifierModelId, activeImageModelId, settings.modelLoadingStrategy, downloadedModels]);
 }
 
 type ModelStateSyncDeps = {
@@ -303,7 +303,7 @@ export function useChatModelStateSync(deps: ModelStateSyncDeps): void {
   useEffect(() => {
     if (activeModelInfo.isRemote) return;
     if (activeModelId && activeModel) { ensureModelLoadedFn(modelDeps); }
-
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [activeModelId, activeModel?.mmProjPath]);
   useEffect(() => {
     if (activeModelInfo.isRemote) {
@@ -314,7 +314,7 @@ export function useChatModelStateSync(deps: ModelStateSyncDeps): void {
       setSupportsVision(false);
     }
 
-  }, [activeModelInfo.isRemote, activeRemoteModel?.capabilities?.supportsVision, activeModel?.mmProjPath, isModelLoading]);
+  }, [activeModelInfo.isRemote, activeRemoteModel?.capabilities?.supportsVision, activeModel?.mmProjPath, isModelLoading, setSupportsVision]);
   useEffect(() => {
     if (activeRemoteTextModelId) {
       setSupportsToolCalling(activeRemoteModel?.capabilities?.supportsToolCalling ?? false);
@@ -327,5 +327,5 @@ export function useChatModelStateSync(deps: ModelStateSyncDeps): void {
       setSupportsThinking(false);
     }
 
-  }, [activeModelId, isModelLoading, activeRemoteTextModelId, activeRemoteModel?.capabilities?.supportsToolCalling, activeRemoteModel?.capabilities?.supportsThinking]);
+  }, [activeModelId, isModelLoading, activeRemoteTextModelId, activeRemoteModel?.capabilities?.supportsToolCalling, activeRemoteModel?.capabilities?.supportsThinking, setSupportsThinking, setSupportsToolCalling]);
 }

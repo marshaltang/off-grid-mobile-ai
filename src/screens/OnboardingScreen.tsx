@@ -28,6 +28,7 @@ import { discoverLANServers } from '../services/networkDiscovery';
 import { remoteServerManager } from '../services';
 import { RootStackParamList } from '../navigation/types';
 import logger from '../utils/logger';
+import { useTranslation } from 'react-i18next';
 
 type OnboardingScreenProps = {
   navigation: NativeStackNavigationProp<RootStackParamList, 'Onboarding'>;
@@ -78,7 +79,7 @@ const SlideContent: React.FC<{
         descTranslateY.value = withDelay(550, withTiming(0, { duration: 400, easing: ease }));
       }
 
-    }, [isActive]);
+    }, [isActive, keywordOpacity, keywordTranslateY, titleOpacity, titleTranslateY, descOpacity, descTranslateY, lineWidth]);
 
     const keywordStyle = useAnimatedStyle(() => ({
       opacity: keywordOpacity.value,
@@ -136,6 +137,7 @@ export const OnboardingScreen: React.FC<OnboardingScreenProps> = ({
   const setOnboardingComplete = useAppStore((s) => s.setOnboardingComplete);
   const { colors } = useTheme();
   const styles = useThemedStyles(createStyles);
+  const { t } = useTranslation();
 
   // Kick off non-blocking LAN scan so results are ready by ModelDownloadScreen
   useEffect(() => {
@@ -227,7 +229,7 @@ export const OnboardingScreen: React.FC<OnboardingScreenProps> = ({
         <View style={styles.header}>
           {!isLastSlide && (
             <Button
-              title="Skip"
+              title={t('onboarding.skip')}
               variant="ghost"
               onPress={handleSkip}
               testID="onboarding-skip"
@@ -257,7 +259,7 @@ export const OnboardingScreen: React.FC<OnboardingScreenProps> = ({
 
         <View style={styles.footer}>
           <Button
-            title={isLastSlide ? 'Get Started' : 'Next'}
+            title={isLastSlide ? t('onboarding.getStarted') : t('onboarding.next')}
             onPress={handleNext}
             size="large"
             style={styles.nextButton}
@@ -269,12 +271,12 @@ export const OnboardingScreen: React.FC<OnboardingScreenProps> = ({
           >
             <View style={styles.madeWithLoveRow}>
               <Text style={styles.madeWithLoveText}>
-                {'made with '}
+                {t('onboarding.madeWithLovePrefix')}
                 <Text style={styles.heart}>{'♥'}</Text>
-                {' by '}
+                {t('onboarding.madeWithLoveSuffix')}
               </Text>
               <Image source={require('../assets/wednesday_logo.png')} style={styles.wednesdayLogo} />
-              <Text style={styles.madeWithLoveText}>{'Wednesday'}</Text>
+              <Text style={styles.madeWithLoveText}>{t('onboarding.madeWithLoveName')}</Text>
             </View>
           </TouchableOpacity>
         </View>

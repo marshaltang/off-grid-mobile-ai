@@ -1,6 +1,7 @@
 import React, { useEffect, useMemo, useState } from 'react';
 import { View, Text, ScrollView, TouchableOpacity, Animated, StyleSheet } from 'react-native';
 import Icon from 'react-native-vector-icons/Feather';
+import { useTranslation } from 'react-i18next';
 import { AppSheet } from '../../../components/AppSheet';
 import { consumePendingSpotlight } from '../../../components/onboarding/spotlightState';
 import { MODEL_PICKER_STEP_INDEX } from '../../../components/onboarding/spotlightConfig';
@@ -42,11 +43,12 @@ type ImageTabStyles = ReturnType<typeof createStyles>;
 type ImageTabProps = Pick<Props, 'downloadedImageModels' | 'activeImageModelId' | 'memoryInfo' | 'loadingState' | 'onUnloadImageModel' | 'onSelectImageModel' | 'onBrowseModels'> & { colors: ImageTabColors; styles: ImageTabStyles };
 
 const ImageTabContent: React.FC<ImageTabProps> = ({ downloadedImageModels, activeImageModelId, memoryInfo, loadingState, onUnloadImageModel, onSelectImageModel, onBrowseModels, colors, styles }) => {
+  const { t } = useTranslation();
   if (downloadedImageModels.length === 0) {
     return (
       <View style={styles.emptyPicker}>
-        <Text style={styles.emptyPickerText}>No image models available</Text>
-        <Button title="Browse Models" variant="outline" size="small" onPress={() => onBrowseModels('image')} />
+        <Text style={styles.emptyPickerText}>{t('home.noImageModelsAvailable')}</Text>
+        <Button title={t('home.browseModels')} variant="outline" size="small" onPress={() => onBrowseModels('image')} />
       </View>
     );
   }
@@ -55,7 +57,7 @@ const ImageTabContent: React.FC<ImageTabProps> = ({ downloadedImageModels, activ
       {activeImageModelId && (
         <TouchableOpacity style={[styles.unloadButton, localStyles.unloadButtonMargin]} onPress={onUnloadImageModel} disabled={loadingState.isLoading}>
           <Icon name="power" size={16} color={colors.error} />
-          <Text style={styles.unloadButtonText}>Unload current model</Text>
+          <Text style={styles.unloadButtonText}>{t('home.unloadCurrentModel')}</Text>
         </TouchableOpacity>
       )}
       {downloadedImageModels.map((model) => {
@@ -71,9 +73,9 @@ const ImageTabContent: React.FC<ImageTabProps> = ({ downloadedImageModels, activ
           >
             <View style={styles.pickerItemInfo}>
               <Text style={styles.pickerItemName}>{model.name}</Text>
-              <Text style={styles.pickerItemMeta}>{model.style || 'Image'} · {hardwareService.formatBytes(model.size)}</Text>
+              <Text style={styles.pickerItemMeta}>{model.style || t('home.imageFallback')} · {hardwareService.formatBytes(model.size)}</Text>
               <Text style={[styles.pickerItemMemory, !memoryFits && styles.pickerItemMemoryWarning]}>
-                ~{estimatedMemoryGB.toFixed(1)} GB RAM {!memoryFits && '(may not fit)'}
+                ~{estimatedMemoryGB.toFixed(1)} GB RAM {!memoryFits && t('home.mayNotFit')}
               </Text>
             </View>
             {activeImageModelId === model.id && <Icon name="check" size={18} color={colors.text} />}
@@ -108,6 +110,7 @@ export const ModelPickerSheet: React.FC<Props> = ({
   onBrowseModels,
   onAddServer,
 }) => {
+  const { t } = useTranslation();
   const { colors } = useTheme();
   const styles = useThemedStyles(createStyles);
   const [highlightFirst, setHighlightFirst] = useState(false);
@@ -120,12 +123,12 @@ export const ModelPickerSheet: React.FC<Props> = ({
     for (const model of remoteTextModels) {
       if (!groups[model.serverId]) {
         const server = servers.find((s) => s.id === model.serverId);
-        groups[model.serverId] = { serverId: model.serverId, serverName: server?.name || 'Remote Server', models: [] };
+        groups[model.serverId] = { serverId: model.serverId, serverName: server?.name || t('home.remoteServerFallback'), models: [] };
       }
       groups[model.serverId].models.push(model);
     }
     return Object.values(groups);
-  }, [remoteTextModels, servers]);
+  }, [remoteTextModels, servers, t]);
 
   // NOTE: Can't use AttachStep/spotlight-tour inside Modal (separate view hierarchy).
   // Pulse the first model's border as a visual hint instead.
@@ -156,7 +159,7 @@ export const ModelPickerSheet: React.FC<Props> = ({
     <AppSheet
       visible={pickerType !== null}
       onClose={onClose}
-      title={pickerType === 'text' ? 'Text Models' : 'Image Models'}
+      title={pickerType === 'text' ? t('home.textModelsSheet') : t('home.imageModelsSheet')}
       snapPoints={['70%']}
     >
       <ScrollView style={styles.modalScroll} contentContainerStyle={localStyles.scrollContent}>
@@ -164,10 +167,10 @@ export const ModelPickerSheet: React.FC<Props> = ({
           <>
             {downloadedModels.length === 0 && remoteTextModels.length === 0 ? (
               <View style={styles.emptyPicker}>
-                <Text style={styles.emptyPickerText}>No text models available</Text>
+                <Text style={styles.emptyPickerText}>{t('home.noTextModelsAvailable')}</Text>
                 <View style={localStyles.emptyActions}>
-                  <Button title="Add Remote Server" variant="outline" size="small" onPress={() => { onClose(); onAddServer?.(); }} />
-                  <Button title="Browse Models" variant="outline" size="small" onPress={() => onBrowseModels('text')} />
+                  <Button title={t('home.addRemoteServer')} variant="outline" size="small" onPress={() => { onClose(); onAddServer?.(); }} />
+                  <Button title={t('home.browseModels')} variant="outline" size="small" onPress={() => onBrowseModels('text')} />
                 </View>
               </View>
             ) : (
@@ -191,13 +194,13 @@ export const ModelPickerSheet: React.FC<Props> = ({
                     onPress={() => { onClose(); onAddServer?.(); }}
                   >
                     <Icon name="plus" size={16} color={colors.primary} />
-                    <Text style={[styles.unloadButtonText, { color: colors.primary }]}>Add Remote Server</Text>
+                    <Text style={[styles.unloadButtonText, { color: colors.primary }]}>{t('home.addRemoteServer')}</Text>
                   </TouchableOpacity>
                 </View>
 
                 {downloadedModels.length > 0 && (
                   <>
-                    <Text style={styles.sectionLabel}>Local Models</Text>
+                    <Text style={styles.sectionLabel}>{t('home.localModels')}</Text>
                     {downloadedModels.map((model, idx) => {
                       const totalSize = model.fileSize + (model.mmProjFileSize || 0);
                       const estimatedMemoryGB = (totalSize * 1.5) / (1024 * 1024 * 1024);
@@ -219,10 +222,10 @@ export const ModelPickerSheet: React.FC<Props> = ({
                             </Text>
                             <Text style={styles.pickerItemMeta}>
                               {model.quantization} · {hardwareService.formatModelSize(model)}
-                              {model.isVisionModel && ' (Vision)'}
+                              {model.isVisionModel && ` (${t('models.capabilities.vision')})`}
                             </Text>
                             <Text style={[styles.pickerItemMemory, !memoryFits && styles.pickerItemMemoryWarning]}>
-                              ~{estimatedMemoryGB.toFixed(1)} GB RAM {!memoryFits && '(may not fit)'}
+                              ~{estimatedMemoryGB.toFixed(1)} GB RAM {!memoryFits && t('home.mayNotFit')}
                             </Text>
                           </View>
                           {activeModelId === model.id && <Icon name="check" size={18} color={colors.text} />}
@@ -233,7 +236,7 @@ export const ModelPickerSheet: React.FC<Props> = ({
                           <Animated.View key={model.id} style={[localStyles.highlightBorder, { borderColor: highlightBorderColor }]}>
                             {modelItem}
                             <Text style={[localStyles.highlightHint, { color: colors.textSecondary }]}>
-                              Tap this model to load it for chatting
+                              {t('home.tapToLoadModel')}
                             </Text>
                           </Animated.View>
                         );
@@ -263,7 +266,7 @@ export const ModelPickerSheet: React.FC<Props> = ({
                             <Icon name="cloud" size={14} color={colors.primary} />
                           </Text>
                           <Text style={styles.pickerItemMeta}>
-                            {[model.capabilities.supportsVision && 'Vision', model.capabilities.supportsToolCalling && 'Tools', model.capabilities.supportsThinking && 'Thinking'].filter(Boolean).join(' · ')}
+                            {[model.capabilities.supportsVision && t('models.capabilities.vision'), model.capabilities.supportsToolCalling && t('models.capabilities.tools'), model.capabilities.supportsThinking && t('models.capabilities.thinking')].filter(Boolean).join(' · ')}
                           </Text>
                         </View>
                         {activeRemoteTextModelId === model.id && activeServerId === model.serverId && (
@@ -294,7 +297,7 @@ export const ModelPickerSheet: React.FC<Props> = ({
       </ScrollView>
 
       <TouchableOpacity style={styles.browseMoreButton} onPress={() => onBrowseModels(pickerType ?? 'text')}>
-        <Text style={styles.browseMoreText}>Browse more models</Text>
+        <Text style={styles.browseMoreText}>{t('home.browseMoreModels')}</Text>
         <Icon name="arrow-right" size={16} color={colors.textMuted} />
       </TouchableOpacity>
     </AppSheet>

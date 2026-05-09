@@ -414,6 +414,20 @@ jest.mock('react-native-safe-area-context', () => {
 });
 
 // ============================================================================
+// react-i18next Mock — used by test files that don't have their own mock
+// ============================================================================
+jest.mock('react-i18next', () => {
+  const mockT = (...args: any[]) => {
+    const { mockT: mockTFn } = require('./__tests__/helpers/mockI18n');
+    return mockTFn(...args);
+  };
+  return {
+    useTranslation: () => ({ t: mockT, i18n: { language: 'en', changeLanguage: jest.fn() } }),
+    initReactI18next: { type: '3rdParty', init: jest.fn() },
+  };
+});
+
+// ============================================================================
 // Global Test Utilities
 // ============================================================================
 

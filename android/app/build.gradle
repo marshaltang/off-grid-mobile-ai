@@ -129,6 +129,13 @@ android {
             // stores .so files inside the APK zip — File.exists() returns false for them and
             // exec() fails with EACCES (error=13) because you can't fork-exec from a zip entry.
             useLegacyPackaging = true
+
+            // Both react-native-reanimated and react-native-worklets ship libworklets.so.
+            // Pick the first one encountered to avoid duplicate library merge conflicts.
+            pickFirst 'lib/arm64-v8a/libworklets.so'
+            pickFirst 'lib/armeabi-v7a/libworklets.so'
+            pickFirst 'lib/x86/libworklets.so'
+            pickFirst 'lib/x86_64/libworklets.so'
         }
     }
     aaptOptions {

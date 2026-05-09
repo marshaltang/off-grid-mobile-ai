@@ -39,6 +39,13 @@ jest.mock('react-native-vector-icons/Feather', () => {
   return ({ name }: any) => <Text>{name}</Text>;
 });
 
+jest.mock('react-i18next', () => {
+  const _t = (key: string) => require('../../helpers/mockI18n').mockT(key);
+  return {
+    useTranslation: () => ({ t: _t }),
+  };
+});
+
 import { DocumentPreviewScreen } from '../../../src/screens/DocumentPreviewScreen';
 
 describe('DocumentPreviewScreen', () => {

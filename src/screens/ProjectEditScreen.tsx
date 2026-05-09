@@ -45,7 +45,7 @@ export const ProjectEditScreen: React.FC = () => {
       const task = InteractionManager.runAfterInteractions(() => goTo(pending));
       return () => task.cancel();
     }
-  }, []);
+  }, [goTo]);
 
   const [formData, setFormData] = useState({
     name: '',

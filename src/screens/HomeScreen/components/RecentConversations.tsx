@@ -2,6 +2,8 @@ import React from 'react';
 import { View, Text, TouchableOpacity } from 'react-native';
 import Swipeable from 'react-native-gesture-handler/Swipeable';
 import Icon from 'react-native-vector-icons/Feather';
+import { useTranslation } from 'react-i18next';
+import i18n from '../../../i18n';
 import { AnimatedListItem } from '../../../components/AnimatedListItem';
 import { useTheme, useThemedStyles } from '../../../theme';
 import { createStyles } from '../styles';
@@ -16,7 +18,7 @@ function formatDate(dateStr: string): string {
     return date.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
   }
   if (diffDays === 1) {
-    return 'Yesterday';
+    return i18n.t('home.yesterday');
   }
   if (diffDays < 7) {
     return date.toLocaleDateString([], { weekday: 'short' });
@@ -39,6 +41,7 @@ export const RecentConversations: React.FC<Props> = ({
   onDeleteConversation,
   onSeeAll,
 }) => {
+  const { t } = useTranslation();
   const { colors } = useTheme();
   const styles = useThemedStyles(createStyles);
 
@@ -55,9 +58,9 @@ export const RecentConversations: React.FC<Props> = ({
   return (
     <View style={styles.section}>
       <View style={styles.sectionHeader}>
-        <Text style={styles.sectionTitle}>Recent</Text>
+        <Text style={styles.sectionTitle}>{t('home.recent')}</Text>
         <TouchableOpacity onPress={onSeeAll} testID="conversation-list-button">
-          <Text style={styles.seeAll}>See all</Text>
+          <Text style={styles.seeAll}>{t('home.seeAll')}</Text>
         </TouchableOpacity>
       </View>
       {conversations.map((conv, index) => (
@@ -88,7 +91,7 @@ export const RecentConversations: React.FC<Props> = ({
                 const lastMsg = conv.messages[conv.messages.length - 1];
                 return (
                   <Text style={styles.conversationPreview} numberOfLines={1}>
-                    {lastMsg.role === 'user' ? 'You: ' : ''}{lastMsg.content}
+                    {lastMsg.role === 'user' ? t('home.youLabel') : ''}{lastMsg.content}
                   </Text>
                 );
               })()}

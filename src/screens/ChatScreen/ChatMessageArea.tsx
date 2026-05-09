@@ -2,6 +2,7 @@ import React, { useState, useMemo } from 'react';
 import { View, FlatList, Text, Keyboard, ActivityIndicator, Platform } from 'react-native';
 import Icon from 'react-native-vector-icons/Feather';
 import Animated, { FadeIn } from 'react-native-reanimated';
+import { useTranslation } from 'react-i18next';
 import { AttachStep } from 'react-native-spotlight-tour';
 import { ChatInput, ToolPickerSheet, ThinkingIndicator } from '../../components';
 import { AnimatedPressable } from '../../components/AnimatedPressable';
@@ -28,6 +29,7 @@ export type ChatMessageAreaProps = {
 export const ChatMessageArea: React.FC<ChatMessageAreaProps> = ({
   flatListRef, isNearBottomRef, chat, styles, colors, handleScroll, renderItem, chatSpotlight,
 }) => {
+  const { t } = useTranslation();
   const tabNav = useNavigation<NativeStackNavigationProp<RootStackParamList>>();
   const [inputHeight, setInputHeight] = useState(84);
   const activeModelRepoId = chat.activeModelId?.split('/').slice(0, 2).join('/');
@@ -86,12 +88,12 @@ export const ChatMessageArea: React.FC<ChatMessageAreaProps> = ({
       {chat.isClassifying && (
         <View style={styles.classifyingBar}>
           <ActivityIndicator size="small" color={colors.primary} />
-          <Text style={styles.classifyingText}>Understanding your request...</Text>
+          <Text style={styles.classifyingText}>{t('chats.understandingRequest')}</Text>
         </View>
       )}
       {chat.isCompacting && (
         <Animated.View entering={FadeIn.duration(200)} style={styles.classifyingBar}>
-          <ThinkingIndicator text="Compacting your conversation..." />
+          <ThinkingIndicator text={t('chats.compactingConversation')} />
         </Animated.View>
       )}
       {chat.hasPendingSettings && !chat.isCompacting && !chat.activeModelInfo?.isRemote && (
@@ -99,7 +101,7 @@ export const ChatMessageArea: React.FC<ChatMessageAreaProps> = ({
           <AnimatedPressable style={styles.pendingSettingsBar} onPress={chat.handleReloadTextModel}>
             <Icon name="alert-circle" size={16} color={colors.warning} />
             <Text style={styles.pendingSettingsText}>
-              Settings changed — tap to reload model
+              {t('chats.settingsChanged')}
             </Text>
             <Icon name="refresh-cw" size={14} color={colors.warning} />
           </AnimatedPressable>
@@ -126,6 +128,7 @@ export const ChatMessageArea: React.FC<ChatMessageAreaProps> = ({
               isModelLoading: chat.isModelLoading,
               supportsVision: chat.supportsVision,
               imageOnly: chat.imageModelLoaded && !chat.hasTextModel,
+              t,
             })}
             onToolsPress={() => chat.setShowToolPicker(true)}
             enabledToolCount={chat.enabledTools.length}

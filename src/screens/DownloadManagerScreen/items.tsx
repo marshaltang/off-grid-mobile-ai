@@ -8,6 +8,7 @@ import { DownloadedModel, BackgroundDownloadInfo, ONNXImageModel, BackgroundDown
 import { needsVisionRepair as checkNeedsVisionRepair } from '../../utils/visionRepair';
 import { getDownloadStatusLabel } from '../../utils/downloadErrors';
 import { createStyles } from './styles';
+import { useTranslation } from 'react-i18next';
 
 // ─── Types ───────────────────────────────────────────────────────────────────
 
@@ -61,14 +62,14 @@ export function extractQuantization(fileName: string): string {
   return match ? match[0].toUpperCase() : 'Unknown';
 }
 
-export function getStatusText(status: string): string {
-  if (status === 'running' || status === 'downloading') return 'Downloading...';
-  if (status === 'pending') return 'Queued';
-  if (status === 'paused') return 'Paused';
-  if (status === 'retrying') return 'Retrying connection...';
-  if (status === 'waiting_for_network') return 'Waiting for network';
-  if (status === 'failed') return 'Needs attention';
-  if (status === 'unknown') return 'Stuck - Remove & retry';
+export function getStatusText(t: (key: string, options?: any) => string, status: string): string {
+  if (status === 'running' || status === 'downloading') return t('download.downloading');
+  if (status === 'pending') return t('download.queued');
+  if (status === 'paused') return t('download.paused');
+  if (status === 'retrying') return t('download.retryingConnection');
+  if (status === 'waiting_for_network') return t('download.waitingForNetwork');
+  if (status === 'failed') return t('download.needsAttention');
+  if (status === 'unknown') return t('download.stuckRemoveRetry');
   return status;
 }
 
@@ -177,11 +178,11 @@ export function buildDownloadItems(data: DownloadItemsData): DownloadItem[] {
   return items;
 }
 
-function getStatusLabel(item: DownloadItem): string {
+function getStatusLabel(t: (key: string, options?: any) => string, item: DownloadItem): string {
   if (item.status === 'failed' || item.status === 'retrying' || item.status === 'pending' || item.status === 'waiting_for_network') {
     return getDownloadStatusLabel(item.status, item.reasonCode, item.reason);
   }
-  if (!item.reason && !item.reasonCode) return getStatusText(item.status);
+  if (!item.reason && !item.reasonCode) return getStatusText(t, item.status);
   return getDownloadStatusLabel(item.status, item.reasonCode, item.reason);
 }
 
@@ -196,6 +197,7 @@ interface ActiveDownloadCardProps {
 export const ActiveDownloadCard: React.FC<ActiveDownloadCardProps> = ({ item, onRemove, onRetry }) => {
   const { colors } = useTheme();
   const styles = useThemedStyles(createStyles);
+  const { t } = useTranslation();
   const progressColor =
     item.status === 'failed'
       ? colors.error
@@ -222,7 +224,7 @@ export const ActiveDownloadCard: React.FC<ActiveDownloadCardProps> = ({ item, on
       <View style={styles.downloadHeader}>
         <View style={styles.downloadInfo}>
           <Text style={styles.fileName} numberOfLines={1}>{item.fileName}</Text>
-          <Text style={styles.modelId} numberOfLines={1}>{item.author}</Text>
+          <Text style={styles.modelId} numberOfLines={1}>{item.author === 'Image Generation' ? t('download.imageGeneration') : item.author}</Text>
         </View>
         {item.status !== 'failed' && (
           <TouchableOpacity
@@ -244,14 +246,14 @@ export const ActiveDownloadCard: React.FC<ActiveDownloadCardProps> = ({ item, on
       </View>
       <View style={styles.downloadMeta}>
         <View style={styles.quantBadge}>
-          <Text style={styles.quantText}>{item.quantization}</Text>
+          <Text style={styles.quantText}>{item.quantization === 'Unknown' ? t('download.unknown') : item.quantization}</Text>
         </View>
         <View style={styles.statusIconRow}>
           {getStatusIcon() && (
             <Icon name={getStatusIcon()!} size={14} color={getStatusIconColor()} />
           )}
           <Text style={[styles.statusText, item.status === 'failed' && { color: colors.error }]}>
-            {getStatusLabel(item)}
+            {getStatusLabel(t, item)}
           </Text>
         </View>
       </View>
@@ -263,7 +265,7 @@ export const ActiveDownloadCard: React.FC<ActiveDownloadCardProps> = ({ item, on
             onPress={() => onRemove(item)}
           >
             <Icon name="trash-2" size={14} color={colors.error} />
-            <Text style={styles.removeButtonText}>Remove</Text>
+            <Text style={styles.removeButtonText}>{t('download.remove')}</Text>
           </TouchableOpacity>
           {onRetry && item.modelType !== 'image' && (
             <TouchableOpacity
@@ -272,7 +274,7 @@ export const ActiveDownloadCard: React.FC<ActiveDownloadCardProps> = ({ item, on
               onPress={() => onRetry(item)}
             >
               <Icon name="rotate-cw" size={14} color={colors.primary} />
-              <Text style={styles.retryButtonText}>Retry</Text>
+              <Text style={styles.retryButtonText}>{t('download.retry')}</Text>
             </TouchableOpacity>
           )}
         </View>
@@ -290,6 +292,7 @@ interface CompletedDownloadCardProps {
 export const CompletedDownloadCard: React.FC<CompletedDownloadCardProps> = ({ item, onDelete, onRepairVision }) => {
   const { colors } = useTheme();
   const styles = useThemedStyles(createStyles);
+  const { t } = useTranslation();
   const needsVisionRepair = checkNeedsVisionRepair(item);
 
   return (
@@ -304,7 +307,7 @@ export const CompletedDownloadCard: React.FC<CompletedDownloadCardProps> = ({ it
         </View>
         <View style={styles.downloadInfo}>
           <Text style={styles.fileName} numberOfLines={1}>{item.fileName}</Text>
-          <Text style={styles.modelId} numberOfLines={1}>{item.author}</Text>
+          <Text style={styles.modelId} numberOfLines={1}>{item.author === 'Image Generation' ? t('download.imageGeneration') : item.author}</Text>
         </View>
         {needsVisionRepair && onRepairVision && (
           <TouchableOpacity
@@ -327,7 +330,7 @@ export const CompletedDownloadCard: React.FC<CompletedDownloadCardProps> = ({ it
         {!!item.quantization && (
           <View style={[styles.quantBadge, item.modelType === 'image' && styles.imageBadge]}>
             <Text style={[styles.quantText, item.modelType === 'image' && styles.imageQuantText]}>
-              {item.quantization}
+              {item.quantization === 'Unknown' ? t('download.unknown') : item.quantization}
             </Text>
           </View>
         )}

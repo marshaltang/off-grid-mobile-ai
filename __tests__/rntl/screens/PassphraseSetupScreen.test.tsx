@@ -106,6 +106,10 @@ jest.mock('react-native-vector-icons/Feather', () => {
   return ({ name }: any) => <Text>{name}</Text>;
 });
 
+jest.mock('react-i18next', () => ({
+  useTranslation: () => ({ t: (key: string, options?: any) => require('../../helpers/mockI18n').mockT(key, options) }),
+}));
+
 import { PassphraseSetupScreen } from '../../../src/screens/PassphraseSetupScreen';
 
 const defaultProps = {

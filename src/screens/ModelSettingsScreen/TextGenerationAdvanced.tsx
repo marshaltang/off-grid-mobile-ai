@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { View, Text, Switch, Platform } from 'react-native';
 import Slider from '@react-native-community/slider';
+import { useTranslation } from 'react-i18next';
 import { Button } from '../../components/Button';
 import { useTheme, useThemedStyles } from '../../theme';
 import { useAppStore } from '../../stores';
@@ -21,21 +22,10 @@ const HTP_UI_ENABLED = false;
 
 type BackendOption = { id: InferenceBackend; label: string };
 
-const IOS_BACKENDS: BackendOption[] = [
-  { id: INFERENCE_BACKENDS.CPU, label: 'CPU' },
-  { id: INFERENCE_BACKENDS.METAL, label: 'Metal' },
-];
-
-const ANDROID_BASE_BACKENDS: BackendOption[] = [
-  { id: INFERENCE_BACKENDS.CPU, label: 'CPU' },
-  { id: INFERENCE_BACKENDS.OPENCL, label: 'OpenCL' },
-];
-
-const HTP_BACKEND: BackendOption = { id: INFERENCE_BACKENDS.HTP, label: 'HTP' };
-
 const BackendSelectorSection: React.FC = () => {
   const { colors } = useTheme();
   const styles = useThemedStyles(createStyles);
+  const { t } = useTranslation();
   const { settings, updateSettings } = useAppStore();
   const { gpuLayersEffective } = useTextGenerationAdvanced();
   const [hasNPU, setHasNPU] = useState(false);
@@ -45,6 +35,18 @@ const BackendSelectorSection: React.FC = () => {
       hardwareService.getSoCInfo().then(info => setHasNPU(info.hasNPU));
     }
   }, []);
+
+  const IOS_BACKENDS: BackendOption[] = [
+    { id: INFERENCE_BACKENDS.CPU, label: t('modelSettings.backendCpu') },
+    { id: INFERENCE_BACKENDS.METAL, label: t('modelSettings.backendMetal') },
+  ];
+
+  const ANDROID_BASE_BACKENDS: BackendOption[] = [
+    { id: INFERENCE_BACKENDS.CPU, label: t('modelSettings.backendCpu') },
+    { id: INFERENCE_BACKENDS.OPENCL, label: t('modelSettings.backendOpencl') },
+  ];
+
+  const HTP_BACKEND: BackendOption = { id: INFERENCE_BACKENDS.HTP, label: t('modelSettings.backendHtp') };
 
   const backends: BackendOption[] = Platform.OS === 'ios'
     ? IOS_BACKENDS
@@ -58,12 +60,12 @@ const BackendSelectorSection: React.FC = () => {
     <>
       <View style={styles.toggleRow}>
         <View style={styles.toggleInfo}>
-          <Text style={styles.toggleLabel}>Inference Backend</Text>
+          <Text style={styles.toggleLabel}>{t('modelSettings.inferenceBackend')}</Text>
           <Text style={styles.toggleDesc}>
-            {current === INFERENCE_BACKENDS.CPU && 'Running on CPU threads only.'}
-            {current === INFERENCE_BACKENDS.OPENCL && 'Offloading layers to GPU via OpenCL.'}
-            {current === INFERENCE_BACKENDS.HTP && 'Offloading layers to Hexagon NPU.'}
-            {current === INFERENCE_BACKENDS.METAL && 'Offloading layers to GPU via Metal.'}
+            {current === INFERENCE_BACKENDS.CPU && t('modelSettings.backendCpuDesc')}
+            {current === INFERENCE_BACKENDS.OPENCL && t('modelSettings.backendOpenclDesc')}
+            {current === INFERENCE_BACKENDS.HTP && t('modelSettings.backendHtpDesc')}
+            {current === INFERENCE_BACKENDS.METAL && t('modelSettings.backendMetalDesc')}
           </Text>
         </View>
       </View>
@@ -86,7 +88,7 @@ const BackendSelectorSection: React.FC = () => {
         <View style={styles.sliderSection}>
           <View style={styles.sliderHeader}>
             <Text style={styles.sliderLabel}>
-              {current === INFERENCE_BACKENDS.HTP ? 'NPU Layers' : 'GPU Layers'}
+              {current === INFERENCE_BACKENDS.HTP ? t('modelSettings.npuLayers') : t('modelSettings.gpuLayers')}
             </Text>
             <Text style={styles.sliderValue}>{gpuLayersEffective}</Text>
           </View>
@@ -113,14 +115,15 @@ const BackendSelectorSection: React.FC = () => {
 const FlashAttentionSection: React.FC<{ trackColor: { false: string; true: string } }> = ({ trackColor }) => {
   const { colors } = useTheme();
   const styles = useThemedStyles(createStyles);
+  const { t } = useTranslation();
   const { isFlashAttnOn, handleFlashAttnToggle } = useTextGenerationAdvanced();
 
   return (
     <View style={styles.toggleRow}>
       <View style={styles.toggleInfo}>
-        <Text style={styles.toggleLabel}>Flash Attention</Text>
+        <Text style={styles.toggleLabel}>{t('modelSettings.flashAttention')}</Text>
         <Text style={styles.toggleDesc}>
-          Faster inference and lower memory. Required for quantized KV cache (q8_0/q4_0). Requires model reload.
+          {t('modelSettings.flashAttentionDesc')}
         </Text>
       </View>
       <Switch
@@ -138,13 +141,14 @@ const FlashAttentionSection: React.FC<{ trackColor: { false: string; true: strin
 
 const KvCacheSection: React.FC<{ cacheDisabled: boolean }> = ({ cacheDisabled }) => {
   const styles = useThemedStyles(createStyles);
+  const { t } = useTranslation();
   const { displayCacheType, isFlashAttnOn, handleCacheTypeChange } = useTextGenerationAdvanced();
 
   return (
     <>
       <View style={styles.toggleRow}>
         <View style={styles.toggleInfo}>
-          <Text style={styles.toggleLabel}>KV Cache Type</Text>
+          <Text style={styles.toggleLabel}>{t('modelSettings.kvCacheType')}</Text>
           <Text style={styles.toggleDesc}>
             {CACHE_TYPE_DESCRIPTIONS[displayCacheType]}
           </Text>
@@ -166,7 +170,7 @@ const KvCacheSection: React.FC<{ cacheDisabled: boolean }> = ({ cacheDisabled })
       </View>
       {!isFlashAttnOn && (
         <Text style={styles.warningText}>
-          Quantized cache (q8_0/q4_0) will auto-enable flash attention.
+          {t('modelSettings.quantizedCacheWarning')}
         </Text>
       )}
     </>
@@ -177,23 +181,24 @@ const KvCacheSection: React.FC<{ cacheDisabled: boolean }> = ({ cacheDisabled })
 
 const ModelLoadingStrategySection: React.FC = () => {
   const styles = useThemedStyles(createStyles);
+  const { t } = useTranslation();
   const { settings, updateSettings } = useAppStore();
 
   return (
     <>
       <View style={styles.toggleRow}>
         <View style={styles.toggleInfo}>
-          <Text style={styles.toggleLabel}>Model Loading Strategy</Text>
+          <Text style={styles.toggleLabel}>{t('modelSettings.modelLoadingStrategy')}</Text>
           <Text style={styles.toggleDesc}>
             {settings?.modelLoadingStrategy === 'performance'
-              ? 'Keep models loaded for faster responses'
-              : 'Load models on demand to save memory'}
+              ? t('modelSettings.strategyPerformance')
+              : t('modelSettings.strategyMemory')}
           </Text>
         </View>
       </View>
       <View style={styles.strategyButtons}>
         <Button
-          title="Save Memory"
+          title={t('modelSettings.saveMemory')}
           variant="secondary"
           size="small"
           testID="strategy-memory-button"
@@ -202,7 +207,7 @@ const ModelLoadingStrategySection: React.FC = () => {
           style={styles.flex1}
         />
         <Button
-          title="Fast"
+          title={t('modelSettings.fast')}
           variant="secondary"
           size="small"
           testID="strategy-performance-button"
@@ -220,6 +225,7 @@ const ModelLoadingStrategySection: React.FC = () => {
 export const TextGenerationAdvanced: React.FC = () => {
   const { colors } = useTheme();
   const styles = useThemedStyles(createStyles);
+  const { t } = useTranslation();
   const { settings, updateSettings } = useAppStore();
   const { cacheDisabled, cpuThreadsDisplayValue, cpuThreadsSliderValue } = useTextGenerationAdvanced();
 
@@ -229,10 +235,10 @@ export const TextGenerationAdvanced: React.FC = () => {
     <>
       <View style={styles.sliderSection}>
         <View style={styles.sliderHeader}>
-          <Text style={styles.sliderLabel}>Top P</Text>
+          <Text style={styles.sliderLabel}>{t('modelSettings.topP')}</Text>
           <Text style={styles.sliderValue}>{(settings?.topP || 0.9).toFixed(2)}</Text>
         </View>
-        <Text style={styles.sliderDesc}>Nucleus sampling threshold</Text>
+        <Text style={styles.sliderDesc}>{t('modelSettings.topPDesc')}</Text>
         <Slider
           style={styles.slider}
           minimumValue={0.1}
@@ -248,10 +254,10 @@ export const TextGenerationAdvanced: React.FC = () => {
 
       <View style={styles.sliderSection}>
         <View style={styles.sliderHeader}>
-          <Text style={styles.sliderLabel}>Repeat Penalty</Text>
+          <Text style={styles.sliderLabel}>{t('modelSettings.repeatPenalty')}</Text>
           <Text style={styles.sliderValue}>{(settings?.repeatPenalty || 1.1).toFixed(2)}</Text>
         </View>
-        <Text style={styles.sliderDesc}>Penalize repeated tokens</Text>
+        <Text style={styles.sliderDesc}>{t('modelSettings.repeatPenaltyDesc')}</Text>
         <Slider
           style={styles.slider}
           minimumValue={1.0}
@@ -267,10 +273,10 @@ export const TextGenerationAdvanced: React.FC = () => {
 
       <View style={styles.sliderSection}>
         <View style={styles.sliderHeader}>
-          <Text style={styles.sliderLabel}>CPU Threads</Text>
+          <Text style={styles.sliderLabel}>{t('modelSettings.cpuThreads')}</Text>
           <Text style={styles.sliderValue}>{cpuThreadsDisplayValue}</Text>
         </View>
-        <Text style={styles.sliderDesc}>Parallel threads for inference</Text>
+        <Text style={styles.sliderDesc}>{t('modelSettings.cpuThreadsDesc')}</Text>
         <Slider
           style={styles.slider}
           minimumValue={1}
@@ -286,10 +292,10 @@ export const TextGenerationAdvanced: React.FC = () => {
 
       <View style={styles.sliderSection}>
         <View style={styles.sliderHeader}>
-          <Text style={styles.sliderLabel}>Batch Size</Text>
+          <Text style={styles.sliderLabel}>{t('modelSettings.batchSize')}</Text>
           <Text style={styles.sliderValue}>{settings?.nBatch || 256}</Text>
         </View>
-        <Text style={styles.sliderDesc}>Tokens processed per batch</Text>
+        <Text style={styles.sliderDesc}>{t('modelSettings.batchSizeDesc')}</Text>
         <Slider
           style={styles.slider}
           minimumValue={32}

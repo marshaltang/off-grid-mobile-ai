@@ -22,6 +22,7 @@ import { ModelFile, DownloadedModel, RemoteServer } from '../types';
 import { RootStackParamList } from '../navigation/types';
 import { fetchModelFiles, NetworkSection } from './ModelDownloadHelpers';
 import logger from '../utils/logger';
+import { useTranslation } from 'react-i18next';
 
 type Props = { navigation: NativeStackNavigationProp<RootStackParamList, 'ModelDownload'> };
 
@@ -73,6 +74,7 @@ export const ModelDownloadScreen: React.FC<Props> = ({ navigation }) => {
 
   const { colors } = useTheme();
   const styles = useThemedStyles(createStyles);
+  const { t } = useTranslation();
 
   const [downloadIds, setDownloadIds] = useState<Record<string, number>>({});
   const downloadIdsRef = useRef<Record<string, number>>({});
@@ -100,13 +102,13 @@ export const ModelDownloadScreen: React.FC<Props> = ({ navigation }) => {
         if (!cancelled) setModelFiles(files);
       } catch (error) {
         logger.error('Error initializing:', error);
-        if (!cancelled) setAlertState(showAlert('Error', 'Failed to initialize. Please try again.'));
+        if (!cancelled) setAlertState(showAlert(t('common.error'), t('download.initErrorMsg')));
       } finally {
         if (!cancelled) setIsLoading(false);
       }
     })();
     return () => { cancelled = true; };
-  }, []);
+  }, [setDeviceInfo, setModelRecommendation, t]);
 
   // Health-check persisted servers — only show reachable ones
   const refreshServerHealth = useCallback(async (): Promise<Set<string>> => {
@@ -145,15 +147,15 @@ export const ModelDownloadScreen: React.FC<Props> = ({ navigation }) => {
       const reachable = await refreshServerHealth();
       // Only alert if there are truly no reachable servers after the scan
       if (reachable.size === 0) {
-        setAlertState(showAlert('No Servers Found', 'Make sure you\'re on the same WiFi network as your server and that it\'s running.'));
+        setAlertState(showAlert(t('download.noServersFoundTitle'), t('download.noServersFoundMsg')));
       }
     } catch (e) {
       logger.warn('[ModelDownload] Scan failed:', (e as Error).message);
-      setAlertState(showAlert('Scan Failed', 'Could not scan your network. Make sure you are connected to WiFi.'));
+      setAlertState(showAlert(t('download.scanFailedTitle'), t('download.scanFailedMsg')));
     } finally {
       setIsScanning(false);
     }
-  }, [refreshServerHealth]);
+  }, [refreshServerHealth, t]);
 
   const handleCancelDownload = async (key: string) => {
     cancelledKeys.current.add(key);
@@ -174,7 +176,7 @@ export const ModelDownloadScreen: React.FC<Props> = ({ navigation }) => {
     const totalBytes = (file.size || 0) + (file.mmProjFile?.size || 0);
     cancelledKeys.current.delete(key);
     setDownloadProgress(key, { progress: 0, bytesDownloaded: 0, totalBytes });
-    const onError = (error: Error) => { setDownloadProgress(key, null); setAlertState(showAlert('Download Failed', getUserFacingDownloadMessage(error.message))); };
+    const onError = (error: Error) => { setDownloadProgress(key, null); setAlertState(showAlert(t('download.downloadFailedTitle'), getUserFacingDownloadMessage(error.message))); };
     try {
       const info = await modelManager.downloadModelBackground(modelId, file, (p) => {
         if (cancelledKeys.current.has(key)) return;
@@ -223,20 +225,20 @@ export const ModelDownloadScreen: React.FC<Props> = ({ navigation }) => {
     try {
       const result = await remoteServerManager.testConnection(server.id);
       if (!result.success) {
-        setAlertState(showAlert('Connection Failed', result.error || 'Could not connect to server.'));
+        setAlertState(showAlert(t('download.connectionFailedTitle'), result.error || t('download.connectionFailedMsg')));
         return;
       }
       setConnectedServerId(server.id);
       const models = discoveredModels[server.id] || result.models || [];
       if (models.length === 0) {
-        setAlertState(showAlert('Connected — No Models Found', `${server.name} is reachable but has no models loaded. Start a model in Ollama/LM Studio, then reconnect.`));
+        setAlertState(showAlert(t('download.connectedNoModelsTitle'), t('download.connectedNoModelsMsg', { name: server.name })));
         return;
       }
       const textModel = models.find(m => !m.capabilities.supportsVision) || models[0];
       if (textModel) await remoteServerManager.setActiveRemoteTextModel(server.id, textModel.id);
-      setAlertState(showAlert('Connected!', `${server.name} is ready with ${models.length} model${models.length === 1 ? '' : 's'}. You can start chatting now.`,
-        [{ text: 'Continue', onPress: () => { setAlertState(hideAlert()); navigation.replace('Main'); } }]));
-    } catch (e) { setAlertState(showAlert('Connection Failed', (e as Error).message)); }
+      setAlertState(showAlert(t('download.connectedTitle'), t('download.connectedMsg', { name: server.name, count: models.length }),
+        [{ text: t('download.continue'), onPress: () => { setAlertState(hideAlert()); navigation.replace('Main'); } }]));
+    } catch (e) { setAlertState(showAlert(t('download.connectionFailedTitle'), (e as Error).message)); }
     finally { setConnectingServerId(null); }
   };
 
@@ -270,7 +272,7 @@ export const ModelDownloadScreen: React.FC<Props> = ({ navigation }) => {
     <SafeAreaView style={styles.container}>
       <View testID="model-download-loading" style={styles.loadingContainer}>
         <ActivityIndicator size="large" color={colors.primary} />
-        <Text style={styles.loadingText}>Analyzing your device...</Text>
+        <Text style={styles.loadingText}>{t('download.analyzingDevice')}</Text>
       </View>
     </SafeAreaView>
   );
@@ -280,9 +282,9 @@ export const ModelDownloadScreen: React.FC<Props> = ({ navigation }) => {
       <View testID="model-download-screen" style={styles.container}>
         <ScrollView style={styles.scrollView} contentContainerStyle={styles.content}>
           <View style={styles.header}>
-            <Text style={styles.title}>Set Up Your AI</Text>
+            <Text style={styles.title}>{t('download.setUpAI')}</Text>
             <Text style={styles.subtitle}>
-              Connect to a model server on your network, or download one to run directly on your device.
+              {t('download.subtitle')}
             </Text>
           </View>
 
@@ -299,15 +301,15 @@ export const ModelDownloadScreen: React.FC<Props> = ({ navigation }) => {
             colors={colors}
           />
 
-          <Text style={styles.sectionTitle}>Download to Your Device</Text>
+          <Text style={styles.sectionTitle}>{t('download.downloadToDevice')}</Text>
 
           <Card style={styles.deviceCard}>
             <View style={styles.deviceInfo}>
-              <Text style={styles.deviceLabel}>Your Device</Text>
+              <Text style={styles.deviceLabel}>{t('download.yourDevice')}</Text>
               <Text style={styles.deviceValue}>{deviceInfo?.deviceModel}</Text>
             </View>
             <View style={styles.deviceInfo}>
-              <Text style={styles.deviceLabel}>Available Memory</Text>
+              <Text style={styles.deviceLabel}>{t('download.availableMemory')}</Text>
               <Text style={styles.deviceValue}>{hardwareService.formatBytes(deviceInfo?.availableMemory || 0)}</Text>
             </View>
           </Card>
@@ -333,14 +335,14 @@ export const ModelDownloadScreen: React.FC<Props> = ({ navigation }) => {
 
           {recommendedModels.length === 0 && (
             <Card style={styles.warningCard}>
-              <Text style={styles.warningTitle}>Limited Compatibility</Text>
-              <Text style={styles.warningText}>Your device has limited memory. You can still browse and download smaller models from the model browser.</Text>
+              <Text style={styles.warningTitle}>{t('download.limitedCompatibility')}</Text>
+              <Text style={styles.warningText}>{t('download.limitedCompatibilityText')}</Text>
             </Card>
           )}
         </ScrollView>
 
         <View style={styles.footer}>
-          <Button title="Skip for Now" variant="ghost" onPress={() => navigation.replace('Main')} testID="model-download-skip" />
+          <Button title={t('download.skipForNow')} variant="ghost" onPress={() => navigation.replace('Main')} testID="model-download-skip" />
         </View>
 
         <CustomAlert visible={alertState.visible} title={alertState.title} message={alertState.message} buttons={alertState.buttons} onClose={() => setAlertState(hideAlert())} />

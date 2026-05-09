@@ -8,13 +8,15 @@
  * - Quick navigation
  * - Recent conversations
  * - Stats display
- * - Gallery link
- * - New chat button
- * - Eject all button
- * - Model picker sheet interactions
- * - Delete conversation
- * - Loading overlay
  */
+
+jest.mock('react-i18next', () => {
+  const _t = (key: string, options?: any) => require('../../helpers/mockI18n').mockT(key, options);
+  return {
+    useTranslation: () => ({ t: _t, i18n: { language: 'en', changeLanguage: jest.fn() } }),
+    initReactI18next: { type: '3rdParty', init: jest.fn() },
+  };
+});
 
 import React from 'react';
 import { render, fireEvent, act, waitFor } from '@testing-library/react-native';
@@ -194,6 +196,7 @@ jest.mock('react-native-gesture-handler/Swipeable', () => {
 });
 
 // Import after mocks
+import i18n from '../../../src/i18n';
 import { HomeScreen } from '../../../src/screens/HomeScreen';
 import { activeModelService } from '../../../src/services/activeModelService';
 
@@ -222,6 +225,7 @@ const renderHomeScreen = () => {
 
 describe('HomeScreen', () => {
   beforeEach(() => {
+    i18n.changeLanguage('en');
     resetStores();
     jest.clearAllMocks();
 

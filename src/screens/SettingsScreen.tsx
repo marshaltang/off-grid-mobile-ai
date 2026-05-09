@@ -55,8 +55,7 @@ export const SettingsScreen: React.FC = () => {
 
   useEffect(() => {
     completeChecklistStep('exploredSettings');
-
-  }, []);
+  }, [completeChecklistStep]);
 
   const handleSendFeedback = async () => {
     const { downloadedModels, activeModelId } = useAppStore.getState();

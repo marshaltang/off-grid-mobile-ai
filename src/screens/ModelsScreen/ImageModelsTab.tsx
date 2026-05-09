@@ -144,6 +144,7 @@ const ImageModelsScrollContent: React.FC<ScrollContentProps> = ({
 }) => {
   const { colors } = useTheme();
   const styles = useThemedStyles(createStyles);
+  const { t } = useTranslation();
   const { goTo } = useSpotlightTour();
 
   // Consume pending spotlight from the onboarding flow (queued when user taps "Try image generation")

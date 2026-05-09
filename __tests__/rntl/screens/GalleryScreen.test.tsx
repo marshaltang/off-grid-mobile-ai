@@ -23,6 +23,37 @@ import React from 'react';
 import { render, fireEvent, act } from '@testing-library/react-native';
 import { TouchableOpacity, Platform } from 'react-native';
 
+// Mock react-i18next with English translations
+jest.mock('react-i18next', () => {
+  const en = require('../../../src/i18n/locales/en.json');
+  const flat: Record<string, string> = {};
+  const flatten = (obj: Record<string, any>, prefix = '') => {
+    for (const key of Object.keys(obj)) {
+      const path = prefix ? `${prefix}.${key}` : key;
+      if (typeof obj[key] === 'object' && obj[key] !== null) {
+        flatten(obj[key], path);
+      } else if (typeof obj[key] === 'string') {
+        flat[path] = obj[key];
+      }
+    }
+  };
+  flatten(en);
+  return {
+    useTranslation: () => ({
+      t: (key: string, options?: Record<string, any>) => {
+        let value = flat[key] || key;
+        if (options) {
+          for (const [k, v] of Object.entries(options)) {
+            value = value.replace(`{{${k}}}`, String(v));
+          }
+        }
+        return value;
+      },
+      i18n: { language: 'en' },
+    }),
+  };
+});
+
 jest.mock('../../../src/hooks/useFocusTrigger', () => ({
   useFocusTrigger: () => 0,
 }));
@@ -220,13 +251,13 @@ describe('GalleryScreen', () => {
 
   it('renders "Gallery" title', () => {
     const { getByText } = render(<GalleryScreen />);
-    expect(getByText('Gallery')).toBeTruthy();
+    expect(getByText('Image Gallery')).toBeTruthy();
   });
 
   it('shows empty state when no images', () => {
     const { getByText } = render(<GalleryScreen />);
-    expect(getByText('No generated images yet')).toBeTruthy();
-    expect(getByText('Generate images from any chat conversation.')).toBeTruthy();
+    expect(getByText('No images generated yet')).toBeTruthy();
+    expect(getByText('Generate an image by typing a description in the chat.')).toBeTruthy();
   });
 
   it('back button calls goBack', () => {
@@ -240,7 +271,7 @@ describe('GalleryScreen', () => {
     mockGeneratedImages.push(...sampleImages);
 
     const { queryByText } = render(<GalleryScreen />);
-    expect(queryByText('No generated images yet')).toBeNull();
+    expect(queryByText('No images generated yet')).toBeNull();
   });
 
   it('shows image count badge when images exist', () => {
@@ -308,7 +339,7 @@ describe('GalleryScreen', () => {
       fireEvent.press(gridItems[0]);
       fireEvent.press(result.getByText('Info'));
       expect(result.getByText('Image Details')).toBeTruthy();
-      expect(result.getByText('PROMPT')).toBeTruthy();
+      expect(result.getByText('Prompt')).toBeTruthy();
       expect(result.getByText('A sunset over mountains')).toBeTruthy();
     }
   });
@@ -339,8 +370,8 @@ describe('GalleryScreen', () => {
 
     if (gridItems.length > 0) {
       fireEvent(gridItems[0], 'onLongPress');
-      expect(result.getByText('1 selected')).toBeTruthy();
-      expect(result.getByText('All')).toBeTruthy();
+      expect(result.getByText('1 Selected')).toBeTruthy();
+      expect(result.getByText('Select All')).toBeTruthy();
     }
   });
 
@@ -352,16 +383,16 @@ describe('GalleryScreen', () => {
 
     if (gridItems.length > 0) {
       fireEvent(gridItems[0], 'onLongPress');
-      expect(result.getByText('1 selected')).toBeTruthy();
+      expect(result.getByText('1 Selected')).toBeTruthy();
 
-      fireEvent.press(result.getByText('All'));
-      expect(result.getByText('3 selected')).toBeTruthy();
+      fireEvent.press(result.getByText('Select All'));
+      expect(result.getByText('3 Selected')).toBeTruthy();
     }
   });
 
   it('does not show select button when gallery is empty', () => {
     const { queryByText } = render(<GalleryScreen />);
-    expect(queryByText('0 selected')).toBeNull();
+    expect(queryByText('0 Selected')).toBeNull();
   });
 
   it('filters images by conversationId', () => {
@@ -405,7 +436,7 @@ describe('GalleryScreen', () => {
 
     // Enter select mode
     fireEvent(gridItems[0], 'onLongPress');
-    expect(result.getByText('1 selected')).toBeTruthy();
+    expect(result.getByText('1 Selected')).toBeTruthy();
 
     // Find the X button in select mode header (first touchable)
     const touchables = result.UNSAFE_getAllByType(TouchableOpacity);
@@ -413,7 +444,7 @@ describe('GalleryScreen', () => {
     fireEvent.press(touchables[0]);
 
     // Should be back to normal mode
-    expect(result.getByText('Gallery')).toBeTruthy();
+    expect(result.getByText('Image Gallery')).toBeTruthy();
   });
 
   it('tapping image in select mode toggles selection', () => {
@@ -424,17 +455,17 @@ describe('GalleryScreen', () => {
 
     // Enter select mode
     fireEvent(gridItems[0], 'onLongPress');
-    expect(result.getByText('1 selected')).toBeTruthy();
+    expect(result.getByText('1 Selected')).toBeTruthy();
 
     // Tap second image to select it
     gridItems = getGridItems(result);
     fireEvent.press(gridItems[1]);
-    expect(result.getByText('2 selected')).toBeTruthy();
+    expect(result.getByText('2 Selected')).toBeTruthy();
 
     // Tap second image again to deselect
     gridItems = getGridItems(result);
     fireEvent.press(gridItems[1]);
-    expect(result.getByText('1 selected')).toBeTruthy();
+    expect(result.getByText('1 Selected')).toBeTruthy();
   });
 
   it('delete selected images with confirmation', async () => {
@@ -446,8 +477,8 @@ describe('GalleryScreen', () => {
     // Enter select mode
     fireEvent(gridItems[0], 'onLongPress');
     // Select all
-    fireEvent.press(result.getByText('All'));
-    expect(result.getByText('3 selected')).toBeTruthy();
+    fireEvent.press(result.getByText('Select All'));
+    expect(result.getByText('3 Selected')).toBeTruthy();
 
     // In select mode, the header touchables (non-grid) are:
     // [X close button, "All" text button, trash icon button]
@@ -488,7 +519,7 @@ describe('GalleryScreen', () => {
     // Deselect the item
     const updatedGridItems = getGridItems(result);
     fireEvent.press(updatedGridItems[0]);
-    expect(result.getByText('0 selected')).toBeTruthy();
+    expect(result.getByText('0 Selected')).toBeTruthy();
 
     // Try to delete with nothing selected - the button should be disabled
     // The trash icon has disabled prop when selectedIds.size === 0
@@ -635,7 +666,7 @@ describe('GalleryScreen', () => {
     // Press Info
     fireEvent.press(result.getByText('Info'));
 
-    expect(result.getByText('NEGATIVE')).toBeTruthy();
+      expect(result.getByText('Negative Prompt')).toBeTruthy();
     expect(result.getByText('ugly, blurry')).toBeTruthy();
   });
 
@@ -721,7 +752,7 @@ describe('GalleryScreen', () => {
     fireEvent.press(result.getByText('Info'));
 
     // The date should be rendered (any format)
-    expect(result.getByText('PROMPT')).toBeTruthy();
+    expect(result.getByText('Prompt')).toBeTruthy();
   });
 
   it('long press does not re-enter select mode if already in select mode', () => {
@@ -732,12 +763,12 @@ describe('GalleryScreen', () => {
 
     // Enter select mode
     fireEvent(gridItems[0], 'onLongPress');
-    expect(result.getByText('1 selected')).toBeTruthy();
+    expect(result.getByText('1 Selected')).toBeTruthy();
 
     // Long press again on a different item while already in select mode
     gridItems = getGridItems(result);
     fireEvent(gridItems[1], 'onLongPress');
     // Should still be in select mode, not re-entered
-    expect(result.getByText('1 selected')).toBeTruthy();
+    expect(result.getByText('1 Selected')).toBeTruthy();
   });
 });

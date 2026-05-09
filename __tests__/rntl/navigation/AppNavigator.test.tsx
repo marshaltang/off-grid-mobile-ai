@@ -7,6 +7,11 @@
  * - Dynamic height based on device navigation mode
  */
 
+jest.mock('react-i18next', () => ({
+  useTranslation: () => ({ t: (key: string) => require('../../helpers/mockI18n').mockT(key), i18n: { language: 'en', changeLanguage: jest.fn() } }),
+  initReactI18next: { type: '3rdParty', init: jest.fn() },
+}));
+
 import React from 'react';
 import { render } from '@testing-library/react-native';
 import { NavigationContainer } from '@react-navigation/native';

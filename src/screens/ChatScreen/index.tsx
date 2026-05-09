@@ -31,7 +31,7 @@ export const ChatScreen: React.FC = () => {
   const pendingNextRef = useRef<number | null>(null);
 
   const [sharePromptVisible, setSharePromptVisible] = useState(false);
-  useEffect(() => subscribeSharePrompt(() => setSharePromptVisible(true)), []);
+  useEffect(() => { const unsub = subscribeSharePrompt(() => setSharePromptVisible(true)); return () => unsub(); }, []);
   // Only ONE AttachStep mounted at a time to avoid waypoint dots/lines.
   // chatSpotlight controls which index is active (3, 12, 15, or 16).
   const [chatSpotlight, setChatSpotlight] = useState<number | null>(null);
@@ -55,7 +55,7 @@ export const ChatScreen: React.FC = () => {
       const task = InteractionManager.runAfterInteractions(() => goTo(pending));
       return () => task.cancel();
     }
-  }, []);
+  }, [goTo]);
   const chainingRef = useRef(false);
   // When the spotlight tour stops after step 3, fire the chained step 12
   useEffect(() => {

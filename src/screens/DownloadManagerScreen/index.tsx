@@ -9,11 +9,13 @@ import { useTheme, useThemedStyles } from '../../theme';
 import { createStyles } from './styles';
 import { ActiveDownloadCard, CompletedDownloadCard, formatBytes } from './items';
 import { useDownloadManager } from './useDownloadManager';
+import { useTranslation } from 'react-i18next';
 
 export const DownloadManagerScreen: React.FC = () => {
   const navigation = useNavigation();
   const { colors } = useTheme();
   const styles = useThemedStyles(createStyles);
+  const { t } = useTranslation();
   const {
     isRefreshing,
     activeItems,
@@ -34,7 +36,7 @@ export const DownloadManagerScreen: React.FC = () => {
         <TouchableOpacity style={styles.backButton} onPress={() => navigation.goBack()} testID="back-button">
           <Icon name="arrow-left" size={20} color={colors.text} />
         </TouchableOpacity>
-        <Text style={styles.title}>Download Manager</Text>
+        <Text style={styles.title}>{t('download.title')}</Text>
       </View>
 
       <FlatList
@@ -45,7 +47,7 @@ export const DownloadManagerScreen: React.FC = () => {
             <View style={styles.section}>
               <View style={styles.sectionHeader}>
                 <Icon name="download" size={18} color={colors.primary} />
-                <Text style={styles.sectionTitle}>Active Downloads</Text>
+                <Text style={styles.sectionTitle}>{t('download.activeDownloads')}</Text>
                 <View style={styles.countBadge}>
                   <Text style={styles.countText}>{activeItems.length}</Text>
                 </View>
@@ -59,7 +61,7 @@ export const DownloadManagerScreen: React.FC = () => {
               ) : (
                 <Card style={styles.emptyCard}>
                   <Icon name="inbox" size={32} color={colors.textMuted} />
-                  <Text style={styles.emptyText}>No active downloads</Text>
+                  <Text style={styles.emptyText}>{t('download.noActiveDownloads')}</Text>
                 </Card>
               )}
             </View>
@@ -68,7 +70,7 @@ export const DownloadManagerScreen: React.FC = () => {
             <View style={styles.section}>
               <View style={styles.sectionHeader}>
                 <Icon name="check-circle" size={18} color={colors.success} />
-                <Text style={styles.sectionTitle}>Downloaded Models</Text>
+                <Text style={styles.sectionTitle}>{t('download.downloadedModels')}</Text>
                 <View style={styles.countBadge}>
                   <Text style={styles.countText}>{completedItems.length}</Text>
                 </View>
@@ -82,9 +84,9 @@ export const DownloadManagerScreen: React.FC = () => {
               ) : (
                 <Card style={styles.emptyCard}>
                   <Icon name="package" size={32} color={colors.textMuted} />
-                  <Text style={styles.emptyText}>No models downloaded yet</Text>
+                  <Text style={styles.emptyText}>{t('download.noModelsDownloaded')}</Text>
                   <Text style={styles.emptySubtext}>
-                    Go to the Models tab to browse and download models
+                    {t('download.browseModelsHint')}
                   </Text>
                 </Card>
               )}
@@ -96,7 +98,7 @@ export const DownloadManagerScreen: React.FC = () => {
                 <View style={styles.storageRow}>
                   <Icon name="hard-drive" size={16} color={colors.textMuted} />
                   <Text style={styles.storageText}>
-                    Total storage used: {formatBytes(totalStorageUsed)}
+                    {t('download.totalStorageUsed', { size: formatBytes(totalStorageUsed) })}
                   </Text>
                 </View>
               </View>
