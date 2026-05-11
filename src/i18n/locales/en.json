@@ -18,6 +18,7 @@
     "home": "Home",
     "chats": "Chats",
     "projects": "Projects",
+    "models": "Models",
     "knowledge": "Knowledge",
     "settingsTab": "Settings"
   },
@@ -251,18 +252,23 @@
     "systemPromptHelp": "Set a default system prompt that will be included in all new conversations.",
     "systemPromptPlaceholder": "Enter default system prompt..."
   },
-   "voiceSettings": {
-     "title": "Voice Settings",
-     "enableVoice": "Enable Voice Input",
-     "speechRecognition": "Speech Recognition",
-     "transcription": "Transcription",
-     "voiceTranscription": "Voice Transcription",
-     "modelStatus": {
-       "downloaded": "Downloaded"
-     },
-     "selectLabel": "Select a model to download:",
-"privacyTitle": "Privacy First",
+    "voiceSettings": {
+      "title": "Voice Settings",
+      "enableVoice": "Enable Voice Input",
+      "speechRecognition": "Speech Recognition",
+      "transcription": "Transcription",
+      "voiceTranscription": "Voice Transcription",
+      "modelStatus": {
+        "downloaded": "Downloaded"
+      },
+      "selectLabel": "Select a model to download:",
+      "privacyTitle": "Privacy First",
       "privacyText": "Voice transcription happens entirely on your device. Your voice data never leaves this device."
+    },
+    "voiceInputUnavailable": {
+      "title": "Voice Input Unavailable",
+      "message": "No transcription model downloaded",
+      "goToVoiceSettings": "Go to Voice Settings"
     },
   "settings": {
     "title": "Settings",
@@ -557,14 +563,22 @@
      "networkError": "Network error",
      "unknownError": "An unknown error occurred"
    },
-   "onboarding": {
-     "skip": "Skip",
-     "next": "Next",
-     "getStarted": "Get Started",
-     "madeWithLovePrefix": "made with ",
-     "madeWithLoveSuffix": " by ",
-     "madeWithLoveName": "Wednesday"
-   },
+    "onboarding": {
+      "skip": "Skip",
+      "next": "Next",
+      "getStarted": "Get Started",
+      "madeWithLovePrefix": "made with ",
+      "madeWithLoveSuffix": " by ",
+      "madeWithLoveName": "AI"
+    },
+    "voiceRecordButton": {
+      "slideToCancel": "Slide to cancel"
+    },
+    "voiceInputUnavailable": {
+      "title": "Voice Input Unavailable",
+      "message": "Download a Whisper model to enable on-device voice input.",
+      "goToVoiceSettings": "Go to Voice Settings"
+    },
    "documentPreview": {
      "title": "Document",
      "loading": "Loading document...",

@@ -24,6 +24,7 @@ import { createStyles } from './styles';
 import { LoadingState, TranscribingState, UnavailableButton, ButtonIcon } from './states';
 import { RootStackParamList } from '../../navigation/types';
 import logger from '../../utils/logger';
+import { useTranslation } from 'react-i18next';
 
 interface VoiceRecordButtonProps {
   isRecording: boolean;
@@ -104,6 +105,7 @@ export const VoiceRecordButton: React.FC<VoiceRecordButtonProps> = ({
 }) => {
   const styles = useThemedStyles(createStyles);
   const navigation = useNavigation<NativeStackNavigationProp<RootStackParamList>>();
+  const { t } = useTranslation();
 
   const pulseAnim = useRef(new Animated.Value(1)).current;
   const loadingAnim = useRef(new Animated.Value(0)).current;
@@ -114,18 +116,17 @@ export const VoiceRecordButton: React.FC<VoiceRecordButtonProps> = ({
   const rippleScale = useSharedValue(1);
   const rippleOpacity = useSharedValue(0);
 
-  useEffect(() => {
-    if (isRecording) {
-      rippleScale.value = 1;
-      rippleOpacity.value = 0.4;
-      rippleScale.value = withRepeat(withTiming(2.2, { duration: 1200, easing: Easing.out(Easing.ease) }), -1, false);
-      rippleOpacity.value = withRepeat(withTiming(0, { duration: 1200, easing: Easing.out(Easing.ease) }), -1, false);
-    } else {
-      rippleScale.value = 1;
-      rippleOpacity.value = 0;
-    }
-
-  }, [isRecording]);
+    useEffect(() => {
+      if (isRecording) {
+        rippleScale.value = 1;
+        rippleOpacity.value = 0.4;
+        rippleScale.value = withRepeat(withTiming(2.2, { duration: 1200, easing: Easing.out(Easing.ease) }), -1, false);
+        rippleOpacity.value = withRepeat(withTiming(0, { duration: 1200, easing: Easing.out(Easing.ease) }), -1, false);
+      } else {
+        rippleScale.value = 1;
+        rippleOpacity.value = 0;
+      }
+    }, [isRecording, rippleScale, rippleOpacity]);
 
   const rippleStyle = useAnimatedStyle(() => ({
     transform: [{ scale: rippleScale.value }],
@@ -160,20 +161,20 @@ export const VoiceRecordButton: React.FC<VoiceRecordButtonProps> = ({
 
   const panResponder = useRef(buildPanResponder({ isDraggingToCancel, cancelOffsetX, callbacksRef })).current;
 
-  const handleUnavailableTap = () => {
-    const errorDetail = error || 'No transcription model downloaded';
-    setAlertState(showAlert(
-      'Voice Input Unavailable',
-      `${errorDetail}\n\nDownload a Whisper model to enable on-device voice input.`,
-      [
-        { text: 'Cancel' },
-        {
-          text: 'Go to Voice Settings',
-          onPress: () => navigation.navigate('VoiceSettings'),
-        },
-      ],
-    ));
-  };
+   const handleUnavailableTap = () => {
+     const errorDetail = error || t('voiceSettings.transcription');
+     setAlertState(showAlert(
+       t('voiceInputUnavailable.title'),
+       `${errorDetail}\n\n${t('voiceInputUnavailable.message')}`,
+       [
+         { text: t('common.cancel') },
+         {
+           text: t('voiceInputUnavailable.goToVoiceSettings'),
+           onPress: () => navigation.navigate('VoiceSettings'),
+         },
+       ],
+     ));
+   };
 
   const alert = (
     <CustomAlert
@@ -223,13 +224,13 @@ export const VoiceRecordButton: React.FC<VoiceRecordButtonProps> = ({
 
   return (
     <View style={styles.container}>
-      {isRecording && (
-        <Animated.View
-          style={[styles.cancelHint, { opacity: cancelOffsetX.interpolate({ inputRange: [-CANCEL_DISTANCE, 0], outputRange: [1, 0], extrapolate: 'clamp' }) }]}
-        >
-          <Text style={styles.cancelHintText}>Slide to cancel</Text>
-        </Animated.View>
-      )}
+{isRecording && (
+  <Animated.View
+    style={[styles.cancelHint, { opacity: cancelOffsetX.interpolate({ inputRange: [-CANCEL_DISTANCE, 0], outputRange: [1, 0], extrapolate: 'clamp' }) }]}
+  >
+    <Text style={styles.cancelHintText}>{t('voiceRecordButton.slideToCancel')}</Text>
+  </Animated.View>
+)}
       {isRecording && partialResult && (
         <View style={styles.partialResultContainer}>
           <Text style={styles.partialResultText} numberOfLines={1}>{partialResult}</Text>
