@@ -25,33 +25,36 @@ export async function validateModelFile(modelPath: string): Promise<{ valid: boo
     if (fileSize < MIN_GGUF_FILE_SIZE) {
       return { valid: false, reason: `Model file too small (${fileSize} bytes) — likely corrupted or incomplete download` };
     }
-    // Read first 4 bytes to check GGUF magic number.
-    // RNFS.read() has an iOS bridging bug with NSInteger arguments on
-    // react-native-fs 2.x, so we catch and skip the magic check if it fails.
-    // llama.rn will still validate the file format natively on load.
-    let header: string | undefined;
-    try {
-      header = await RNFS.read(modelPath, 4, 0, 'ascii');
-    } catch (readErr) {
-      logger.warn('[LLM] RNFS.read() failed for magic check, skipping header validation:', readErr);
-    }
-    if (header !== undefined && !header.startsWith(GGUF_MAGIC)) {
-      return { valid: false, reason: `Invalid model file — not a GGUF file (header: ${header})` };
-    }
-    if (header !== undefined) {
-      logger.log(`[LLM] GGUF magic OK`);
-    }
-    // Try to read GGUF version (bytes 4-7, little-endian uint32)
-    try {
-      const versionBytes = await RNFS.read(modelPath, 4, 4, 'ascii');
-      if (versionBytes) {
-        const version = versionBytes.charCodeAt(0) | (versionBytes.charCodeAt(1) << 8) |
-          (versionBytes.charCodeAt(2) << 16) | (versionBytes.charCodeAt(3) << 24);
-        logger.log(`[LLM] GGUF version: ${version}`);
+     // Read first 4 bytes to check GGUF magic number.
+     // RNFS.read() has an iOS bridging bug with NSInteger arguments on
+     // react-native-fs 2.x, so we catch and skip the magic check if it fails.
+     // llama.rn will still validate the file format natively on load.
+     let header: string | undefined;
+     try {
+       header = await RNFS.read(modelPath, 4, 0, 'ascii');
+     } catch (readErr) {
+       logger.warn('[LLM] RNFS.read() failed for magic check, skipping header validation:', readErr);
+     }
+      if (header !== undefined && !header.startsWith(GGUF_MAGIC)) {
+        return { valid: false, reason: `Invalid model file — not a GGUF file (header: ${header})` };
       }
-    } catch (_e) {
-      // Non-critical, just skip
-    }
+     if (header !== undefined) {
+       logger.log(`[LLM] GGUF magic OK`);
+     }
+     // Try to read GGUF version (bytes 4-7, little-endian uint32)
+      try {
+        const versionBytes = await RNFS.read(modelPath, 4, 4, 'ascii');
+        if (versionBytes) {
+          const version =
+            versionBytes.charCodeAt(0) +
+            versionBytes.charCodeAt(1) * 256 +
+            versionBytes.charCodeAt(2) * 65536 +
+            versionBytes.charCodeAt(3) * 16777216;
+          logger.log(`[LLM] GGUF version: ${version}`);
+        }
+      } catch (_e) {
+        // Non-critical, just skip
+      }
     // Log the model filename for easier identification
     const filename = modelPath.split('/').pop() || modelPath;
     logger.log(`[LLM] Model filename: ${filename}`);

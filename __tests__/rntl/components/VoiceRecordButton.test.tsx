@@ -187,24 +187,24 @@ describe('VoiceRecordButton', () => {
       );
     });
 
-    it('taps unavailable button with default error when no error prop', () => {
-      const { UNSAFE_getAllByType } = render(
-        <VoiceRecordButton
-          {...defaultProps}
-          isAvailable={false}
-        />
-      );
+     it('taps unavailable button with default error when no error prop', () => {
+       const { UNSAFE_getAllByType } = render(
+         <VoiceRecordButton
+           {...defaultProps}
+           isAvailable={false}
+         />
+       );
 
-      const { TouchableOpacity } = require('react-native');
-      const touchables = UNSAFE_getAllByType(TouchableOpacity);
-      fireEvent.press(touchables[0]);
+       const { TouchableOpacity } = require('react-native');
+       const touchables = UNSAFE_getAllByType(TouchableOpacity);
+       fireEvent.press(touchables[0]);
 
-      expect(mockShowAlert).toHaveBeenCalledWith(
-        'Voice Input Unavailable',
-        expect.stringContaining('No transcription model downloaded'),
-        expect.any(Array)
-      );
-    });
+       expect(mockShowAlert).toHaveBeenCalledWith(
+         'Voice Input Unavailable',
+         expect.stringContaining('Transcription\n\nDownload a Whisper model to enable on-device voice input.'),
+         expect.any(Array)
+       );
+     });
 
     it('alert message includes instructions for downloading model', () => {
       const { UNSAFE_getAllByType } = render(

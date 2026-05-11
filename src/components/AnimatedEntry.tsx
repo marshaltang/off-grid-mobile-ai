@@ -32,24 +32,23 @@ export function AnimatedEntry({
   trigger,
   children,
 }: AnimatedEntryProps) {
-  const reducedMotion = useReducedMotion();
-  const opacity = useSharedValue((from as any).opacity ?? 1);
-  const translateY = useSharedValue((from as any).translateY ?? 0);
+    const reducedMotion = useReducedMotion();
+    const opacity = useSharedValue((from as any).opacity ?? 1);
+    const translateY = useSharedValue((from as any).translateY ?? 0);
+    const computedDelay = delay ?? index * staggerMs;
+    const duration = transition?.duration ?? 300;
 
-  const computedDelay = delay ?? index * staggerMs;
-  const duration = transition?.duration ?? 300;
+    useEffect(() => {
+      if (reducedMotion || index >= maxItems) return;
+      // Reset to initial values before animating
+      opacity.value = (from as any).opacity ?? 1;
+      translateY.value = (from as any).translateY ?? 0;
+      const targetOpacity = (animate as any).opacity ?? 1;
+      const targetTranslateY = (animate as any).translateY ?? 0;
+      opacity.value = withDelay(computedDelay, withTiming(targetOpacity, { duration }));
+      translateY.value = withDelay(computedDelay, withTiming(targetTranslateY, { duration }));
 
-  useEffect(() => {
-    if (reducedMotion || index >= maxItems) return;
-    // Reset to initial values before animating
-    opacity.value = (from as any).opacity ?? 1;
-    translateY.value = (from as any).translateY ?? 0;
-    const targetOpacity = (animate as any).opacity ?? 1;
-    const targetTranslateY = (animate as any).translateY ?? 0;
-    opacity.value = withDelay(computedDelay, withTiming(targetOpacity, { duration }));
-    translateY.value = withDelay(computedDelay, withTiming(targetTranslateY, { duration }));
-
-  }, [trigger]);
+    }, [trigger, reducedMotion, index, maxItems, from, animate, transition, delay, staggerMs, opacity, translateY, computedDelay, duration]);
 
   const animatedStyle = useAnimatedStyle(() => ({
     opacity: opacity.value,

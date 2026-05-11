@@ -14,18 +14,18 @@ export function BlinkingCursor() {
   const { colors } = useTheme();
   const reducedMotion = useReducedMotion();
   const opacity = useSharedValue(1);
-  useEffect(() => {
-    if (reducedMotion) { return; }
-    opacity.value = withRepeat(
-      withSequence(
-        withTiming(0, { duration: 400 }),
-        withTiming(1, { duration: 400 }),
-      ),
-      -1,
-      false,
-    );
+   useEffect(() => {
+     if (reducedMotion) { return; }
+     opacity.value = withRepeat(
+       withSequence(
+         withTiming(0, { duration: 400 }),
+         withTiming(1, { duration: 400 }),
+       ),
+       -1,
+       false,
+     );
 
-  }, [reducedMotion]);
+   }, [reducedMotion, opacity]);
   const style = useAnimatedStyle(() => ({ opacity: opacity.value }));
   return (
     <Animated.Text

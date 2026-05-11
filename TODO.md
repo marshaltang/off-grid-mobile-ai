@@ -17,3 +17,13 @@ All hardcoded English strings in `src/screens/` have been replaced with `react-i
 
 - **ESLint**: 0 errors, 0 warnings (`npx eslint --max-warnings 0 src/screens/ --ext .ts,.tsx`)
 - **Tests**: 159 suites, 5215 passed, 4 skipped, 0 failed (`npx jest --no-coverage`)
+
+
+
+### the rest work
+
+-- finish All hardcoded English strings in `src/` except  `src/screens/`
+
+-- add __test__ test case if need
+
+-- run ESLint but omit warning!
