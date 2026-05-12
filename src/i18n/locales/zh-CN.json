@@ -128,7 +128,6 @@
       "createProjectDescription": "创建项目以按主题组织对话，例如\"西班牙语学习\"或\"代码审查\"。",
       "noModel": "无模型",
       "noModelMessage": "请先从模型标签页下载模型。",
-      "deleteProject": "删除项目",
       "deleteProjectConfirm": "删除\"{name}\"？这不会删除与此项目关联的对话。",
       "notFound": "项目未找到",
       "goBack": "返回",
@@ -158,21 +157,7 @@
     "failedToIndexDocuments": "索引文档失败",
     "failedToIndexFile": "索引\"{fileName}\"失败：{error}"
   },
-  "settings": {
-    "title": "设置",
-    "language": "语言",
-    "theme": "主题",
-    "themeSystem": "跟随系统",
-    "themeLight": "浅色",
-    "themeDark": "深色",
-    "modelSettings": "模型设置",
-    "voiceSettings": "语音设置",
-    "storageSettings": "存储设置",
-    "securitySettings": "安全设置",
-    "about": "关于",
-    "version": "版本",
-    "deviceInfo": "设备信息"
-  },
+
   "modelSettings": {
     "title": "模型设置",
     "textGeneration": "语言生成",
@@ -274,6 +259,22 @@
     "title": "设置",
     "language": "语言",
     "theme": "主题",
+    "themeSystem": "跟随系统",
+    "themeLight": "浅色",
+    "themeDark": "深色",
+    "modelSettings": "模型设置",
+    "modelSettingsDesc": "System prompt, generation, and performance",
+    "voiceSettings": "语音设置",
+    "voiceSettingsDesc": "On-device speech to text",
+    "storageSettings": "存储设置",
+    "storageSettingsDesc": "Models and data usage",
+    "securitySettings": "安全设置",
+    "securitySettingsDesc": "Passphrase and app lock",
+    "remoteServers": "远程服务器",
+    "remoteServersDesc": "Connect to Ollama, LM Studio, and more",
+    "deviceInfo": "设备信息",
+    "deviceInfoDesc": "Hardware and compatibility",
+    "version": "版本",
     "github": {
       "star": "在 GitHub 上点赞",
       "support": "支持开源项目"
@@ -565,11 +566,6 @@
     },
     "voiceRecordButton": {
       "slideToCancel": "滑动取消"
-    },
-    "voiceInputUnavailable": {
-      "title": "语音输入不可用",
-      "message": "下载一个 Whisper 模型以启用设备上的语音输入。",
-      "goToVoiceSettings": "前往语音设置"
     },
    "documentPreview": {
      "title": "文档",

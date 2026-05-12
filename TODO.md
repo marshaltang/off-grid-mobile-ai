@@ -22,7 +22,7 @@ All hardcoded English strings in `src/screens/` have been replaced with `react-i
 
 ### the rest work
 
--- finish All hardcoded English strings in `src/` except  `src/screens/`
+-- finish All hardcoded English strings in `src/screens/SettingsScreen.tsx`  line180~188
 
 -- add __test__ test case if need
 

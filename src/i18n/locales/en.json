@@ -128,7 +128,6 @@
       "createProjectDescription": "Create a project to organize your chats by topic, like \"Spanish Learning\" or \"Code Review\".",
       "noModel": "No Model",
       "noModelMessage": "Please download a model first from the Models tab.",
-      "deleteProject": "Delete Project",
       "deleteProjectConfirm": "Delete \"{name}\"? This will not delete the chats associated with this project.",
       "notFound": "Project not found",
       "goBack": "Go back",
@@ -158,21 +157,7 @@
     "failedToIndexDocuments": "Failed to index documents",
     "failedToIndexFile": "Failed to index \"{fileName}\": {error}"
   },
-  "settings": {
-    "title": "Settings",
-    "language": "Language",
-    "theme": "Theme",
-    "themeSystem": "System",
-    "themeLight": "Light",
-    "themeDark": "Dark",
-    "modelSettings": "Model Settings",
-    "voiceSettings": "Voice Settings",
-    "storageSettings": "Storage Settings",
-    "securitySettings": "Security Settings",
-    "about": "About",
-    "version": "Version",
-    "deviceInfo": "Device Info"
-  },
+
   "modelSettings": {
     "title": "Model Settings",
     "textGeneration": "Text Generation",
@@ -274,6 +259,22 @@
     "title": "Settings",
     "language": "Language",
     "theme": "Theme",
+    "themeSystem": "System",
+    "themeLight": "Light",
+    "themeDark": "Dark",
+ "modelSettings": "Model Settings",
+   "modelSettingsDesc": "System prompt, generation, and performance",
+   "voiceSettings": "Voice Settings",
+   "voiceSettingsDesc": "On-device speech to text",
+   "storageSettings": "Storage Settings",
+   "storageSettingsDesc": "Models and data usage",
+   "securitySettings": "Security Settings",
+   "securitySettingsDesc": "Passphrase and app lock",
+   "remoteServers": "Remote Servers",
+   "remoteServersDesc": "Connect to Ollama, LM Studio, and more",
+   "deviceInfo": "Device Info",
+   "deviceInfoDesc": "Hardware and compatibility",
+    "version": "Version",
     "github": {
       "star": "Star on GitHub",
       "support": "Support the open-source project"
@@ -573,11 +574,6 @@
     },
     "voiceRecordButton": {
       "slideToCancel": "Slide to cancel"
-    },
-    "voiceInputUnavailable": {
-      "title": "Voice Input Unavailable",
-      "message": "Download a Whisper model to enable on-device voice input.",
-      "goToVoiceSettings": "Go to Voice Settings"
     },
    "documentPreview": {
      "title": "Document",
