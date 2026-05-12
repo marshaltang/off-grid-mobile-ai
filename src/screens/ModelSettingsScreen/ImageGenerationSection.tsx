@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { View, Text, Switch, Platform, TouchableOpacity } from 'react-native';
 import Slider from '@react-native-community/slider';
+import { useTranslation } from 'react-i18next';
 import { AdvancedToggle, Card } from '../../components';
 import { Button } from '../../components/Button';
 import { useTheme, useThemedStyles } from '../../theme';
@@ -13,17 +14,18 @@ import { createStyles } from './styles';
 const EnhanceImageToggle: React.FC = () => {
   const { colors } = useTheme();
   const styles = useThemedStyles(createStyles);
+  const { t } = useTranslation();
   const { settings, updateSettings } = useAppStore();
   const trackColor = { false: colors.surfaceLight, true: `${colors.primary}80` };
 
   return (
     <View style={styles.toggleRow}>
       <View style={styles.toggleInfo}>
-        <Text style={styles.toggleLabel}>Enhance Image Prompts</Text>
+        <Text style={styles.toggleLabel}>{t('modelSettings.enhanceImagePrompts')}</Text>
         <Text style={styles.toggleDesc}>
           {settings?.enhanceImagePrompts
-            ? 'Text model refines your prompt before image generation (slower but better results)'
-            : 'Use your prompt directly for image generation (faster)'}
+            ? t('modelSettings.enhanceOnDesc')
+            : t('modelSettings.enhanceOffDesc')}
         </Text>
       </View>
       <Switch
@@ -39,6 +41,7 @@ const EnhanceImageToggle: React.FC = () => {
 const ImageGpuSection: React.FC = () => {
   const { colors } = useTheme();
   const styles = useThemedStyles(createStyles);
+  const { t } = useTranslation();
   const { settings, updateSettings } = useAppStore();
   const { clearing, handleClearCache } = useClearGpuCache();
   const trackColor = { false: colors.surfaceLight, true: `${colors.primary}80` };
@@ -48,9 +51,9 @@ const ImageGpuSection: React.FC = () => {
     <>
       <View style={styles.toggleRow}>
         <View style={styles.toggleInfo}>
-          <Text style={styles.toggleLabel}>OpenCL GPU Acceleration</Text>
+          <Text style={styles.toggleLabel}>{t('modelSettings.openclGpuAccel')}</Text>
           <Text style={styles.toggleDesc}>
-            Use GPU for faster image generation. First run may be slower while optimizing for your device.
+            {t('modelSettings.openclGpuAccelDesc')}
           </Text>
         </View>
         <Switch
@@ -67,7 +70,7 @@ const ImageGpuSection: React.FC = () => {
           disabled={clearing}
         >
           <Text style={styles.clearCacheText}>
-            {clearing ? 'Clearing...' : 'Clear GPU Cache'}
+            {clearing ? t('modelSettings.clearing') : t('modelSettings.clearGpuCache')}
           </Text>
         </TouchableOpacity>
       )}
@@ -77,21 +80,22 @@ const ImageGpuSection: React.FC = () => {
 
 const DetectionMethodRow: React.FC = () => {
   const styles = useThemedStyles(createStyles);
+  const { t } = useTranslation();
   const { settings, updateSettings } = useAppStore();
 
   if (settings?.imageGenerationMode !== 'auto') return null;
 
   return (
     <View style={styles.settingSection}>
-      <Text style={styles.settingLabel}>Detection Method</Text>
+      <Text style={styles.settingLabel}>{t('modelSettings.detectionMethod')}</Text>
       <Text style={styles.settingDesc}>
         {settings?.autoDetectMethod === 'pattern'
-          ? 'Fast keyword matching'
-          : 'Uses text model for classification'}
+          ? t('modelSettings.detectionPatternDesc')
+          : t('modelSettings.detectionLlmDesc')}
       </Text>
       <View style={styles.buttonRow}>
         <Button
-          title="Pattern"
+          title={t('modelSettings.pattern')}
           variant="secondary"
           size="medium"
           active={settings?.autoDetectMethod === 'pattern'}
@@ -99,7 +103,7 @@ const DetectionMethodRow: React.FC = () => {
           style={styles.flex1}
         />
         <Button
-          title="LLM"
+          title={t('modelSettings.llm')}
           variant="secondary"
           size="medium"
           active={settings?.autoDetectMethod === 'llm'}
@@ -116,16 +120,17 @@ const DetectionMethodRow: React.FC = () => {
 const ImageAdvancedSection: React.FC = () => {
   const { colors } = useTheme();
   const styles = useThemedStyles(createStyles);
+  const { t } = useTranslation();
   const { settings, updateSettings } = useAppStore();
 
   return (
     <>
       <View style={styles.sliderSection}>
         <View style={styles.sliderHeader}>
-          <Text style={styles.sliderLabel}>Guidance Scale</Text>
+          <Text style={styles.sliderLabel}>{t('modelSettings.guidanceScale')}</Text>
           <Text style={styles.sliderValue}>{(settings?.imageGuidanceScale || 7.5).toFixed(1)}</Text>
         </View>
-        <Text style={styles.sliderDesc}>Higher = follows prompt more strictly</Text>
+        <Text style={styles.sliderDesc}>{t('modelSettings.guidanceScaleDesc')}</Text>
         <Slider
           style={styles.slider}
           minimumValue={1}
@@ -141,11 +146,11 @@ const ImageAdvancedSection: React.FC = () => {
 
       <View style={styles.sliderSection}>
         <View style={styles.sliderHeader}>
-          <Text style={styles.sliderLabel}>Image Threads</Text>
+          <Text style={styles.sliderLabel}>{t('modelSettings.imageThreads')}</Text>
           <Text style={styles.sliderValue}>{settings?.imageThreads ?? 4}</Text>
         </View>
         <Text style={styles.sliderDesc}>
-          CPU threads used for image generation (applies on next image model load)
+          {t('modelSettings.imageThreadsDesc')}
         </Text>
         <Slider
           style={styles.slider}
@@ -173,6 +178,7 @@ const ImageAdvancedSection: React.FC = () => {
 export const ImageGenerationSection: React.FC = () => {
   const { colors } = useTheme();
   const styles = useThemedStyles(createStyles);
+  const { t } = useTranslation();
   const { settings, updateSettings } = useAppStore();
   const [showAdvanced, setShowAdvanced] = useState(false);
 
@@ -182,18 +188,18 @@ export const ImageGenerationSection: React.FC = () => {
   return (
     <Card style={styles.section}>
       <Text style={styles.settingHelp}>
-        Control how image generation requests are handled in chat.
+        {t('modelSettings.imageGenHelp')}
       </Text>
 
       {/* ── Basic Settings ── */}
 
       <View style={styles.toggleRow}>
         <View style={styles.toggleInfo}>
-          <Text style={styles.toggleLabel}>Automatic Detection</Text>
+          <Text style={styles.toggleLabel}>{t('modelSettings.automaticDetection')}</Text>
           <Text style={styles.toggleDesc}>
             {isAutoMode
-              ? 'LLM will classify if your message is asking for an image'
-              : 'Only generate images when you tap the image button'}
+              ? t('modelSettings.autoDetectionDesc')
+              : t('modelSettings.manualDetectionDesc')}
           </Text>
         </View>
         <Switch
@@ -207,16 +213,16 @@ export const ImageGenerationSection: React.FC = () => {
       </View>
       <Text style={styles.toggleNote}>
         {isAutoMode
-          ? 'In Auto mode, messages like "Draw me a sunset" will automatically generate an image when an image model is loaded.'
-          : 'In Manual mode, you must tap the IMG button in chat to generate images.'}
+          ? t('modelSettings.autoModeNote')
+          : t('modelSettings.manualModeNote')}
       </Text>
 
       <View style={styles.sliderSection}>
         <View style={styles.sliderHeader}>
-          <Text style={styles.sliderLabel}>Image Steps</Text>
+          <Text style={styles.sliderLabel}>{t('modelSettings.imageSteps')}</Text>
           <Text style={styles.sliderValue}>{settings?.imageSteps || 8}</Text>
         </View>
-        <Text style={styles.sliderDesc}>More steps = better quality but slower (4-8 fast, 20-50 high quality)</Text>
+        <Text style={styles.sliderDesc}>{t('modelSettings.imageStepsDesc')}</Text>
         <Slider
           style={styles.slider}
           minimumValue={4}
@@ -232,10 +238,10 @@ export const ImageGenerationSection: React.FC = () => {
 
       <View style={styles.sliderSection}>
         <View style={styles.sliderHeader}>
-          <Text style={styles.sliderLabel}>Image Size</Text>
+          <Text style={styles.sliderLabel}>{t('modelSettings.imageSize')}</Text>
           <Text style={styles.sliderValue}>{settings?.imageWidth ?? 256}x{settings?.imageHeight ?? 256}</Text>
         </View>
-        <Text style={styles.sliderDesc}>Output resolution (smaller = faster, larger = more detail)</Text>
+        <Text style={styles.sliderDesc}>{t('modelSettings.imageSizeDesc')}</Text>
         <Slider
           style={styles.slider}
           minimumValue={128}

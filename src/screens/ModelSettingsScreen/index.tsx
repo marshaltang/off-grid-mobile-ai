@@ -4,6 +4,7 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 import Icon from 'react-native-vector-icons/Feather';
 import { AttachStep, useSpotlightTour } from 'react-native-spotlight-tour';
 import { useNavigation } from '@react-navigation/native';
+import { useTranslation } from 'react-i18next';
 import { Button } from '../../components';
 import { CustomAlert, showAlert, hideAlert, AlertState, initialAlertState } from '../../components/CustomAlert';
 import { consumePendingSpotlight } from '../../components/onboarding/spotlightState';
@@ -18,6 +19,7 @@ export const ModelSettingsScreen: React.FC = () => {
   const navigation = useNavigation();
   const { colors } = useTheme();
   const styles = useThemedStyles(createStyles);
+  const { t } = useTranslation();
   const { goTo } = useSpotlightTour();
   const resetSettings = useAppStore((s) => s.resetSettings);
   const [alertState, setAlertState] = useState<AlertState>(initialAlertState);
@@ -33,16 +35,16 @@ export const ModelSettingsScreen: React.FC = () => {
       const task = InteractionManager.runAfterInteractions(() => goTo(pending));
       return () => task.cancel();
     }
-  }, []);
+  }, [goTo]);
 
   const handleReset = () => {
     setAlertState(showAlert(
-      'Reset All Settings',
-      'This will restore all model settings to their defaults. You may need to reload the model for changes to take effect.',
+      t('modelSettings.resetAllSettings'),
+      t('modelSettings.resetMessage'),
       [
-        { text: 'Cancel', style: 'cancel' },
+        { text: t('common.cancel'), style: 'cancel' },
         {
-          text: 'Reset',
+          text: t('modelSettings.reset'),
           style: 'destructive',
           onPress: () => { resetSettings(); setAlertState(hideAlert()); },
         },
@@ -56,7 +58,7 @@ export const ModelSettingsScreen: React.FC = () => {
         <TouchableOpacity style={styles.backButton} onPress={() => navigation.goBack()}>
           <Icon name="arrow-left" size={20} color={colors.text} />
         </TouchableOpacity>
-        <Text style={styles.title}>Model Settings</Text>
+        <Text style={styles.title}>{t('modelSettings.title')}</Text>
       </View>
       <ScrollView style={styles.scrollView} contentContainerStyle={styles.content}>
         <AttachStep index={6} fill>
@@ -66,7 +68,7 @@ export const ModelSettingsScreen: React.FC = () => {
             activeOpacity={0.7}
             testID="system-prompt-accordion"
           >
-            <Text style={styles.accordionTitle}>Default System Prompt</Text>
+            <Text style={styles.accordionTitle}>{t('modelSettings.defaultSystemPrompt')}</Text>
             <Icon
               name={promptOpen ? 'chevron-up' : 'chevron-down'}
               size={16}
@@ -82,7 +84,7 @@ export const ModelSettingsScreen: React.FC = () => {
           activeOpacity={0.7}
           testID="image-generation-accordion"
         >
-          <Text style={styles.accordionTitle}>Image Generation</Text>
+          <Text style={styles.accordionTitle}>{t('modelSettings.imageGeneration')}</Text>
           <Icon
             name={imageOpen ? 'chevron-up' : 'chevron-down'}
             size={16}
@@ -97,7 +99,7 @@ export const ModelSettingsScreen: React.FC = () => {
           activeOpacity={0.7}
           testID="text-generation-accordion"
         >
-          <Text style={styles.accordionTitle}>Text Generation</Text>
+          <Text style={styles.accordionTitle}>{t('modelSettings.textGeneration')}</Text>
           <Icon
             name={textOpen ? 'chevron-up' : 'chevron-down'}
             size={16}
@@ -107,7 +109,7 @@ export const ModelSettingsScreen: React.FC = () => {
         {textOpen && <TextGenerationSection />}
 
         <Button
-          title="Reset All to Defaults"
+          title={t('modelSettings.resetToDefaults')}
           variant="ghost"
           size="small"
           onPress={handleReset}

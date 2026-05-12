@@ -35,6 +35,37 @@ jest.mock('@react-native-community/slider', () => {
   };
 });
 
+// Mock react-i18next with English translations
+jest.mock('react-i18next', () => {
+  const en = require('../../../src/i18n/locales/en.json');
+  const flat: Record<string, string> = {};
+  const flatten = (obj: Record<string, any>, prefix = '') => {
+    for (const key of Object.keys(obj)) {
+      const path = prefix ? `${prefix}.${key}` : key;
+      if (typeof obj[key] === 'object' && obj[key] !== null) {
+        flatten(obj[key], path);
+      } else if (typeof obj[key] === 'string') {
+        flat[path] = obj[key];
+      }
+    }
+  };
+  flatten(en);
+  return {
+    useTranslation: () => ({
+      t: (key: string, options?: Record<string, any>) => {
+        let value = flat[key] || key;
+        if (options) {
+          for (const [k, v] of Object.entries(options)) {
+            value = value.replace(`{{${k}}}`, String(v));
+          }
+        }
+        return value;
+      },
+      i18n: { language: 'en' },
+    }),
+  };
+});
+
 // Import after mocks
 import { ModelSettingsScreen } from '../../../src/screens/ModelSettingsScreen';
 
@@ -91,7 +122,7 @@ describe('ModelSettingsScreen', () => {
 
     it('shows section help text for system prompt when expanded', () => {
       const { getByText } = renderWithSections('prompt');
-      expect(getByText(/Instructions given to the model/)).toBeTruthy();
+      expect(getByText('Set a default system prompt that will be included in all new conversations.')).toBeTruthy();
     });
 
     it('sections are collapsed by default', () => {
@@ -104,12 +135,12 @@ describe('ModelSettingsScreen', () => {
 
     it('shows section help text for image generation when expanded', () => {
       const { getByText } = renderWithSections('image');
-      expect(getByText(/Control how image generation/)).toBeTruthy();
+      expect(getByText('Configure settings for AI image generation.')).toBeTruthy();
     });
 
     it('shows section help text for text generation when expanded', () => {
       const { getByText } = renderWithSections('text');
-      expect(getByText(/Configure LLM behavior/)).toBeTruthy();
+      expect(getByText('Configure how the model generates text responses.')).toBeTruthy();
     });
 
   });
@@ -176,7 +207,7 @@ describe('ModelSettingsScreen', () => {
     it('renders the toggle with label and description', () => {
       const { getByText } = renderWithSections('text');
       expect(getByText('Show Generation Details')).toBeTruthy();
-      expect(getByText('Display tokens/sec, timing, and memory usage on responses')).toBeTruthy();
+      expect(getByText('Display timing and token information during generation.')).toBeTruthy();
     });
 
     it('defaults to off', () => {
@@ -274,13 +305,13 @@ describe('ModelSettingsScreen', () => {
     it('shows auto mode description when enabled', () => {
       useAppStore.getState().updateSettings({ imageGenerationMode: 'auto' });
       const { getByText } = renderWithSections('image');
-      expect(getByText(/LLM will classify/)).toBeTruthy();
+      expect(getByText('Automatically select the best detection method for your model.')).toBeTruthy();
     });
 
     it('shows manual mode description when disabled', () => {
       useAppStore.getState().updateSettings({ imageGenerationMode: 'manual' });
       const { getByText } = renderWithSections('image');
-      expect(getByText(/Only generate images when you tap/)).toBeTruthy();
+      expect(getByText('Manually select which detection method to use.')).toBeTruthy();
     });
 
     it('toggles image generation mode', () => {
@@ -303,18 +334,18 @@ describe('ModelSettingsScreen', () => {
     it('shows auto mode note', () => {
       useAppStore.getState().updateSettings({ imageGenerationMode: 'auto' });
       const { getByText } = renderWithSections('image');
-      expect(getByText(/In Auto mode/)).toBeTruthy();
+      expect(getByText('The system will choose the most effective detection method based on your active model.')).toBeTruthy();
     });
 
     it('shows manual mode note', () => {
       useAppStore.getState().updateSettings({ imageGenerationMode: 'manual' });
       const { getByText } = renderWithSections('image');
-      expect(getByText(/In Manual mode/)).toBeTruthy();
+      expect(getByText('Choose the detection method that works best with your current setup.')).toBeTruthy();
     });
 
     it('shows Image Steps slider label and value', () => {
       const { getByText } = renderWithSections('image');
-      expect(getByText('Image Steps')).toBeTruthy();
+      expect(getByText('Steps')).toBeTruthy();
       // Default value
       expect(getByText('8')).toBeTruthy();
     });
@@ -374,13 +405,13 @@ describe('ModelSettingsScreen', () => {
     it('shows enhance prompts on description', () => {
       useAppStore.getState().updateSettings({ enhanceImagePrompts: true });
       const { getByText } = renderWithSections('image');
-      expect(getByText(/Text model refines your prompt/)).toBeTruthy();
+      expect(getByText('Prompts are automatically enhanced for better results.')).toBeTruthy();
     });
 
     it('shows enhance prompts off description', () => {
       useAppStore.getState().updateSettings({ enhanceImagePrompts: false });
       const { getByText } = renderWithSections('image');
-      expect(getByText(/Use your prompt directly/)).toBeTruthy();
+      expect(getByText('Prompts are used as-is without enhancement.')).toBeTruthy();
     });
   });
 
@@ -396,7 +427,7 @@ describe('ModelSettingsScreen', () => {
 
     it('shows Temperature description', () => {
       const { getByText } = renderWithSections('text');
-      expect(getByText(/Higher = more creative/)).toBeTruthy();
+      expect(getByText('Controls randomness. Lower values are more deterministic, higher values more creative.')).toBeTruthy();
     });
 
     it('shows Max Tokens slider label and default value', () => {
@@ -425,7 +456,7 @@ describe('ModelSettingsScreen', () => {
 
     it('shows context length description', () => {
       const { getByText } = renderWithSections('text');
-      expect(getByText(/KV cache size/)).toBeTruthy();
+      expect(getByText('Number of tokens the model considers as context. Higher values use more memory.')).toBeTruthy();
     });
   });
 
@@ -459,13 +490,13 @@ describe('ModelSettingsScreen', () => {
     it('shows memory strategy description when memory mode', () => {
       useAppStore.getState().updateSettings({ modelLoadingStrategy: 'memory' });
       const { getByText } = renderWithSections('text');
-      expect(getByText(/Load models on demand/)).toBeTruthy();
+      expect(getByText('Prioritize memory — may be slower')).toBeTruthy();
     });
 
     it('shows performance strategy description when performance mode', () => {
       useAppStore.getState().updateSettings({ modelLoadingStrategy: 'performance' });
       const { getByText } = renderWithSections('text');
-      expect(getByText(/Keep models loaded/)).toBeTruthy();
+      expect(getByText('Prioritize performance — may use more memory')).toBeTruthy();
     });
   });
 
@@ -857,7 +888,7 @@ describe('ModelSettingsScreen', () => {
     it('shows manual mode text when imageGenerationMode is not auto', () => {
       useAppStore.getState().updateSettings({ imageGenerationMode: undefined as any });
       const { getByText } = renderWithSections('image');
-      expect(getByText(/Only generate images when you tap/)).toBeTruthy();
+      expect(getByText('Manually select which detection method to use.')).toBeTruthy();
     });
   });
 
@@ -913,6 +944,7 @@ describe('ModelSettingsScreen', () => {
     });
 
     // HTP is currently disabled via HTP_UI_ENABLED feature flag
+    // eslint-disable-next-line jest/no-disabled-tests
     it.skip('locks KV cache display to f16 on HTP backend', () => {
       useAppStore.getState().updateSettings({ inferenceBackend: 'htp', cacheType: 'q4_0' });
       const { getByText } = renderWithSections('text');
@@ -947,13 +979,13 @@ describe('ModelSettingsScreen', () => {
     it('shows pattern description when pattern is selected', () => {
       useAppStore.getState().updateSettings({ autoDetectMethod: 'pattern' });
       const { getByText } = renderWithSections('image');
-      expect(getByText('Fast keyword matching')).toBeTruthy();
+      expect(getByText('Uses pattern matching to detect NSFW content. Fast but less accurate.')).toBeTruthy();
     });
 
     it('shows LLM description when LLM is selected', () => {
       useAppStore.getState().updateSettings({ autoDetectMethod: 'llm' });
       const { getByText } = renderWithSections('image');
-      expect(getByText('Uses text model for classification')).toBeTruthy();
+      expect(getByText('Uses the LLM to detect NSFW content. More accurate but slower.')).toBeTruthy();
     });
   });
 

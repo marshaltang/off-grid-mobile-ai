@@ -96,6 +96,10 @@ jest.mock('../../../src/stores/remoteServerStore', () => ({
   ),
 }));
 
+jest.mock('react-i18next', () => ({
+  useTranslation: () => ({ t: (key: string) => require('../../helpers/mockI18n').mockT(key) }),
+}));
+
 import { OnboardingScreen } from '../../../src/screens/OnboardingScreen';
 
 const mockNavigate = jest.fn();

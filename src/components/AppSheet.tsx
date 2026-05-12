@@ -14,6 +14,7 @@ import {
 } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { useTheme, useThemedStyles } from '../theme';
+import { useTranslation } from 'react-i18next';
 import { createStyles } from './AppSheet.styles';
 
 const { height: SCREEN_HEIGHT } = Dimensions.get('window');
@@ -95,12 +96,14 @@ export const AppSheet: React.FC<AppSheetProps> = ({
   snapPoints,
   enableDynamicSizing = false,
   title,
-  closeLabel = 'Done',
+  closeLabel,
   showHeader = true,
   showHandle = true,
   elevation = 'level3',
   children,
 }) => {
+  const { t } = useTranslation();
+  const resolvedCloseLabel = closeLabel ?? t('common.done');
   const { elevation: elevationTokens } = useTheme();
   const styles = useThemedStyles(createStyles);
   const { bottom: bottomInset } = useSafeAreaInsets();
@@ -180,39 +183,38 @@ export const AppSheet: React.FC<AppSheetProps> = ({
   // Track whether we should animate on next onShow
   const pendingAnimateIn = useRef(false);
 
-  useEffect(() => {
-    if (visible) {
-      pendingAnimateIn.current = true;
-      // Dismiss keyboard first, then open — prevents animation conflict
-      const keyboardVisible = Keyboard.isVisible?.() ?? false;
-      if (keyboardVisible) {
-        Keyboard.dismiss();
-        let opened = false;
-        const openOnce = () => {
-          if (opened) return;
-          opened = true;
-          setModalVisible(true);
-        };
-        const sub = Keyboard.addListener('keyboardDidHide', () => {
-          sub.remove();
-          openOnce();
-        });
-        // Safety timeout in case the event never fires
-        const timeout = setTimeout(() => {
-          sub.remove();
-          openOnce();
-        }, 400);
-        return () => {
-          clearTimeout(timeout);
-          sub.remove();
-        };
-      }
-      setModalVisible(true);
-
-    } else if (modalVisible) {
-      animateOut(() => setModalVisible(false));
-    }
-  }, [visible]);
+   useEffect(() => {
+     if (visible) {
+       pendingAnimateIn.current = true;
+       // Dismiss keyboard first, then open — prevents animation conflict
+       const keyboardVisible = Keyboard.isVisible?.() ?? false;
+       if (keyboardVisible) {
+         Keyboard.dismiss();
+         let opened = false;
+         const openOnce = () => {
+           if (opened) return;
+           opened = true;
+           setModalVisible(true);
+         };
+         const sub = Keyboard.addListener('keyboardDidHide', () => {
+           sub.remove();
+           openOnce();
+         });
+         // Safety timeout in case the event never fires
+         const timeout = setTimeout(() => {
+           sub.remove();
+           openOnce();
+         }, 400);
+         return () => {
+           clearTimeout(timeout);
+           sub.remove();
+         };
+       }
+       setModalVisible(true);
+     } else if (modalVisible) {
+       animateOut(() => setModalVisible(false));
+     }
+   }, [visible, animateOut, modalVisible]);
 
   // Track keyboard height so the sheet lifts above the keyboard
   useEffect(() => {
@@ -316,12 +318,12 @@ export const AppSheet: React.FC<AppSheetProps> = ({
               <Text style={styles.headerTitle} numberOfLines={1}>
                 {title}
               </Text>
-              <TouchableOpacity
-                onPress={onHeaderClosePress || dismiss}
-                hitSlop={{ top: 8, bottom: 8, left: 8, right: 8 }}
-              >
-                <Text style={styles.headerClose}>{closeLabel}</Text>
-              </TouchableOpacity>
+<TouchableOpacity
+  onPress={onHeaderClosePress || dismiss}
+  hitSlop={{ top: 8, bottom: 8, left: 8, right: 8 }}
+>
+  <Text style={styles.headerClose}>{resolvedCloseLabel}</Text>
+</TouchableOpacity>
             </View>
           ) : null}
 

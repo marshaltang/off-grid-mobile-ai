@@ -215,6 +215,13 @@ jest.mock('../../../src/screens/ModelDownloadHelpers', () => {
   };
 });
 
+jest.mock('react-i18next', () => {
+  const _t = (key: string, options?: any) => require('../../helpers/mockI18n').mockT(key, options);
+  return {
+    useTranslation: () => ({ t: _t }),
+  };
+});
+
 import { ModelDownloadScreen } from '../../../src/screens/ModelDownloadScreen';
 
 const MOCK_FILE = {

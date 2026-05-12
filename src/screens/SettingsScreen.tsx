@@ -24,6 +24,7 @@ import { TYPOGRAPHY, SPACING } from '../constants';
 import DeviceInfo from 'react-native-device-info';
 import RNFS from 'react-native-fs';
 import { useAppStore, useRemoteServerStore } from '../stores';
+import type { Language } from '../stores/appStore';
 import { languageOptions } from '../i18n';
 import { useTranslation } from 'react-i18next';
 import { hardwareService } from '../services';
@@ -31,7 +32,7 @@ import { RootStackParamList, MainTabParamList } from '../navigation/types';
 import { GITHUB_URL, SHARE_ON_X_URL } from '../utils/sharePrompt';
 import packageJson from '../../package.json';
 
-const FEEDBACK_EMAIL = 'work@wednesday.is';
+const FEEDBACK_EMAIL = 'work@AI.is';
 
 type NavigationProp = CompositeNavigationProp<
   BottomTabNavigationProp<MainTabParamList, 'SettingsTab'>,
@@ -55,8 +56,7 @@ export const SettingsScreen: React.FC = () => {
 
   useEffect(() => {
     completeChecklistStep('exploredSettings');
-
-  }, []);
+  }, [completeChecklistStep]);
 
   const handleSendFeedback = async () => {
     const { downloadedModels, activeModelId } = useAppStore.getState();
@@ -178,13 +178,13 @@ export const SettingsScreen: React.FC = () => {
         <AttachStep index={5} fill>
           <View style={styles.navSection}>
             {[
-              { icon: 'sliders', title: 'Model Settings', desc: 'System prompt, generation, and performance', screen: 'ModelSettings' as const },
-              { icon: 'wifi', title: 'Remote Servers', desc: 'Connect to Ollama, LM Studio, and more', screen: 'RemoteServers' as const },
+              { icon: 'sliders', title: t('settings.modelSettings'), desc: t('settings.modelSettingsDesc'), screen: 'ModelSettings' as const },
+              { icon: 'wifi', title: t('settings.remoteServers'), desc: t('settings.remoteServersDesc'), screen: 'RemoteServers' as const },
             //  { icon: 'search', title: 'Web Search', desc: 'Configure search API key for reliable results', screen: 'WebSearchSettings' as const },
-              { icon: 'mic', title: 'Voice Transcription', desc: 'On-device speech to text', screen: 'VoiceSettings' as const },
-              { icon: 'lock', title: 'Security', desc: 'Passphrase and app lock', screen: 'SecuritySettings' as const },
-              { icon: 'smartphone', title: 'Device Information', desc: 'Hardware and compatibility', screen: 'DeviceInfo' as const },
-              { icon: 'hard-drive', title: 'Storage', desc: 'Models and data usage', screen: 'StorageSettings' as const },
+              { icon: 'mic', title: t('settings.voiceSettings'), desc: t('settings.voiceSettingsDesc'), screen: 'VoiceSettings' as const },
+              { icon: 'lock', title: t('settings.securitySettings'), desc: t('settings.securitySettingsDesc'), screen: 'SecuritySettings' as const },
+              { icon: 'smartphone', title: t('settings.deviceInfo'), desc: t('settings.deviceInfoDesc'), screen: 'DeviceInfo' as const },
+              { icon: 'hard-drive', title: t('settings.storageSettings'), desc: t('settings.storageSettingsDesc'), screen: 'StorageSettings' as const },
             ].map((item, index, arr) => (
               <AnimatedListItem
                 key={item.screen}

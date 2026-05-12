@@ -4,6 +4,7 @@ import Icon from 'react-native-vector-icons/Feather';
 import { pick, isErrorWithCode, errorCodes } from '@react-native-documents/picker';
 
 import { resolvePickedFileUri } from '../utils/resolvePickedFileUri';
+import { useTranslation } from 'react-i18next';
 import { Button } from '../components/Button';
 import { showAlert, AlertState } from '../components/CustomAlert';
 import { ragService } from '../services/rag';
@@ -25,6 +26,7 @@ export interface KBSectionProps {
 }
 
 export const KnowledgeBaseSection: React.FC<KBSectionProps> = ({ projectId, colors, styles, setAlertState, onNavigateToKb, onDocumentPress }) => {
+  const { t } = useTranslation();
   const [kbDocs, setKbDocs] = useState<RagDocument[]>([]);
   const [indexingFile, setIndexingFile] = useState<string | null>(null);
   const [isPicking, setIsPicking] = useState(false);
@@ -32,8 +34,8 @@ export const KnowledgeBaseSection: React.FC<KBSectionProps> = ({ projectId, colo
 
   const loadKbDocs = useCallback(async () => {
     try { setKbDocs(await ragService.getDocumentsByProject(projectId)); }
-    catch (err: any) { setAlertState(showAlert('Error', err?.message || 'Failed to load documents')); }
-  }, [projectId, setAlertState]);
+    catch (err: any) { setAlertState(showAlert(t('common.error'), err?.message || t('knowledge.failedToLoad'))); }
+  }, [projectId, setAlertState, t]);
 
   useEffect(() => { loadKbDocs(); }, [loadKbDocs]);
 
@@ -63,12 +65,12 @@ export const KnowledgeBaseSection: React.FC<KBSectionProps> = ({ projectId, colo
       if (isErrorWithCode(err) && err.code === errorCodes.OPERATION_CANCELED) return;
       if (isPickerStuck(err)) {
         setAlertState(showAlert(
-          'File Picker Unavailable',
-          "The file picker isn't responding. Please close and reopen the app, then try again.",
+          t('knowledge.filePickerUnavailable'),
+          t('knowledge.filePickerUnavailableMessage'),
         ));
         return;
       }
-      setAlertState(showAlert('Error', err.message || 'Failed to index document'));
+      setAlertState(showAlert(t('common.error'), err.message || t('knowledge.failedToIndex')));
     } finally {
       isPickingRef.current = false;
       setIsPicking(false);
@@ -78,22 +80,22 @@ export const KnowledgeBaseSection: React.FC<KBSectionProps> = ({ projectId, colo
 
   const handleToggleDocument = async (docId: number, enabled: boolean) => {
     try { await ragService.toggleDocument(docId, enabled); await loadKbDocs(); }
-    catch (err: any) { setAlertState(showAlert('Error', err?.message || 'Failed to update document')); }
+    catch (err: any) { setAlertState(showAlert(t('common.error'), err?.message || t('knowledge.failedToUpdate'))); }
   };
 
   const handleDeleteDocument = (doc: RagDocument) => {
     setAlertState(showAlert(
-      'Remove Document',
-      `Remove "${doc.name}" from the knowledge base?`,
+      t('knowledge.removeDocument'),
+      t('knowledge.removeConfirm', { name: doc.name }),
       [
-        { text: 'Cancel', style: 'cancel' },
+        { text: t('common.cancel'), style: 'cancel' },
         {
-          text: 'Remove',
+          text: t('knowledge.remove'),
           style: 'destructive',
           onPress: () => {
             ragService.deleteDocument(doc.id)
               .then(() => loadKbDocs())
-              .catch((err: any) => setAlertState(showAlert('Error', err?.message || 'Failed to remove document')));
+              .catch((err: any) => setAlertState(showAlert(t('common.error'), err?.message || t('knowledge.failedToRemove'))));
           },
         },
       ]));
@@ -103,11 +105,11 @@ export const KnowledgeBaseSection: React.FC<KBSectionProps> = ({ projectId, colo
     <View style={styles.sectionContent}>
       <TouchableOpacity style={styles.sectionHeader} onPress={onNavigateToKb} activeOpacity={0.7}>
         <View style={styles.sectionTitleRow}>
-          <Text style={styles.sectionTitle}>Knowledge Base</Text>
+          <Text style={styles.sectionTitle}>{t('knowledge.title')}</Text>
           {kbDocs.length > 0 && <Text style={styles.sectionCount}>{kbDocs.length}</Text>}
         </View>
         <View style={styles.sectionActions}>
-          <Button title="Add" variant="primary" size="small" onPress={handleAddDocument}
+          <Button title={t('knowledge.addCompact')} variant="primary" size="small" onPress={handleAddDocument}
             disabled={isPicking || !!indexingFile}
             icon={<Icon name="plus" size={16} color={colors.primary} />} />
           <Icon name="chevron-right" size={16} color={colors.textMuted} style={styles.navIcon} />
@@ -117,14 +119,14 @@ export const KnowledgeBaseSection: React.FC<KBSectionProps> = ({ projectId, colo
       {indexingFile && (
         <View style={styles.kbIndexing}>
           <ActivityIndicator size="small" color={colors.primary} />
-          <Text style={styles.kbIndexingText} numberOfLines={1}>Indexing {indexingFile}...</Text>
+          <Text style={styles.kbIndexingText} numberOfLines={1}>{t('knowledge.indexingFile', { fileName: indexingFile })}</Text>
         </View>
       )}
 
       {kbDocs.length === 0 && !indexingFile ? (
         <View style={styles.emptyState}>
           <Icon name="file-text" size={24} color={colors.textMuted} />
-          <Text style={styles.emptyStateText}>No documents added</Text>
+          <Text style={styles.emptyStateText}>{t('knowledge.noDocuments')}</Text>
         </View>
       ) : (
         <ScrollView style={styles.sectionList} nestedScrollEnabled>

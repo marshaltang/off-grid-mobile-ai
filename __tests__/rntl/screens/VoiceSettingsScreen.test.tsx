@@ -8,13 +8,12 @@
  * - Back button navigation
  * - Downloaded model state (name, status badge, remove button)
  * - Download progress display
- * - Model download trigger
- * - Remove model confirmation alert
- * - Error display and clear
- * - Privacy card display
- *
- * Priority: P1 (High)
  */
+
+jest.mock('react-i18next', () => ({
+  useTranslation: () => ({ t: (key: string, options?: any) => require('../../helpers/mockI18n').mockT(key, options), i18n: { language: 'en', changeLanguage: jest.fn() } }),
+  initReactI18next: { type: '3rdParty', init: jest.fn() },
+}));
 
 import React from 'react';
 import { render, fireEvent } from '@testing-library/react-native';
@@ -160,7 +159,7 @@ describe('VoiceSettingsScreen', () => {
       const { getByText } = render(<VoiceSettingsScreen />);
       expect(getByText('Privacy First')).toBeTruthy();
       expect(
-        getByText(/Voice transcription happens entirely on your device/),
+        getByText(/voice transcription happens entirely on your device/i),
       ).toBeTruthy();
     });
 

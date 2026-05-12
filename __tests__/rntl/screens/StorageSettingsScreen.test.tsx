@@ -10,9 +10,12 @@
  * - Image models list rendering
  * - Orphaned files section
  * - Stale downloads section
- * - Delete orphaned file flow
- * - Conversation count display
  */
+
+jest.mock('react-i18next', () => ({
+  useTranslation: () => ({ t: (key: string, options?: any) => require('../../helpers/mockI18n').mockT(key, options), i18n: { language: 'en', changeLanguage: jest.fn() } }),
+  initReactI18next: { type: '3rdParty', init: jest.fn() },
+}));
 
 import React from 'react';
 import { render, fireEvent, act } from '@testing-library/react-native';
@@ -161,7 +164,7 @@ describe('StorageSettingsScreen', () => {
 
   it('renders "Storage" title', () => {
     const { getByText } = render(<StorageSettingsScreen />);
-    expect(getByText('Storage')).toBeTruthy();
+    expect(getByText('Storage Settings')).toBeTruthy();
   });
 
   it('back button calls goBack', () => {

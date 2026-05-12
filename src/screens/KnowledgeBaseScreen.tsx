@@ -23,6 +23,7 @@ import { ragService } from '../services/rag';
 import type { RagDocument } from '../services/rag';
 import { RootStackParamList } from '../navigation/types';
 import { isPickerStuck } from '../utils/pickerErrorUtils';
+import { useTranslation } from 'react-i18next';
 
 type NavigationProp = NativeStackNavigationProp<RootStackParamList>;
 type RouteProps = RouteProp<RootStackParamList, 'KnowledgeBase'>;
@@ -37,6 +38,7 @@ export const KnowledgeBaseScreen: React.FC = () => {
   const navigation = useNavigation<NavigationProp>();
   const route = useRoute<RouteProps>();
   const { projectId } = route.params;
+  const { t } = useTranslation();
   const { colors } = useTheme();
   const styles = useThemedStyles(createStyles);
 
@@ -53,11 +55,11 @@ export const KnowledgeBaseScreen: React.FC = () => {
       setIsLoading(true);
       setKbDocs(await ragService.getDocumentsByProject(projectId));
     } catch (err: any) {
-      Alert.alert('Error', err?.message || 'Failed to load documents');
+      Alert.alert(t('common.error'), err?.message || t('knowledge.failedToLoad'));
     } finally {
       setIsLoading(false);
     }
-  }, [projectId]);
+  }, [projectId, t]);
 
   useEffect(() => {
     loadKbDocs();
@@ -96,7 +98,7 @@ export const KnowledgeBaseScreen: React.FC = () => {
           logger.log(`[KnowledgeBase] indexed successfully: ${fileName}`);
         } catch (indexErr: any) {
           logger.error(`[KnowledgeBase] index failed for "${fileName}" — ${indexErr?.message}`);
-          Alert.alert('Error', `Failed to index "${fileName}": ${indexErr?.message || 'Unknown error'}`);
+          Alert.alert(t('common.error'), t('knowledge.failedToIndexFile', { fileName, error: indexErr?.message || t('common.unknownError') }));
         }
       }
       await loadKbDocs();
@@ -107,11 +109,11 @@ export const KnowledgeBaseScreen: React.FC = () => {
       }
       if (isPickerStuck(err)) {
         logger.warn(`[KnowledgeBase] picker stuck — code: ${err?.code}, message: ${err?.message}`);
-        Alert.alert('File Picker Unavailable', "The file picker isn't responding. Please close and reopen the app, then try again.");
+        Alert.alert(t('knowledge.filePickerUnavailable'), t('knowledge.filePickerUnavailableMessage'));
         return;
       }
       logger.error(`[KnowledgeBase] picker error — code: ${err?.code}, message: ${err?.message}`);
-      Alert.alert('Error', err?.message || 'Failed to index documents');
+      Alert.alert(t('common.error'), err?.message || t('knowledge.failedToIndexDocuments'));
     } finally {
       isPickingRef.current = false;
       setIsPicking(false);
@@ -125,25 +127,25 @@ export const KnowledgeBaseScreen: React.FC = () => {
       await ragService.toggleDocument(docId, enabled);
       await loadKbDocs();
     } catch (err: any) {
-      Alert.alert('Error', err?.message || 'Failed to update document');
+      Alert.alert(t('common.error'), err?.message || t('knowledge.failedToUpdate'));
     }
   };
 
   const handleDeleteDocument = (doc: RagDocument) => {
     Alert.alert(
-      'Remove Document',
-      `Remove "${doc.name}" from the knowledge base?`,
+      t('knowledge.removeDocument'),
+      t('knowledge.removeConfirm', { name: doc.name }),
       [
-        { text: 'Cancel', style: 'cancel' },
+        { text: t('common.cancel'), style: 'cancel' },
         {
-          text: 'Remove',
+          text: t('knowledge.remove'),
           style: 'destructive',
           onPress: async () => {
             try {
               await ragService.deleteDocument(doc.id);
               await loadKbDocs();
             } catch (err: any) {
-              Alert.alert('Error', err?.message || 'Failed to remove document');
+              Alert.alert(t('common.error'), err?.message || t('knowledge.failedToRemove'));
             }
           },
         },
@@ -180,7 +182,7 @@ export const KnowledgeBaseScreen: React.FC = () => {
         </TouchableOpacity>
         <View style={styles.headerCenter}>
           <Text style={styles.headerTitle} numberOfLines={1}>
-            {project?.name || 'Knowledge Base'}
+            {project?.name || t('knowledge.title')}
           </Text>
         </View>
         <TouchableOpacity onPress={handleAddDocument} style={styles.addButton} disabled={isPicking || !!indexingFile}>
@@ -195,7 +197,7 @@ export const KnowledgeBaseScreen: React.FC = () => {
       {indexingFile && (
         <View style={styles.indexingBanner}>
           <ActivityIndicator size="small" color={colors.primary} />
-          <Text style={styles.indexingText}>Indexing {indexingFile}...</Text>
+          <Text style={styles.indexingText}>{t('knowledge.indexingFile', { fileName: indexingFile })}</Text>
         </View>
       )}
 
@@ -206,10 +208,10 @@ export const KnowledgeBaseScreen: React.FC = () => {
       ) : kbDocs.length === 0 ? (
         <View style={styles.centered}>
           <Icon name="file-text" size={40} color={colors.textMuted} />
-          <Text style={styles.emptyText}>No documents yet</Text>
-          <Text style={styles.emptySubtext}>Add files to build your knowledge base</Text>
+          <Text style={styles.emptyText}>{t('knowledge.noDocumentsYet')}</Text>
+          <Text style={styles.emptySubtext}>{t('knowledge.noDocumentsSubtext')}</Text>
           <TouchableOpacity style={styles.addFirstButton} onPress={handleAddDocument} disabled={isPicking}>
-            <Text style={styles.addFirstButtonText}>Add Document</Text>
+            <Text style={styles.addFirstButtonText}>{t('knowledge.addDocuments')}</Text>
           </TouchableOpacity>
         </View>
       ) : (

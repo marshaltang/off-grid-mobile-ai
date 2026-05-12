@@ -74,6 +74,10 @@ jest.mock('../../../src/components/AnimatedListItem', () => ({
   },
 }));
 
+jest.mock('react-i18next', () => ({
+  useTranslation: () => ({ t: (key: string) => require('../../helpers/mockI18n').mockT(key) }),
+}));
+
 import { DeviceInfoScreen } from '../../../src/screens/DeviceInfoScreen';
 
 describe('DeviceInfoScreen', () => {

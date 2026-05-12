@@ -34,7 +34,7 @@ type AppSettings = {
 };
 
 type ThemeMode = 'system' | 'light' | 'dark';
-type Language = 'en' | 'zh-CN';
+export type Language = 'en' | 'zh-CN';
 
 interface AppState {
   themeMode: ThemeMode;

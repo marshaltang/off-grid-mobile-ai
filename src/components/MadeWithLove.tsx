@@ -1,22 +1,27 @@
 import React from 'react';
 import { View, Text, Image, TouchableOpacity, Linking, StyleSheet } from 'react-native';
 import { TYPOGRAPHY } from '../constants';
+import { useTranslation } from 'react-i18next';
 
 const WEDNESDAY_URL = 'https://www.wednesday.is/?utm_source=off-grid-mobile-app';
 
-export const MadeWithLove: React.FC = () => (
-  <TouchableOpacity onPress={() => Linking.openURL(WEDNESDAY_URL)} style={styles.container}>
-    <View style={styles.row}>
-      <Text style={styles.text}>
-        {'made with '}
-        <Text style={styles.heart}>{'♥'}</Text>
-        {' by '}
-      </Text>
-      <Image source={require('../assets/wednesday_logo.png')} style={styles.logo} />
-      <Text style={styles.text}>{'Wednesday'}</Text>
-    </View>
-  </TouchableOpacity>
-);
+export const MadeWithLove: React.FC = () => {
+  const { t } = useTranslation();
+  
+  return (
+    <TouchableOpacity onPress={() => Linking.openURL(WEDNESDAY_URL)} style={styles.container}>
+      <View style={styles.row}>
+        <Text style={styles.text}>
+          {t('onboarding.madeWithLovePrefix')}
+          <Text style={styles.heart}>{'♥'}</Text>
+          {t('onboarding.madeWithLoveSuffix')}
+        </Text>
+        <Image source={require('../assets/wednesday_logo.png')} style={styles.logo} />
+        <Text style={styles.text}>{t('onboarding.madeWithLoveName')}</Text>
+      </View>
+    </TouchableOpacity>
+  );
+};
 
 const TEXT_COLOR = '#8C8C8C';
 const HEART_COLOR = '#FF0000';

@@ -131,6 +131,10 @@ jest.mock('../../../src/components/AnimatedListItem', () => ({
   },
 }));
 
+jest.mock('react-i18next', () => ({
+  useTranslation: () => ({ t: (key: string, options?: any) => require('../../helpers/mockI18n').mockT(key, options) }),
+}));
+
 import { DownloadManagerScreen } from '../../../src/screens/DownloadManagerScreen';
 
 // Standard model fixture used across many tests

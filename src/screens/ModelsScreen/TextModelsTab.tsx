@@ -67,6 +67,7 @@ const ModelDetailView: React.FC<DetailProps> = ({
 }) => {
   const { colors } = useTheme();
   const styles = useThemedStyles(createStyles);
+  const { t } = useTranslation();
   const { goTo } = useSpotlightTour();
 
   // If user arrived here via onboarding spotlight flow, show file card spotlight

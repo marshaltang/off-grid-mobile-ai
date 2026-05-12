@@ -11,6 +11,7 @@ import { TYPOGRAPHY, SPACING, FONTS } from '../constants';
 import { huggingFaceService } from '../services';
 import { ModelFile, RemoteModel, RemoteServer } from '../types';
 import logger from '../utils/logger';
+import { useTranslation } from 'react-i18next';
 
 // ---------------------------------------------------------------------------
 // Model file fetching
@@ -46,9 +47,10 @@ export const ServerCard: React.FC<{
   onConnect: () => void;
   colors: ThemeColors;
 }> = ({ server, modelCount, isConnecting, isConnected, onConnect, colors }) => {
-  const serverType = server.endpoint.includes(':11434') ? 'Ollama'
-    : server.endpoint.includes(':1234') ? 'LM Studio'
-    : 'AI Server';
+  const { t } = useTranslation();
+  const serverType = server.endpoint.includes(':11434') ? t('download.serverTypeOllama')
+    : server.endpoint.includes(':1234') ? t('download.serverTypeLMStudio')
+    : t('download.serverTypeAIServer');
   const styles = serverCardStyles(colors);
 
   return (
@@ -57,20 +59,20 @@ export const ServerCard: React.FC<{
         <View style={styles.serverInfo}>
           <Text style={styles.serverName}>{server.name}</Text>
           <Text style={styles.serverMeta}>
-            {serverType} · {modelCount > 0 ? `${modelCount} model${modelCount !== 1 ? 's' : ''}` : 'Tap to connect'}
+            {serverType} · {modelCount > 0 ? t('download.modelCount', { count: modelCount }) : t('download.tapToConnect')}
           </Text>
         </View>
         {isConnecting && (
           <ActivityIndicator size="small" color={colors.primary} />
         )}
         {!isConnecting && isConnected && (
-          <View style={[styles.connectedBadge, { backgroundColor: `${colors.success}20`, borderColor: colors.success }]} testID={`discovered-server-${server.id}-connected`}>
-            <Text style={[styles.connectButtonText, { color: colors.success }]}>Connected</Text>
+            <View style={[styles.connectedBadge, { backgroundColor: `${colors.success}20`, borderColor: colors.success }]} testID={`discovered-server-${server.id}-connected`}>
+            <Text style={[styles.connectButtonText, { color: colors.success }]}>{t('download.connected')}</Text>
           </View>
         )}
         {!isConnecting && !isConnected && (
-          <TouchableOpacity style={[styles.connectButton, { borderColor: colors.primary }]} onPress={onConnect} testID={`discovered-server-${server.id}-connect`}>
-            <Text style={[styles.connectButtonText, { color: colors.primary }]}>Connect</Text>
+            <TouchableOpacity style={[styles.connectButton, { borderColor: colors.primary }]} onPress={onConnect} testID={`discovered-server-${server.id}-connect`}>
+            <Text style={[styles.connectButtonText, { color: colors.primary }]}>{t('download.connect')}</Text>
           </TouchableOpacity>
         )}
       </View>
@@ -94,18 +96,19 @@ export const NetworkSection: React.FC<{
   onAddManually: () => void;
   colors: ThemeColors;
 }> = ({ servers, discoveredModels, connectingServerId, connectedServerId, isCheckingNetwork, isScanning, onConnectServer, onScanNetwork, onAddManually, colors }) => {
+  const { t } = useTranslation();
   const styles = networkSectionStyles(colors);
   const hasServers = servers.length > 0;
   const busy = isCheckingNetwork || isScanning;
 
   return (
     <View style={styles.section}>
-      <Text style={styles.sectionTitle}>Network Models</Text>
+      <Text style={styles.sectionTitle}>{t('download.networkModels')}</Text>
 
       {isCheckingNetwork && !hasServers && (
         <View style={styles.scanningRow}>
           <ActivityIndicator size="small" color={colors.textSecondary} />
-          <Text style={styles.scanningText}>Scanning your network...</Text>
+          <Text style={styles.scanningText}>{t('download.scanningNetwork')}</Text>
         </View>
       )}
 
@@ -123,7 +126,7 @@ export const NetworkSection: React.FC<{
 
       {!isCheckingNetwork && !hasServers && (
         <Text style={styles.emptyText}>
-          No servers found. Make sure you're on the same WiFi network as your Ollama or LM Studio server, then scan or add it manually.
+          {t('download.noServersFoundText')}
         </Text>
       )}
 
@@ -135,13 +138,13 @@ export const NetworkSection: React.FC<{
         >
           {busy
             ? <ActivityIndicator size="small" color={colors.primary} />
-            : <Text style={[styles.actionButtonText, { color: colors.primary }]}>Scan Network</Text>}
+            : <Text style={[styles.actionButtonText, { color: colors.primary }]}>{t('download.scanNetwork')}</Text>}
         </TouchableOpacity>
         <TouchableOpacity
           style={[styles.actionButton, { borderColor: colors.primary }]}
           onPress={onAddManually}
         >
-          <Text style={[styles.actionButtonText, { color: colors.primary }]}>Add Server</Text>
+          <Text style={[styles.actionButtonText, { color: colors.primary }]}>{t('download.addServer')}</Text>
         </TouchableOpacity>
       </View>
     </View>

@@ -5,7 +5,7 @@ import type { ThemeColors, ThemeShadows } from './palettes';
 
 /**
  * Creates memoized StyleSheet from a factory that receives theme colors & shadows.
- * Re-computes only when the theme mode changes (light ↔ dark).
+ * Re-computes only when the theme mode changes (light ↔ dark) or the factory changes.
  *
  * Usage:
  *   const styles = useThemedStyles(createStyles);
@@ -15,10 +15,9 @@ import type { ThemeColors, ThemeShadows } from './palettes';
 export function useThemedStyles<T extends StyleSheet.NamedStyles<T>>(
   factory: (colors: ThemeColors, shadows: ThemeShadows) => T,
 ): T {
-  const { colors, shadows, isDark } = useTheme();
+  const { colors, shadows } = useTheme();
   return useMemo(
     () => StyleSheet.create(factory(colors, shadows)),
-
-    [isDark],
+    [factory, colors, shadows],
   );
 }

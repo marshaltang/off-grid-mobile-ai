@@ -64,90 +64,90 @@ export const useWhisperTranscription = (): UseWhisperTranscriptionResult => {
   // NOTE: This does NOT clear isTranscribing - that's done by clearResult()
   // which is called from ChatInput after the text is added to the input box.
   // This keeps the loader visible until text actually appears.
-  const finalizeTranscription = useCallback((text: string) => {
-    if (!mountedRef.current) return;
-    const startTime = transcribingStartTime.current;
-    const elapsed = startTime ? Date.now() - startTime : MIN_TRANSCRIBING_TIME;
-    const remaining = Math.max(0, MIN_TRANSCRIBING_TIME - elapsed);
+   const finalizeTranscription = useCallback((text: string) => {
+     if (!mountedRef.current) return;
+     const startTime = transcribingStartTime.current;
+     const elapsed = startTime ? Date.now() - startTime : MIN_TRANSCRIBING_TIME;
+     const remaining = Math.max(0, MIN_TRANSCRIBING_TIME - elapsed);
 
-    if (remaining > 0) {
-      // Store result and wait for minimum time
-      pendingResult.current = text;
-      setTimeout(() => {
-        if (!mountedRef.current) return;
-        if (!isCancelled.current && pendingResult.current !== null) {
-          setFinalResult(pendingResult.current);
-          pendingResult.current = null;
-        } else {
-          // If cancelled, clear the transcribing state
-          setIsTranscribing(false);
-        }
-        setPartialResult('');
-        transcribingStartTime.current = null;
-      }, remaining);
-    } else {
-      // Minimum time already passed - set result, let clearResult() clear isTranscribing
-      setFinalResult(text);
-      setPartialResult('');
-      transcribingStartTime.current = null;
-    }
-  }, []);
+     if (remaining > 0) {
+       // Store result and wait for minimum time
+       pendingResult.current = text;
+       setTimeout(() => {
+         if (!mountedRef.current) return;
+         if (!isCancelled.current && pendingResult.current !== null) {
+           setFinalResult(pendingResult.current);
+           pendingResult.current = null;
+         } else {
+           // If cancelled, clear the transcribing state
+           setIsTranscribing(false);
+         }
+         setPartialResult('');
+         transcribingStartTime.current = null;
+       }, remaining);
+     } else {
+       // Minimum time already passed - set result, let clearResult() clear isTranscribing
+       setFinalResult(text);
+       setPartialResult('');
+       transcribingStartTime.current = null;
+     }
+   }, [mountedRef, transcribingStartTime, MIN_TRANSCRIBING_TIME, isCancelled, pendingResult, setFinalResult, setIsTranscribing, setPartialResult]);
 
   // Extra recording time after user releases button (ms)
   // Whisper needs trailing audio/silence to properly process speech
   const TRAILING_RECORD_TIME = 2500;
 
   // Define stopRecording first since startRecording depends on it
-  const stopRecording = useCallback(async () => {
-    logger.log('[Whisper] stopRecording called');
+   const stopRecording = useCallback(async () => {
+     logger.log('[Whisper] stopRecording called');
 
-    // Immediately update UI to show "Transcribing..." state
-    // But keep recording in background for better accuracy
-    if (mountedRef.current) setIsRecording(false);
-    transcribingStartTime.current = Date.now();
+     // Immediately update UI to show "Transcribing..." state
+     // But keep recording in background for better accuracy
+     if (mountedRef.current) setIsRecording(false);
+     transcribingStartTime.current = Date.now();
 
-    try {
-      // Continue recording for a bit longer to capture trailing audio
-      // This helps Whisper process the speech more accurately
-      // User sees "Transcribing..." during this time
-      logger.log('[Whisper] Capturing trailing audio for', TRAILING_RECORD_TIME, 'ms...');
-      await new Promise<void>(resolve => setTimeout(() => resolve(), TRAILING_RECORD_TIME));
+     try {
+       // Continue recording for a bit longer to capture trailing audio
+       // This helps Whisper process the speech more accurately
+       // User sees "Transcribing..." during this time
+       logger.log('[Whisper] Capturing trailing audio for', TRAILING_RECORD_TIME, 'ms...');
+       await new Promise<void>(resolve => setTimeout(() => resolve(), TRAILING_RECORD_TIME));
 
-      // Check if cancelled or unmounted during the wait
-      if (isCancelled.current || !mountedRef.current) {
-        logger.log('[Whisper] Cancelled/unmounted during trailing capture');
-        whisperService.forceReset();
-        return;
+       // Check if cancelled or unmounted during the wait
+       if (isCancelled.current || !mountedRef.current) {
+         logger.log('[Whisper] Cancelled/unmounted during trailing capture');
+         whisperService.forceReset();
+         return;
+       }
+
+       // Now actually stop the transcription
+       await whisperService.stopTranscription();
+       // Haptic feedback
+       if (mountedRef.current) Vibration.vibrate(30);
+     } catch (err) {
+       logger.error('[Whisper] Stop error:', err);
+       // Force reset on error
+       whisperService.forceReset();
+       // On error, also clear transcribing state (only if still mounted)
+       if (mountedRef.current) {
+         setIsTranscribing(false);
+         transcribingStartTime.current = null;
+       }
+     }
+    }, [mountedRef, setIsRecording, transcribingStartTime, TRAILING_RECORD_TIME, isCancelled, setIsTranscribing]);
+
+    const clearResult = useCallback(() => {
+      setFinalResult('');
+      setPartialResult('');
+      setIsTranscribing(false);
+      isCancelled.current = true;
+      pendingResult.current = null;
+      transcribingStartTime.current = null;
+      // Also ensure recording is stopped
+      if (whisperService.isCurrentlyTranscribing()) {
+        whisperService.stopTranscription();
       }
-
-      // Now actually stop the transcription
-      await whisperService.stopTranscription();
-      // Haptic feedback
-      if (mountedRef.current) Vibration.vibrate(30);
-    } catch (err) {
-      logger.error('[Whisper] Stop error:', err);
-      // Force reset on error
-      whisperService.forceReset();
-      // On error, also clear transcribing state (only if still mounted)
-      if (mountedRef.current) {
-        setIsTranscribing(false);
-        transcribingStartTime.current = null;
-      }
-    }
-  }, []);
-
-  const clearResult = useCallback(() => {
-    setFinalResult('');
-    setPartialResult('');
-    setIsTranscribing(false);
-    isCancelled.current = true;
-    pendingResult.current = null;
-    transcribingStartTime.current = null;
-    // Also ensure recording is stopped
-    if (whisperService.isCurrentlyTranscribing()) {
-      whisperService.stopTranscription();
-    }
-  }, []);
+    }, [setFinalResult, setPartialResult, setIsTranscribing, isCancelled, pendingResult, transcribingStartTime]);
 
   const startRecording = useCallback(async () => {
     logger.log('[Whisper] startRecording called');
@@ -229,7 +229,7 @@ export const useWhisperTranscription = (): UseWhisperTranscriptionResult => {
         Vibration.vibrate([0, 50, 50, 50]);
       }
     }
-  }, [downloadedModelId, loadModel, isRecording, stopRecording, finalizeTranscription]);
+    }, [mountedRef, stopRecording, isRecording, downloadedModelId, loadModel, setError, setIsRecording, setIsTranscribing, setPartialResult, setFinalResult, setRecordingTime, isCancelled, finalizeTranscription, transcribingStartTime]);
 
   return {
     isRecording,

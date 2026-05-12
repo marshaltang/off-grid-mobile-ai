@@ -129,24 +129,6 @@ export const useHomeScreen = (navigation: HomeScreenNavigationProp) => {
     handleUnloadRemoteImageModel,
   } = useRemoteModelHandlers({ activeModelId, setPickerType, setLoadingState, setAlertState });
 
-  useEffect(() => {
-    const task = InteractionManager.runAfterInteractions(() => {
-      loadData();
-      if (!hasInitializedNativeSync) {
-        hasInitializedNativeSync = true;
-        activeModelService.syncWithNativeState();
-      }
-      if (!hasRunLANDiscovery) {
-        hasRunLANDiscovery = true;
-        // Delay LAN scan so the home screen is fully rendered and interactive first
-        setTimeout(runLANDiscovery, 3000);
-      }
-    });
-    isFirstMount.current = false;
-    return () => task.cancel();
-
-  }, []);
-
   const refreshMemoryInfo = useCallback(async () => {
     try {
       const info = await activeModelService.getResourceUsage();
@@ -162,17 +144,33 @@ export const useHomeScreen = (navigation: HomeScreenNavigationProp) => {
     return () => unsubscribe();
   }, [refreshMemoryInfo]);
 
-  const loadData = async () => {
-    if (!deviceInfo) {
-      const info = await hardwareService.getDeviceInfo();
-      setDeviceInfo(info);
-    }
-    await modelManager.linkOrphanMmProj();
-    const models = await modelManager.getDownloadedModels();
-    setDownloadedModels(models);
-    const imageModels = await modelManager.getDownloadedImageModels();
-    setDownloadedImageModels(imageModels);
-  };
+  useEffect(() => {
+    const loadData = async () => {
+      if (!deviceInfo) {
+        const info = await hardwareService.getDeviceInfo();
+        setDeviceInfo(info);
+      }
+      await modelManager.linkOrphanMmProj();
+      const models = await modelManager.getDownloadedModels();
+      setDownloadedModels(models);
+      const imageModels = await modelManager.getDownloadedImageModels();
+      setDownloadedImageModels(imageModels);
+    };
+    const task = InteractionManager.runAfterInteractions(() => {
+      loadData();
+      if (!hasInitializedNativeSync) {
+        hasInitializedNativeSync = true;
+        activeModelService.syncWithNativeState();
+      }
+      if (!hasRunLANDiscovery) {
+        hasRunLANDiscovery = true;
+        setTimeout(runLANDiscovery, 3000);
+      }
+    });
+    isFirstMount.current = false;
+    return () => task.cancel();
+
+  }, [runLANDiscovery, deviceInfo, setDeviceInfo, setDownloadedModels, setDownloadedImageModels]);
 
   const handleEjectAll = () => {
     const hasLocalModels = activeModelId || activeImageModelId;

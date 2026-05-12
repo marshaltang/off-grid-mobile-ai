@@ -17,6 +17,7 @@ import { createStyles } from './ProjectDetailScreen.styles';
 import { useChatStore, useProjectStore, useAppStore } from '../stores';
 import { Conversation } from '../types';
 import { RootStackParamList } from '../navigation/types';
+import { useTranslation } from 'react-i18next';
 import { KnowledgeBaseSection } from './ProjectDetailKnowledgeBaseSection';
 
 type NavigationProp = NativeStackNavigationProp<RootStackParamList>;
@@ -26,6 +27,7 @@ export const ProjectDetailScreen: React.FC = () => {
   const navigation = useNavigation<NavigationProp>();
   const route = useRoute<RouteProps>();
   const { projectId } = route.params;
+  const { t } = useTranslation();
   const [alertState, setAlertState] = useState<AlertState>(initialAlertState);
   const { colors } = useTheme();
   const styles = useThemedStyles(createStyles);
@@ -49,7 +51,7 @@ export const ProjectDetailScreen: React.FC = () => {
 
   const handleNewChat = () => {
     if (!hasModels) {
-      setAlertState(showAlert('No Model', 'Please download a model first from the Models tab.'));
+      setAlertState(showAlert(t('projects.noModel'), t('projects.noModelMessage')));
       return;
     }
     const modelId = activeModelId || downloadedModels[0]?.id;
@@ -61,12 +63,12 @@ export const ProjectDetailScreen: React.FC = () => {
 
   const handleDeleteProject = () => {
     setAlertState(showAlert(
-      'Delete Project',
-      `Delete "${project?.name}"? This will not delete the chats associated with this project.`,
+      t('projects.deleteProject'),
+      t('projects.deleteProjectConfirm', { name: project?.name }),
       [
-        { text: 'Cancel', style: 'cancel' },
+        { text: t('common.cancel'), style: 'cancel' },
         {
-          text: 'Delete',
+          text: t('common.delete'),
           style: 'destructive',
           onPress: () => {
             deleteProject(projectId);
@@ -79,12 +81,12 @@ export const ProjectDetailScreen: React.FC = () => {
 
   const handleDeleteChat = (conversation: Conversation) => {
     setAlertState(showAlert(
-      'Delete Chat',
-      `Delete "${conversation.title}"?`,
+      t('chats.deleteChat'),
+      t('chats.deleteConfirmSimple', { title: conversation.title }),
       [
-        { text: 'Cancel', style: 'cancel' },
+        { text: t('common.cancel'), style: 'cancel' },
         {
-          text: 'Delete',
+          text: t('common.delete'),
           style: 'destructive',
           onPress: () => deleteConversation(conversation.id),
         },
@@ -100,7 +102,7 @@ export const ProjectDetailScreen: React.FC = () => {
     if (diffDays === 0) {
       return date.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
     } else if (diffDays === 1) {
-      return 'Yesterday';
+      return t('chats.yesterday');
     } else if (diffDays < 7) {
       return date.toLocaleDateString([], { weekday: 'short' });
     }
@@ -141,7 +143,7 @@ export const ProjectDetailScreen: React.FC = () => {
             </View>
             {lastMessage && (
               <Text style={styles.chatPreview} numberOfLines={1}>
-                {lastMessage.role === 'user' ? 'You: ' : ''}{lastMessage.content}
+                {lastMessage.role === 'user' ? t('chats.youPrefix') : ''}{lastMessage.content}
               </Text>
             )}
           </View>
@@ -155,9 +157,9 @@ export const ProjectDetailScreen: React.FC = () => {
     return (
       <SafeAreaView style={styles.container} edges={['top']}>
         <View style={styles.errorContainer}>
-          <Text style={styles.errorText}>Project not found</Text>
+          <Text style={styles.errorText}>{t('projects.notFound')}</Text>
           <TouchableOpacity onPress={() => navigation.goBack()}>
-            <Text style={styles.errorLink}>Go back</Text>
+            <Text style={styles.errorLink}>{t('projects.goBack')}</Text>
           </TouchableOpacity>
         </View>
       </SafeAreaView>
@@ -205,14 +207,14 @@ export const ProjectDetailScreen: React.FC = () => {
             activeOpacity={0.7}
           >
             <View style={styles.sectionTitleRow}>
-              <Text style={styles.sectionTitle}>Chats</Text>
+              <Text style={styles.sectionTitle}>{t('projects.sectionChats')}</Text>
               {projectChats.length > 0 && (
                 <Text style={styles.sectionCount}>{projectChats.length}</Text>
               )}
             </View>
             <View style={styles.sectionActions}>
               <Button
-                title="New"
+                title={t('chats.new')}
                 variant="primary"
                 size="small"
                 onPress={handleNewChat}
@@ -232,10 +234,10 @@ export const ProjectDetailScreen: React.FC = () => {
             {projectChats.length === 0 ? (
               <View style={styles.emptyState}>
                 <Icon name="message-circle" size={24} color={colors.textMuted} />
-                <Text style={styles.emptyStateText}>No chats yet</Text>
+                <Text style={styles.emptyStateText}>{t('chats.noChats')}</Text>
                 {hasModels && (
                   <Button
-                    title="Start a Chat"
+                    title={t('chats.startChat')}
                     variant="primary"
                     size="small"
                     onPress={handleNewChat}
@@ -257,7 +259,7 @@ export const ProjectDetailScreen: React.FC = () => {
       {/* Delete Project Button */}
       <View style={styles.footer}>
         <Button
-          title="Delete Project"
+          title={t('projects.deleteProject')}
           variant="ghost"
           size="medium"
           onPress={handleDeleteProject}

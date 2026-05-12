@@ -42,6 +42,7 @@ type PlaceholderTextOptions = {
   isModelLoading: boolean;
   supportsVision: boolean;
   imageOnly?: boolean;
+  t: (key: string) => string;
 };
 
 export function getPlaceholderText({
@@ -49,8 +50,9 @@ export function getPlaceholderText({
   isModelLoading,
   supportsVision,
   imageOnly,
+  t,
 }: PlaceholderTextOptions): string {
-  if (!hasModel) return isModelLoading ? 'Loading model...' : 'Load a model to use chat';
-  if (imageOnly) return 'Describe an image...';
-  return supportsVision ? 'Type a message or add an image...' : 'Type a message...';
+  if (!hasModel) return isModelLoading ? t('chats.loadingModelPlaceholder') : t('chats.loadModelPlaceholder');
+  if (imageOnly) return t('chats.describeImagePlaceholder');
+  return supportsVision ? t('chats.typeMessageOrImagePlaceholder') : t('chats.typeMessagePlaceholder');
 }

@@ -29,6 +29,36 @@ import {
 
 // Mock navigation
 const mockNavigate = jest.fn();
+jest.mock('react-i18next', () => {
+  const en = require('../../../src/i18n/locales/en.json');
+  const flat: Record<string, string> = {};
+  const flatten = (obj: Record<string, any>, prefix = '') => {
+    for (const key of Object.keys(obj)) {
+      const path = prefix ? `${prefix}.${key}` : key;
+      if (typeof obj[key] === 'object' && obj[key] !== null) {
+        flatten(obj[key], path);
+      } else if (typeof obj[key] === 'string') {
+        flat[path] = obj[key];
+      }
+    }
+  };
+  flatten(en);
+  return {
+    useTranslation: () => ({
+      t: (key: string, options?: Record<string, any>) => {
+        let value = flat[key] || key;
+        if (options) {
+          for (const [k, v] of Object.entries(options)) {
+            value = value.replace(`{{${k}}}`, String(v));
+          }
+        }
+        return value;
+      },
+      i18n: { language: 'en' },
+    }),
+    initReactI18next: { type: '3rdParty', init: jest.fn() },
+  };
+});
 jest.mock('@react-navigation/native', () => {
   const actual = jest.requireActual('@react-navigation/native');
   return {

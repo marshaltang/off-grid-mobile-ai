@@ -14,12 +14,14 @@ import type { ThemeColors, ThemeShadows } from '../theme';
 import { TYPOGRAPHY, SPACING } from '../constants';
 import { useAppStore } from '../stores';
 import { hardwareService } from '../services';
+import { useTranslation } from 'react-i18next';
 
 export const DeviceInfoScreen: React.FC = () => {
   const navigation = useNavigation();
   const { deviceInfo } = useAppStore();
   const { colors } = useTheme();
   const styles = useThemedStyles(createStyles);
+  const { t } = useTranslation();
 
   const totalRamGB = hardwareService.getTotalMemoryGB();
   const deviceTier = hardwareService.getDeviceTier();
@@ -33,28 +35,28 @@ export const DeviceInfoScreen: React.FC = () => {
         >
           <Icon name="arrow-left" size={20} color={colors.text} />
         </TouchableOpacity>
-        <Text style={styles.title}>Device Information</Text>
+        <Text style={styles.title}>{t('deviceInfo.title')}</Text>
       </View>
 
       <ScrollView style={styles.scrollView} contentContainerStyle={styles.content}>
         <Card style={styles.section}>
-          <Text style={styles.sectionTitle}>Hardware</Text>
+          <Text style={styles.sectionTitle}>{t('deviceInfo.hardware')}</Text>
           <View style={styles.infoRow}>
-            <Text style={styles.infoLabel}>Model</Text>
+            <Text style={styles.infoLabel}>{t('deviceInfo.model')}</Text>
             <Text style={styles.infoValue}>{deviceInfo?.deviceModel}</Text>
           </View>
           <View style={styles.infoRow}>
-            <Text style={styles.infoLabel}>System</Text>
+            <Text style={styles.infoLabel}>{t('deviceInfo.system')}</Text>
             <Text style={styles.infoValue}>
               {deviceInfo?.systemName} {deviceInfo?.systemVersion}
             </Text>
           </View>
           <View style={styles.infoRow}>
-            <Text style={styles.infoLabel}>Total RAM</Text>
+            <Text style={styles.infoLabel}>{t('deviceInfo.totalRam')}</Text>
             <Text style={styles.infoValue}>{totalRamGB.toFixed(1)} GB</Text>
           </View>
           <View style={[styles.infoRow, styles.lastRow]}>
-            <Text style={styles.infoLabel}>Device Tier</Text>
+            <Text style={styles.infoLabel}>{t('deviceInfo.deviceTier')}</Text>
             <Text style={[styles.infoValue, styles.tierBadge]}>
               {deviceTier.charAt(0).toUpperCase() + deviceTier.slice(1)}
             </Text>
@@ -62,31 +64,31 @@ export const DeviceInfoScreen: React.FC = () => {
         </Card>
 
         <Card style={styles.section}>
-          <Text style={styles.sectionTitle}>Compatibility</Text>
+          <Text style={styles.sectionTitle}>{t('deviceInfo.compatibility')}</Text>
           <Text style={styles.description}>
-            Your device tier determines which models will run smoothly. Higher RAM allows larger, more capable models.
+            {t('deviceInfo.description')}
           </Text>
 
           <View style={styles.tierInfo}>
             <View style={[styles.tierItem, deviceTier === 'low' && styles.tierItemActive]}>
-              <Text style={[styles.tierName, deviceTier === 'low' && styles.tierNameActive]}>Low</Text>
-              <Text style={styles.tierDesc}>{'< 4GB RAM'}</Text>
-              <Text style={styles.tierModels}>Small models only</Text>
+              <Text style={[styles.tierName, deviceTier === 'low' && styles.tierNameActive]}>{t('deviceInfo.low')}</Text>
+              <Text style={styles.tierDesc}>{t('deviceInfo.lessThan4GB')}</Text>
+              <Text style={styles.tierModels}>{t('deviceInfo.smallModelsOnly')}</Text>
             </View>
             <View style={[styles.tierItem, deviceTier === 'medium' && styles.tierItemActive]}>
-              <Text style={[styles.tierName, deviceTier === 'medium' && styles.tierNameActive]}>Medium</Text>
-              <Text style={styles.tierDesc}>4-6GB RAM</Text>
-              <Text style={styles.tierModels}>Most models</Text>
+              <Text style={[styles.tierName, deviceTier === 'medium' && styles.tierNameActive]}>{t('deviceInfo.medium')}</Text>
+              <Text style={styles.tierDesc}>{t('deviceInfo.ram4to6GB')}</Text>
+              <Text style={styles.tierModels}>{t('deviceInfo.mostModels')}</Text>
             </View>
             <View style={[styles.tierItem, deviceTier === 'high' && styles.tierItemActive]}>
-              <Text style={[styles.tierName, deviceTier === 'high' && styles.tierNameActive]}>High</Text>
-              <Text style={styles.tierDesc}>{'>6GB RAM'}</Text>
-              <Text style={styles.tierModels}>All models</Text>
+              <Text style={[styles.tierName, deviceTier === 'high' && styles.tierNameActive]}>{t('deviceInfo.high')}</Text>
+              <Text style={styles.tierDesc}>{t('deviceInfo.moreThan6GB')}</Text>
+              <Text style={styles.tierModels}>{t('deviceInfo.allModels')}</Text>
             </View>
             <View style={[styles.tierItem, deviceTier === 'flagship' && styles.tierItemActive]}>
-              <Text style={[styles.tierName, deviceTier === 'flagship' && styles.tierNameActive]}>Flagship</Text>
-              <Text style={styles.tierDesc}>{'8GB+ RAM'}</Text>
-              <Text style={styles.tierModels}>All models + largest</Text>
+              <Text style={[styles.tierName, deviceTier === 'flagship' && styles.tierNameActive]}>{t('deviceInfo.flagship')}</Text>
+              <Text style={styles.tierDesc}>{t('deviceInfo.ram8plusGB')}</Text>
+              <Text style={styles.tierModels}>{t('deviceInfo.allModelsPlusLargest')}</Text>
             </View>
           </View>
         </Card>

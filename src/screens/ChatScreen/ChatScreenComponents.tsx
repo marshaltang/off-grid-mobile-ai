@@ -9,6 +9,7 @@ import {
 } from 'react-native';
 import Icon from 'react-native-vector-icons/Feather';
 import { SafeAreaView } from 'react-native-safe-area-context';
+import { useTranslation } from 'react-i18next';
 import { AttachStep } from 'react-native-spotlight-tour';
 import { ModelSelectorModal } from '../../components';
 import { AnimatedEntry } from '../../components/AnimatedEntry';
@@ -29,7 +30,9 @@ export const NoModelScreen: React.FC<{
   onSelectModel: (model: any) => void;
   onUnloadModel: () => void;
   isModelLoading: boolean;
-}> = ({ styles, colors, navigation, downloadedModelsCount, showModelSelector, setShowModelSelector, onSelectModel, onUnloadModel, isModelLoading }) => (
+}> = ({ styles, colors, navigation, downloadedModelsCount, showModelSelector, setShowModelSelector, onSelectModel, onUnloadModel, isModelLoading }) => {
+  const { t } = useTranslation();
+  return (
   <SafeAreaView style={styles.container} edges={['top']}>
     <View style={styles.header}>
       <View style={styles.headerRow}>
@@ -37,7 +40,7 @@ export const NoModelScreen: React.FC<{
           <Icon name="arrow-left" size={20} color={colors.text} />
         </TouchableOpacity>
         <View style={styles.headerLeft}>
-          <Text style={styles.headerTitle}>New Chat</Text>
+          <Text style={styles.headerTitle}>{t('chats.newChat')}</Text>
         </View>
         <View style={styles.headerActions} />
       </View>
@@ -46,15 +49,15 @@ export const NoModelScreen: React.FC<{
       <View style={styles.noModelIconContainer}>
         <Icon name="cpu" size={32} color={colors.textMuted} />
       </View>
-      <Text style={styles.noModelTitle}>No Model Selected</Text>
+      <Text style={styles.noModelTitle}>{t('chats.noModelSelected')}</Text>
       <Text style={styles.noModelText}>
         {downloadedModelsCount > 0
-          ? 'Select a text or image model to get started.'
-          : 'Download a text or image model from the Models tab to get started.'}
+          ? t('chats.selectModelToStart')
+          : t('chats.downloadModelToStart')}
       </Text>
       {downloadedModelsCount > 0 && (
         <TouchableOpacity style={styles.selectModelButton} onPress={() => setShowModelSelector(true)}>
-          <Text style={styles.selectModelButtonText}>Select Model</Text>
+          <Text style={styles.selectModelButtonText}>{t('chats.selectModel')}</Text>
         </TouchableOpacity>
       )}
     </View>
@@ -68,6 +71,7 @@ export const NoModelScreen: React.FC<{
     />
   </SafeAreaView>
 );
+};
 
 export const LoadingScreen: React.FC<{
   styles: StylesType;
@@ -76,7 +80,9 @@ export const LoadingScreen: React.FC<{
   loadingModelName: string;
   modelSize: string;
   hasVision: boolean;
-}> = ({ styles, colors, navigation, loadingModelName, modelSize, hasVision }) => (
+}> = ({ styles, colors, navigation, loadingModelName, modelSize, hasVision }) => {
+  const { t } = useTranslation();
+  return (
   <SafeAreaView style={styles.container} edges={['top']}>
     <View style={styles.header}>
       <View style={styles.headerRow}>
@@ -84,22 +90,23 @@ export const LoadingScreen: React.FC<{
           <Icon name="arrow-left" size={20} color={colors.text} />
         </TouchableOpacity>
         <View style={styles.headerLeft}>
-          <Text style={styles.headerTitle}>Loading Model</Text>
+          <Text style={styles.headerTitle}>{t('chats.loadingModel')}</Text>
         </View>
         <View style={styles.headerActions} />
       </View>
     </View>
     <View style={styles.loadingContainer}>
       <ActivityIndicator size="large" color={colors.primary} />
-      <Text style={styles.loadingText}>Loading {loadingModelName}</Text>
+      <Text style={styles.loadingText}>{t('chats.loadingModelName', { name: loadingModelName })}</Text>
       {modelSize ? <Text style={styles.loadingSubtext}>{modelSize}</Text> : null}
       <Text style={styles.loadingHint}>
-        Preparing model for inference. This may take a moment for larger models.
+        {t('chats.modelLoadingHint')}
       </Text>
-      {hasVision && <Text style={styles.loadingHint}>Vision capabilities will be enabled.</Text>}
+      {hasVision && <Text style={styles.loadingHint}>{t('chats.visionEnabled')}</Text>}
     </View>
   </SafeAreaView>
 );
+};
 
 export const ChatHeader: React.FC<{
   styles: StylesType;
@@ -114,7 +121,9 @@ export const ChatHeader: React.FC<{
   setShowSettingsPanel: (v: boolean) => void;
   setShowProjectSelector: (v: boolean) => void;
   isRemote?: boolean;
-}> = ({ styles, colors, activeConversation, activeModel, activeModelName, activeImageModel, activeProject, navigation, setShowModelSelector, setShowSettingsPanel, setShowProjectSelector, isRemote }) => (
+}> = ({ styles, colors, activeConversation, activeModel, activeModelName, activeImageModel, activeProject, navigation, setShowModelSelector, setShowSettingsPanel, setShowProjectSelector, isRemote }) => {
+  const { t } = useTranslation();
+  return (
   <View style={styles.header}>
     <View style={styles.headerRow}>
       <TouchableOpacity style={styles.backButton} onPress={() => navigation.goBack()}>
@@ -122,7 +131,7 @@ export const ChatHeader: React.FC<{
       </TouchableOpacity>
       <View style={styles.headerLeft}>
         <Text style={styles.headerTitle} numberOfLines={1}>
-          {activeConversation?.title || 'New Chat'}
+          {activeConversation?.title || t('chats.newChat')}
         </Text>
         <View style={styles.headerSubtitleRow}>
           <TouchableOpacity style={styles.modelSelector} onPress={() => setShowModelSelector(true)} testID="model-selector">
@@ -130,7 +139,7 @@ export const ChatHeader: React.FC<{
               <Icon name="cloud" size={12} color={colors.primary} style={styles.remoteIcon} />
             )}
             <Text style={styles.headerSubtitle} numberOfLines={1} testID="model-loaded-indicator">
-              {activeModelName || activeModel?.name || 'Unknown'}
+              {activeModelName || activeModel?.name || t('remoteServers.status.unknown')}
             </Text>
             {activeImageModel && (
               <View style={styles.headerImageBadge}>
@@ -143,7 +152,7 @@ export const ChatHeader: React.FC<{
           <TouchableOpacity style={styles.headerProjectRow} onPress={() => setShowProjectSelector(true)}>
             <Icon name="folder" size={11} color={activeProject ? colors.primary : colors.textMuted} />
             <Text style={[styles.headerSubtitle, { color: activeProject ? colors.primary : colors.textMuted }]} numberOfLines={1}>
-              {activeProject ? activeProject.name : 'Default'}
+              {activeProject ? activeProject.name : t('chats.defaultProject')}
             </Text>
           </TouchableOpacity>
         </View>
@@ -158,6 +167,7 @@ export const ChatHeader: React.FC<{
     </View>
   </View>
 );
+};
 
 export const EmptyChat: React.FC<{
   styles: StylesType;
@@ -167,7 +177,9 @@ export const EmptyChat: React.FC<{
   activeProject: any;
   setShowProjectSelector: (v: boolean) => void;
   isRemote?: boolean;
-}> = ({ styles, colors, activeModel, activeModelName, activeProject, setShowProjectSelector, isRemote }) => (
+}> = ({ styles, colors, activeModel, activeModelName, activeProject, setShowProjectSelector, isRemote }) => {
+  const { t } = useTranslation();
+  return (
   <View style={styles.emptyChat}>
     <AnimatedEntry index={0} staggerMs={60}>
       <View style={styles.emptyChatIconContainer}>
@@ -175,11 +187,11 @@ export const EmptyChat: React.FC<{
       </View>
     </AnimatedEntry>
     <AnimatedEntry index={1} staggerMs={60}>
-      <Text style={styles.emptyChatTitle}>Start a Conversation</Text>
+      <Text style={styles.emptyChatTitle}>{t('chats.startConversation')}</Text>
     </AnimatedEntry>
     <AnimatedEntry index={2} staggerMs={60}>
       <Text style={styles.emptyChatText}>
-        Type a message below to begin chatting with {activeModelName || activeModel?.name || 'Unknown'}.
+        {t('chats.chatWithModel', { name: activeModelName || activeModel?.name || t('remoteServers.status.unknown') })}
       </Text>
     </AnimatedEntry>
     <AnimatedEntry index={3} staggerMs={60}>
@@ -190,19 +202,20 @@ export const EmptyChat: React.FC<{
           </Text>
         </View>
         <Text style={styles.projectHintText}>
-          Project: {activeProject?.name || 'Default'} — tap to change
+          {t('chats.projectHint', { name: activeProject?.name || t('chats.defaultProject') })}
         </Text>
       </TouchableOpacity>
     </AnimatedEntry>
     <AnimatedEntry index={4} staggerMs={60}>
       <Text style={styles.privacyText}>
         {isRemote
-          ? 'This conversation uses a remote model. Your messages will be sent to the remote server.'
-          : 'This conversation is completely private. All processing happens on your device.'}
+          ? t('chats.remotePrivacy')
+          : t('chats.localPrivacy')}
       </Text>
     </AnimatedEntry>
   </View>
 );
+};
 
 export const ImageProgressIndicator: React.FC<{
   styles: StylesType;
@@ -211,7 +224,9 @@ export const ImageProgressIndicator: React.FC<{
   imageGenerationStatus: string | null | undefined;
   imageGenerationProgress: { step: number; totalSteps: number } | null | undefined;
   onStop: () => void;
-}> = ({ styles, colors, imagePreviewPath, imageGenerationStatus, imageGenerationProgress, onStop }) => (
+}> = ({ styles, colors, imagePreviewPath, imageGenerationStatus, imageGenerationProgress, onStop }) => {
+  const { t } = useTranslation();
+  return (
   <View style={styles.imageProgressContainer}>
     <View style={styles.imageProgressCard}>
       <View style={styles.imageProgressRow}>
@@ -225,7 +240,7 @@ export const ImageProgressIndicator: React.FC<{
             </View>
             <View style={styles.imageProgressInfo}>
               <Text style={styles.imageProgressTitle}>
-                {imagePreviewPath ? 'Refining Image' : 'Generating Image'}
+                {imagePreviewPath ? t('chats.refiningImage') : t('chats.generatingImage')}
               </Text>
               {imageGenerationStatus && (
                 <Text style={styles.imageProgressStatus}>{imageGenerationStatus}</Text>
@@ -257,6 +272,7 @@ export const ImageProgressIndicator: React.FC<{
     </View>
   </View>
 );
+};
 
 export const ImageViewerModal: React.FC<{
   styles: StylesType;
@@ -264,7 +280,9 @@ export const ImageViewerModal: React.FC<{
   viewerImageUri: string | null;
   onClose: () => void;
   onSave: () => void;
-}> = ({ styles, colors, viewerImageUri, onClose, onSave }) => (
+}> = ({ styles, colors, viewerImageUri, onClose, onSave }) => {
+  const { t } = useTranslation();
+  return (
   <Modal visible={!!viewerImageUri} transparent animationType="fade" onRequestClose={onClose}>
     <View style={styles.imageViewerContainer}>
       <TouchableOpacity style={styles.imageViewerBackdrop} activeOpacity={1} onPress={onClose} />
@@ -274,11 +292,11 @@ export const ImageViewerModal: React.FC<{
           <View style={styles.imageViewerActions}>
             <TouchableOpacity style={styles.imageViewerButton} onPress={onSave}>
               <Icon name="download" size={24} color={colors.text} />
-              <Text style={styles.imageViewerButtonText}>Save</Text>
+              <Text style={styles.imageViewerButtonText}>{t('common.save')}</Text>
             </TouchableOpacity>
             <TouchableOpacity style={styles.imageViewerButton} onPress={onClose}>
               <Icon name="x" size={24} color={colors.text} />
-              <Text style={styles.imageViewerButtonText}>Close</Text>
+              <Text style={styles.imageViewerButtonText}>{t('common.close')}</Text>
             </TouchableOpacity>
           </View>
         </View>
@@ -286,3 +304,4 @@ export const ImageViewerModal: React.FC<{
     </View>
   </Modal>
 );
+};

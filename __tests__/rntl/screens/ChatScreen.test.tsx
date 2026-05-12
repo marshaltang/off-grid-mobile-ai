@@ -37,6 +37,48 @@ import {
   createProject,
 } from '../../utils/factories';
 
+// Mock react-i18next translations
+jest.mock('react-i18next', () => {
+  const translations: Record<string, string> = {
+    'chats.newChat': 'New Chat',
+    'chats.noModelSelected': 'No Model Selected',
+    'chats.selectModelToStart': 'Select a text or image model to get started.',
+    'chats.downloadModelToStart': 'Download a text or image model from the Models tab to get started.',
+    'chats.selectModel': 'Select Model',
+    'chats.loadingModel': 'Loading Model',
+    'chats.loadingModelName': 'Loading {{name}}',
+    'chats.defaultProject': 'Default',
+    'chats.startConversation': 'Start a Conversation',
+    'chats.chatWithModel': 'Type a message below to begin chatting with {{name}}.',
+    'chats.projectHint': 'Project: {{name}} — tap to change',
+    'chats.remotePrivacy': 'This conversation uses a remote model. Your messages will be sent to the remote server.',
+    'chats.localPrivacy': 'This conversation is completely private. All processing happens on your device.',
+    'chats.refiningImage': 'Refining Image',
+    'chats.generatingImage': 'Generating Image',
+    'chats.understandingRequest': 'Understanding your request...',
+    'chats.compactingConversation': 'Compacting your conversation...',
+    'chats.settingsChanged': 'Settings changed — tap to reload model',
+    'chats.loadModelPlaceholder': 'Load a model to use chat',
+    'chats.loadingModelPlaceholder': 'Loading model...',
+    'chats.describeImagePlaceholder': 'Describe an image...',
+    'chats.typeMessageOrImagePlaceholder': 'Type a message or add an image...',
+    'chats.typeMessagePlaceholder': 'Type a message...',
+    'common.save': 'Save',
+    'common.close': 'Close',
+    'remoteServers.status.unknown': 'Unknown',
+  };
+  const t = (key: string, options?: Record<string, string>) => {
+    const value = translations[key];
+    if (typeof value === 'string' && options) {
+      return value.replace(/\{\{(\w+)\}\}/g, (_: string, match: string) => options[match] ?? '');
+    }
+    return value ?? key;
+  };
+  return {
+    useTranslation: () => ({ t, i18n: { language: 'en' } }),
+  };
+});
+
 // Mock navigation
 const mockNavigate = jest.fn();
 const mockGoBack = jest.fn();

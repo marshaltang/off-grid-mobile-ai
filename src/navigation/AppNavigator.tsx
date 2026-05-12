@@ -15,6 +15,7 @@ import type { ThemeColors, ThemeShadows } from '../theme';
 import { triggerHaptic } from '../utils/haptics';
 import { useAppStore } from '../stores';
 import { createSpotlightSteps } from '../components/onboarding/spotlightConfig';
+import { useTranslation } from 'react-i18next';
 import {
   OnboardingScreen,
   ModelDownloadScreen,
@@ -55,34 +56,6 @@ const TAB_ICON_MAP: Record<string, string> = {
   SettingsTab: 'settings',
 };
 
-const TabBarIcon: React.FC<{ name: string; focused: boolean }> = ({ name, focused }) => {
-  const { colors } = useTheme();
-  const tabStyles = useThemedStyles(createTabBarStyles);
-  const scale = useSharedValue(focused ? 1.1 : 1);
-
-  useEffect(() => {
-    scale.value = withSpring(focused ? 1.1 : 1, { damping: 15, stiffness: 150 });
-
-  }, [focused]);
-
-  const animatedStyle = useAnimatedStyle(() => ({
-    transform: [{ scale: scale.value }],
-  }));
-
-  return (
-    <View style={tabStyles.iconContainer}>
-      <Animated.View style={animatedStyle}>
-        <Icon
-          name={TAB_ICON_MAP[name] || 'circle'}
-          size={22}
-          color={focused ? colors.primary : colors.textMuted}
-        />
-      </Animated.View>
-      {focused && <View style={tabStyles.focusDot} />}
-    </View>
-  );
-};
-
 const createTabBarStyles = (colors: ThemeColors, _shadows: ThemeShadows) => ({
   iconContainer: {
     alignItems: 'center' as const,
@@ -98,6 +71,34 @@ const createTabBarStyles = (colors: ThemeColors, _shadows: ThemeShadows) => ({
   },
 });
 
+const TabBarIcon = ({ focused, color: _, route }: { focused: boolean; color: string; route: { name: string } }) => {
+  const { colors } = useTheme();
+  const tabStyles = useThemedStyles(createTabBarStyles);
+  const scale = useSharedValue(focused ? 1.1 : 1);
+
+  useEffect(() => {
+    scale.value = withSpring(focused ? 1.1 : 1, { damping: 15, stiffness: 150 });
+
+  }, [focused, scale]);
+
+  const animatedStyle = useAnimatedStyle(() => ({
+    transform: [{ scale: scale.value }],
+  }));
+
+  return (
+    <View style={tabStyles.iconContainer}>
+      <Animated.View style={animatedStyle}>
+        <Icon
+          name={TAB_ICON_MAP[route.name] || 'circle'}
+          size={22}
+          color={focused ? colors.primary : colors.textMuted}
+        />
+      </Animated.View>
+      {focused && <View style={tabStyles.focusDot} />}
+    </View>
+  );
+};
+
 const mainTabsStyles = StyleSheet.create({
   container: { flex: 1 },
 });
@@ -105,6 +106,7 @@ const mainTabsStyles = StyleSheet.create({
 // Main Tab Navigator
 const MainTabs: React.FC = () => {
   const { colors, shadows } = useTheme();
+  const { t } = useTranslation();
   const insets = useSafeAreaInsets();
   const bottomInset = Math.max(insets.bottom, 20);
   const tabBarHeight = 60 + bottomInset;
@@ -128,9 +130,7 @@ const MainTabs: React.FC = () => {
           },
           tabBarActiveTintColor: colors.primary,
           tabBarInactiveTintColor: colors.textMuted,
-          tabBarIcon: ({ focused }) => (
-            <TabBarIcon name={route.name} focused={focused} />
-          ),
+          tabBarIcon: ({ focused, color }) => TabBarIcon({ focused, color, route }),
           tabBarLabelStyle: {
             fontSize: 11,
             fontWeight: '500' as const,
@@ -140,7 +140,7 @@ const MainTabs: React.FC = () => {
         <Tab.Screen
           name="HomeTab"
           component={HomeScreen}
-          options={{ tabBarLabel: 'Home', tabBarButtonTestID: 'home-tab' }}
+          options={{ tabBarLabel: t('tabs.home'), tabBarButtonTestID: 'home-tab' }}
           listeners={() => ({
             tabPress: () => { triggerHaptic('selection'); },
           })}
@@ -148,7 +148,7 @@ const MainTabs: React.FC = () => {
         <Tab.Screen
           name="ChatsTab"
           component={ChatsListScreen}
-          options={{ tabBarLabel: 'Chats', tabBarButtonTestID: 'chats-tab' }}
+          options={{ tabBarLabel: t('tabs.chats'), tabBarButtonTestID: 'chats-tab' }}
           listeners={() => ({
             tabPress: () => { triggerHaptic('selection'); },
           })}
@@ -156,7 +156,7 @@ const MainTabs: React.FC = () => {
         <Tab.Screen
           name="ProjectsTab"
           component={ProjectsScreen}
-          options={{ tabBarLabel: 'Projects', tabBarButtonTestID: 'projects-tab' }}
+          options={{ tabBarLabel: t('tabs.projects'), tabBarButtonTestID: 'projects-tab' }}
           listeners={() => ({
             tabPress: () => { triggerHaptic('selection'); },
           })}
@@ -164,7 +164,7 @@ const MainTabs: React.FC = () => {
         <Tab.Screen
           name="ModelsTab"
           component={ModelsScreen}
-          options={{ tabBarLabel: 'Models', tabBarButtonTestID: 'models-tab' }}
+          options={{ tabBarLabel: t('tabs.models'), tabBarButtonTestID: 'models-tab' }}
           listeners={() => ({
             tabPress: () => { triggerHaptic('selection'); },
           })}
@@ -172,7 +172,7 @@ const MainTabs: React.FC = () => {
         <Tab.Screen
           name="SettingsTab"
           component={SettingsScreen}
-          options={{ tabBarLabel: 'Settings', tabBarButtonTestID: 'settings-tab' }}
+          options={{ tabBarLabel: t('tabs.settingsTab'), tabBarButtonTestID: 'settings-tab' }}
           listeners={() => ({
             tabPress: () => { triggerHaptic('selection'); },
           })}

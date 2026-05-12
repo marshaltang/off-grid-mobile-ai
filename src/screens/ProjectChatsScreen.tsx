@@ -19,24 +19,10 @@ import { TYPOGRAPHY, SPACING } from '../constants';
 import { useChatStore, useProjectStore, useAppStore } from '../stores';
 import { Conversation } from '../types';
 import { RootStackParamList } from '../navigation/types';
+import { useTranslation } from 'react-i18next';
 
 type NavigationProp = NativeStackNavigationProp<RootStackParamList>;
 type RouteProps = RouteProp<RootStackParamList, 'ProjectChats'>;
-
-const formatDate = (dateString: string) => {
-  const date = new Date(dateString);
-  const now = new Date();
-  const diffDays = Math.floor((now.getTime() - date.getTime()) / (1000 * 60 * 60 * 24));
-
-  if (diffDays === 0) {
-    return date.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
-  } else if (diffDays === 1) {
-    return 'Yesterday';
-  } else if (diffDays < 7) {
-    return date.toLocaleDateString([], { weekday: 'short' });
-  }
-  return date.toLocaleDateString([], { month: 'short', day: 'numeric' });
-};
 
 const createStyles = (colors: ThemeColors, shadows: ThemeShadows) => ({
   container: {
@@ -161,9 +147,25 @@ export const ProjectChatsScreen: React.FC = () => {
   const navigation = useNavigation<NavigationProp>();
   const route = useRoute<RouteProps>();
   const { projectId } = route.params;
+  const { t } = useTranslation();
   const { colors } = useTheme();
   const styles = useThemedStyles(createStyles);
   const [alertState, setAlertState] = useState<AlertState>(initialAlertState);
+
+  const formatDate = (dateString: string) => {
+    const date = new Date(dateString);
+    const now = new Date();
+    const diffDays = Math.floor((now.getTime() - date.getTime()) / (1000 * 60 * 60 * 24));
+
+    if (diffDays === 0) {
+      return date.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+    } else if (diffDays === 1) {
+      return t('chats.yesterday');
+    } else if (diffDays < 7) {
+      return date.toLocaleDateString([], { weekday: 'short' });
+    }
+    return date.toLocaleDateString([], { month: 'short', day: 'numeric' });
+  };
 
   const { getProject } = useProjectStore();
   const { conversations, deleteConversation, setActiveConversation, createConversation } = useChatStore();
@@ -184,7 +186,7 @@ export const ProjectChatsScreen: React.FC = () => {
 
   const handleNewChat = () => {
     if (!hasModels) {
-      setAlertState(showAlert('No Model', 'Please download a model first from the Models tab.'));
+      setAlertState(showAlert(t('chats.noModel'), t('chats.noModelMessageSimple')));
       return;
     }
     const modelId = activeModelId || downloadedModels[0]?.id;
@@ -196,12 +198,12 @@ export const ProjectChatsScreen: React.FC = () => {
 
   const handleDeleteChat = (conversation: Conversation) => {
     setAlertState(showAlert(
-      'Delete Chat',
-      `Delete "${conversation.title}"?`,
+      t('chats.deleteChat'),
+      t('chats.deleteConfirmSimple', { title: conversation.title }),
       [
-        { text: 'Cancel', style: 'cancel' },
+        { text: t('common.cancel'), style: 'cancel' },
         {
-          text: 'Delete',
+          text: t('common.delete'),
           style: 'destructive',
           onPress: () => deleteConversation(conversation.id),
         },
@@ -243,7 +245,7 @@ export const ProjectChatsScreen: React.FC = () => {
             </View>
             {lastMessage && (
               <Text style={styles.chatPreview} numberOfLines={1}>
-                {lastMessage.role === 'user' ? 'You: ' : ''}{lastMessage.content}
+                {lastMessage.role === 'user' ? t('chats.youPrefix') : ''}{lastMessage.content}
               </Text>
             )}
           </View>
@@ -261,7 +263,7 @@ export const ProjectChatsScreen: React.FC = () => {
         </TouchableOpacity>
         <View style={styles.headerCenter}>
           <Text style={styles.headerTitle} numberOfLines={1}>
-            {project?.name || 'Chats'}
+            {project?.name || t('chats.title')}
           </Text>
         </View>
         <TouchableOpacity onPress={handleNewChat} style={styles.addButton} disabled={!hasModels}>
@@ -274,15 +276,15 @@ export const ProjectChatsScreen: React.FC = () => {
           <View style={styles.emptyIcon}>
             <Icon name="message-circle" size={28} color={colors.textMuted} />
           </View>
-          <Text style={styles.emptyTitle}>No chats yet</Text>
+          <Text style={styles.emptyTitle}>{t('chats.noChats')}</Text>
           <Text style={styles.emptyText}>
             {hasModels
-              ? 'Start a new conversation for this project.'
-              : 'Download a model to start chatting.'}
+              ? t('chats.projectStartConversation')
+              : t('chats.projectDownloadModel')}
           </Text>
           {hasModels && (
             <Button
-              title="New Chat"
+              title={t('chats.newChat')}
               variant="primary"
               size="medium"
               onPress={handleNewChat}

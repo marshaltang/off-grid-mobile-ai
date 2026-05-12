@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { View, Text, Switch } from 'react-native';
 import Slider from '@react-native-community/slider';
+import { useTranslation } from 'react-i18next';
 import { AdvancedToggle, Card } from '../../components';
 import { useTheme, useThemedStyles } from '../../theme';
 import { useAppStore } from '../../stores';
@@ -13,6 +14,7 @@ const HIGH_CONTEXT_THRESHOLD = 8192;
 export const TextGenerationSection: React.FC = () => {
   const { colors } = useTheme();
   const styles = useThemedStyles(createStyles);
+  const { t } = useTranslation();
   const { settings, updateSettings } = useAppStore();
   const modelMaxContext = useAppStore((s) => s.modelMaxContext);
   const [showAdvanced, setShowAdvanced] = useState(false);
@@ -30,16 +32,16 @@ export const TextGenerationSection: React.FC = () => {
 
   return (
     <Card style={styles.section}>
-      <Text style={styles.settingHelp}>Configure LLM behavior for text responses.</Text>
+      <Text style={styles.settingHelp}>{t('modelSettings.textGenHelp')}</Text>
 
       {/* ── Basic Settings ── */}
 
       <View style={styles.sliderSection}>
         <View style={styles.sliderHeader}>
-          <Text style={styles.sliderLabel}>Temperature</Text>
+          <Text style={styles.sliderLabel}>{t('modelSettings.temperature')}</Text>
           <Text style={styles.sliderValue}>{(settings?.temperature || 0.7).toFixed(2)}</Text>
         </View>
-        <Text style={styles.sliderDesc}>Higher = more creative, Lower = more focused</Text>
+        <Text style={styles.sliderDesc}>{t('modelSettings.temperatureDesc')}</Text>
         <Slider
           style={styles.slider}
           minimumValue={0}
@@ -55,10 +57,10 @@ export const TextGenerationSection: React.FC = () => {
 
       <View style={styles.sliderSection}>
         <View style={styles.sliderHeader}>
-          <Text style={styles.sliderLabel}>Max Tokens</Text>
+          <Text style={styles.sliderLabel}>{t('modelSettings.maxTokens')}</Text>
           <Text style={styles.sliderValue}>{maxTokensLabel}</Text>
         </View>
-        <Text style={styles.sliderDesc}>Maximum response length</Text>
+        <Text style={styles.sliderDesc}>{t('modelSettings.maxTokensDesc')}</Text>
         <Slider
           style={styles.slider}
           minimumValue={64}
@@ -74,13 +76,13 @@ export const TextGenerationSection: React.FC = () => {
 
       <View style={styles.sliderSection}>
         <View style={styles.sliderHeader}>
-          <Text style={styles.sliderLabel}>Context Length</Text>
+          <Text style={styles.sliderLabel}>{t('modelSettings.contextLength')}</Text>
           <Text style={styles.sliderValue}>{contextLengthLabel}</Text>
         </View>
-        <Text style={styles.sliderDesc}>KV cache size — larger uses more RAM (requires reload)</Text>
+        <Text style={styles.sliderDesc}>{t('modelSettings.contextLengthDesc')}</Text>
         {contextLength > HIGH_CONTEXT_THRESHOLD && (
           <Text style={[styles.sliderDesc, { color: colors.error }]}>
-            High context uses significant RAM and may crash on some devices
+            {t('modelSettings.highContextWarning')}
           </Text>
         )}
         <Slider
@@ -98,9 +100,9 @@ export const TextGenerationSection: React.FC = () => {
 
       <View style={styles.toggleRow}>
         <View style={styles.toggleInfo}>
-          <Text style={styles.toggleLabel}>Show Generation Details</Text>
+          <Text style={styles.toggleLabel}>{t('modelSettings.showGenDetails')}</Text>
           <Text style={styles.toggleDesc}>
-            Display tokens/sec, timing, and memory usage on responses
+            {t('modelSettings.showGenDetailsDesc')}
           </Text>
         </View>
         <Switch
