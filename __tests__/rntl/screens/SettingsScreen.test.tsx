@@ -98,14 +98,14 @@ describe('SettingsScreen', () => {
     expect(getByText('1.0.0')).toBeTruthy();
   });
 
-  it('renders navigation items', () => {
-    const { getByText } = render(<SettingsScreen />);
-    expect(getByText('Model Settings')).toBeTruthy();
-    expect(getByText('Voice Transcription')).toBeTruthy();
-    expect(getByText('Security')).toBeTruthy();
-    expect(getByText('Device Information')).toBeTruthy();
-    expect(getByText('Storage')).toBeTruthy();
-  });
+    it('renders navigation items', () => {
+      const { getByText } = render(<SettingsScreen />);
+      expect(getByText('Model Settings')).toBeTruthy();
+      expect(getByText('Voice Settings')).toBeTruthy();
+      expect(getByText('Security Settings')).toBeTruthy();
+      expect(getByText('Device Info')).toBeTruthy();
+      expect(getByText('Storage Settings')).toBeTruthy();
+    });
 
   it('renders navigation item descriptions', () => {
     const { getByText } = render(<SettingsScreen />);
@@ -122,21 +122,21 @@ describe('SettingsScreen', () => {
     expect(mockNavigate).toHaveBeenCalledWith('ModelSettings');
   });
 
-  it('navigates to each settings screen', () => {
-    const { getByText } = render(<SettingsScreen />);
+    it('navigates to each settings screen', () => {
+      const { getByText } = render(<SettingsScreen />);
 
-    fireEvent.press(getByText('Voice Transcription'));
-    expect(mockNavigate).toHaveBeenCalledWith('VoiceSettings');
+      fireEvent.press(getByText('Voice Settings'));
+      expect(mockNavigate).toHaveBeenCalledWith('VoiceSettings');
 
-    fireEvent.press(getByText('Security'));
-    expect(mockNavigate).toHaveBeenCalledWith('SecuritySettings');
+      fireEvent.press(getByText('Security Settings'));
+      expect(mockNavigate).toHaveBeenCalledWith('SecuritySettings');
 
-    fireEvent.press(getByText('Device Information'));
-    expect(mockNavigate).toHaveBeenCalledWith('DeviceInfo');
+      fireEvent.press(getByText('Device Info'));
+      expect(mockNavigate).toHaveBeenCalledWith('DeviceInfo');
 
-    fireEvent.press(getByText('Storage'));
-    expect(mockNavigate).toHaveBeenCalledWith('StorageSettings');
-  });
+      fireEvent.press(getByText('Storage Settings'));
+      expect(mockNavigate).toHaveBeenCalledWith('StorageSettings');
+    });
 
   it('renders theme selector with system/light/dark options', () => {
     const { getByText } = render(<SettingsScreen />);
