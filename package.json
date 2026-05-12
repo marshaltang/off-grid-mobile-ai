@@ -1,6 +1,6 @@
 {
   "name": "offgrid-mobile-cn",
-  "version": "26.0511.89",
+  "version": "26.0512.89",
   "private": true,
   "scripts": {
     "android": "react-native run-android --mode=debug --appId ai.offgridmobile.dev",
